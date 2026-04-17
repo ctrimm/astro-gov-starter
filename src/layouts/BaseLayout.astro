@@ -1,0 +1,87 @@
+---
+import USABanner from '../components/uswds/USABanner.astro';
+import USAIdentifier from '../components/uswds/USAIdentifier.astro';
+import Header from '../components/uswds/Header.astro';
+import type { Locale } from '../i18n/utils';
+import { useTranslations } from '../i18n/utils';
+import { siteConfig } from '../config/site';
+
+// Import global styles — USWDS first, then Tailwind utilities
+import '../styles/uswds-theme.scss';
+import '../styles/globals.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  locale?: Locale;
+  /** Canonical URL for this page */
+  canonicalUrl?: string;
+  /** Open Graph image */
+  ogImage?: string;
+}
+
+const {
+  title,
+  description = siteConfig.description,
+  locale = 'en',
+  canonicalUrl,
+  ogImage,
+} = Astro.props;
+
+const t = useTranslations(locale);
+const lang = locale;
+const pageTitle = title === siteConfig.name
+  ? title
+  : `${title} | ${siteConfig.name}`;
+const currentPath = Astro.url.pathname;
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+
+    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    {ogImage && <meta property="og:image" content={ogImage} />}
+
+    <!-- Alternate languages -->
+    <link rel="alternate" hreflang="en" href={`https://${siteConfig.domain}${currentPath.replace(/^\/es/, '') || '/'}`} />
+    <link rel="alternate" hreflang="es" href={`https://${siteConfig.domain}/es${currentPath.startsWith('/es') ? currentPath.replace(/^\/es/, '') : currentPath}`} />
+
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  </head>
+
+  <body>
+    <!-- Skip navigation for keyboard and screen reader users -->
+    <a class="usa-skipnav" href="#main-content">
+      {t('nav.skipToMain')}
+    </a>
+
+    <!-- Required: Official US government website identification banner -->
+    <USABanner locale={locale} />
+
+    <!-- Site header and navigation -->
+    <Header locale={locale} currentPath={currentPath} />
+
+    <!-- Main page content -->
+    <main id="main-content" tabindex="-1">
+      <slot />
+    </main>
+
+    <!-- Required: Agency identifier footer -->
+    <USAIdentifier locale={locale} />
+
+    <!-- USWDS JavaScript for accordion, banner, and nav behaviors.
+         Served from public/uswds/js/ — copied by scripts/setup-uswds.mjs. -->
+    <script src="/uswds/js/uswds.min.js" is:inline defer></script>
+  </body>
+</html>

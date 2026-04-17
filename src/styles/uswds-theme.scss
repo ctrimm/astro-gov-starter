@@ -1,0 +1,13 @@
+// USWDS 3.x entry point
+//
+// loadPaths in astro.config.mjs points to node_modules/@uswds/uswds/packages,
+// so @use "uswds" resolves to packages/uswds/_index.scss without a full path.
+//
+// Settings are configured at the top-level @use so they flow through the
+// @forward chain (uswds → uswds-global → uswds-core) without a module loop.
+// Assets are served from /uswds/ (copied by scripts/setup-uswds.mjs).
+@use "uswds" with (
+  $theme-font-path: "/uswds/fonts/",
+  $theme-image-path: "/uswds/img/",
+  $theme-show-notifications: false
+);

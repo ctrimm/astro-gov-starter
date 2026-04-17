@@ -1,0 +1,135 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { useTranslations } from '../i18n/utils';
+import { siteConfig } from '../config/site';
+
+const locale = 'en';
+const t = useTranslations(locale);
+---
+
+<BaseLayout
+  title={siteConfig.name}
+  description={siteConfig.description}
+  locale={locale}
+>
+  <!-- Hero section -->
+  <section class="usa-hero" aria-label="Introduction">
+    <div class="grid-container">
+      <div class="usa-hero__callout">
+        <h1 class="usa-hero__heading">
+          <span class="usa-hero__heading--alt">{t('home.heroHeading')}</span>
+          {t('home.heroHeadingAlt')}
+        </h1>
+        <p>{t('home.heroSubheading')}</p>
+        <a class="usa-button usa-button--big" href="/services/">
+          {t('home.heroCta')}
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Announcement bar placeholder -->
+  <div class="usa-alert usa-alert--info usa-alert--slim" role="status">
+    <div class="usa-alert__body">
+      <p class="usa-alert__text">
+        <strong>Notice:</strong> Replace this announcement with your agency's current notice.
+        See <code>src/content/announcements/</code> in M2.
+      </p>
+    </div>
+  </div>
+
+  <!-- Services overview -->
+  <section class="usa-section" aria-labelledby="services-heading">
+    <div class="grid-container">
+      <h2 id="services-heading" class="font-heading-xl">{t('home.servicesHeading')}</h2>
+      <p class="usa-intro">{t('home.servicesSubheading')}</p>
+
+      <ul class="usa-card-group">
+        <!-- Seed service cards — replace with dynamic content from content collections in M2 -->
+        <li class="usa-card tablet:grid-col-4">
+          <div class="usa-card__container">
+            <div class="usa-card__header">
+              <h3 class="usa-card__heading">SNAP Benefits</h3>
+            </div>
+            <div class="usa-card__body">
+              <p>
+                The Supplemental Nutrition Assistance Program helps eligible
+                low-income individuals and families buy nutritious food.
+              </p>
+            </div>
+            <div class="usa-card__footer">
+              <a href="/services/snap" class="usa-button">{t('home.learnMore')}</a>
+            </div>
+          </div>
+        </li>
+
+        <li class="usa-card tablet:grid-col-4">
+          <div class="usa-card__container">
+            <div class="usa-card__header">
+              <h3 class="usa-card__heading">Medicaid</h3>
+            </div>
+            <div class="usa-card__body">
+              <p>
+                Medicaid provides free or low-cost health coverage to eligible
+                people, including children and pregnant women.
+              </p>
+            </div>
+            <div class="usa-card__footer">
+              <a href="/services/medicaid" class="usa-button">{t('home.learnMore')}</a>
+            </div>
+          </div>
+        </li>
+
+        <li class="usa-card tablet:grid-col-4">
+          <div class="usa-card__container">
+            <div class="usa-card__header">
+              <h3 class="usa-card__heading">WIC</h3>
+            </div>
+            <div class="usa-card__body">
+              <p>
+                WIC provides nutritious foods, nutrition education, and referrals
+                to women who are pregnant, recently gave birth, or are breastfeeding.
+              </p>
+            </div>
+            <div class="usa-card__footer">
+              <a href="/services/wic" class="usa-button">{t('home.learnMore')}</a>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Process section -->
+  <section class="usa-section bg-primary-darker" aria-labelledby="process-heading">
+    <div class="grid-container">
+      <h2 id="process-heading" class="font-heading-xl text-white">How to apply</h2>
+      <ol class="usa-process-list">
+        <li class="usa-process-list__item">
+          <h3 class="usa-process-list__heading">Check eligibility</h3>
+          <p>
+            Answer a few questions to find out which programs you may qualify for.
+            This takes about 5 minutes and does not start an application.
+          </p>
+        </li>
+        <li class="usa-process-list__item">
+          <h3 class="usa-process-list__heading">Gather documents</h3>
+          <p>
+            You may need proof of identity, income, and residency. Our checklist
+            will tell you exactly what to bring.
+          </p>
+        </li>
+        <li class="usa-process-list__item">
+          <h3 class="usa-process-list__heading">Submit your application</h3>
+          <p>
+            Apply online in about 20 minutes. You'll get a confirmation number
+            immediately and a decision within 30 days.
+          </p>
+        </li>
+      </ol>
+      <a href="/apply/" class="usa-button usa-button--outline usa-button--inverse">
+        {t('home.applyNow')}
+      </a>
+    </div>
+  </section>
+</BaseLayout>
