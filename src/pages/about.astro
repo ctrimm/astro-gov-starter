@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/uswds/Breadcrumb.astro';
+import { siteConfig } from '../config/site';
+
+const locale = 'en';
+---
+
+<BaseLayout
+  title="About"
+  description={`About ${siteConfig.name} — our mission, programs, and how to reach us.`}
+  locale={locale}
+>
+  <div class="grid-container usa-section">
+    <div class="grid-row">
+      <div class="grid-col-12 tablet:grid-col-8">
+        <Breadcrumb items={[
+          { label: 'Home', href: '/' },
+          { label: 'About', href: '/about/' },
+        ]} />
+
+        <h1>About {siteConfig.name}</h1>
+
+        <div class="usa-prose">
+          <p class="usa-intro">
+            Replace this placeholder with a description of your agency's mission and programs.
+          </p>
+
+          <h2>Our mission</h2>
+          <p>
+            <!-- TODO: Replace with your agency's mission statement -->
+            [Agency Name] provides assistance programs and services to eligible residents,
+            helping families meet their basic needs and achieve self-sufficiency.
+          </p>
+
+          <h2>Our programs</h2>
+          <p>
+            We administer federal and state benefit programs including food assistance,
+            health coverage, childcare support, and nutrition services.
+            <a href="/services/" class="usa-link">View all available programs</a>.
+          </p>
+
+          <h2>Contact us</h2>
+          <p>
+            <a href="/contact/" class="usa-link">Reach our office</a> by phone, email,
+            or in person. We are here to help.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

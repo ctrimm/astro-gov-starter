@@ -1,0 +1,45 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/uswds/Breadcrumb.astro';
+import { siteConfig } from '../../config/site';
+
+const locale = 'es';
+---
+
+<BaseLayout
+  title="Política de privacidad"
+  description={`Cómo ${siteConfig.name} recopila, usa y protege su información personal.`}
+  locale={locale}
+>
+  <div class="grid-container usa-section">
+    <div class="grid-row">
+      <div class="grid-col-12 tablet:grid-col-8">
+        <Breadcrumb items={[
+          { label: 'Inicio', href: '/es/' },
+          { label: 'Privacidad', href: '/es/privacy/' },
+        ]} />
+
+        <h1>Política de privacidad</h1>
+
+        <div class="usa-prose">
+          <p class="usa-intro">
+            {siteConfig.name} se compromete a proteger su privacidad.
+          </p>
+
+          <p>
+            Para leer la política de privacidad completa en inglés, visite{' '}
+            <a href="/privacy/" class="usa-link" hreflang="en">
+              nuestra política de privacidad en inglés
+            </a>.
+          </p>
+
+          <h2>Preguntas</h2>
+          <p>
+            Si tiene preguntas sobre nuestra política de privacidad,{' '}
+            <a href="/es/contact/" class="usa-link">contáctenos</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

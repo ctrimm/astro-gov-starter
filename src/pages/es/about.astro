@@ -1,0 +1,46 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/uswds/Breadcrumb.astro';
+import { siteConfig } from '../../config/site';
+
+const locale = 'es';
+---
+
+<BaseLayout
+  title="Acerca de"
+  description={`Acerca de ${siteConfig.name} — nuestra misión, programas y cómo contactarnos.`}
+  locale={locale}
+>
+  <div class="grid-container usa-section">
+    <div class="grid-row">
+      <div class="grid-col-12 tablet:grid-col-8">
+        <Breadcrumb items={[
+          { label: 'Inicio', href: '/es/' },
+          { label: 'Acerca de', href: '/es/about/' },
+        ]} />
+
+        <h1>Acerca de {siteConfig.name}</h1>
+
+        <div class="usa-prose">
+          <p class="usa-intro">
+            Reemplace este contenido provisional con una descripción de la misión y los
+            programas de su agencia.
+          </p>
+
+          <p>
+            Para leer la información completa en inglés, visite{' '}
+            <a href="/about/" class="usa-link" hreflang="en">
+              nuestra página "About" en inglés
+            </a>.
+          </p>
+
+          <h2>Contáctenos</h2>
+          <p>
+            <a href="/es/contact/" class="usa-link">Comuníquese con nuestra oficina</a>{' '}
+            por teléfono, correo electrónico o en persona. Estamos aquí para ayudarle.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

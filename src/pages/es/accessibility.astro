@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/uswds/Breadcrumb.astro';
+import { siteConfig } from '../../config/site';
+
+const locale = 'es';
+---
+
+<BaseLayout
+  title="Declaración de accesibilidad"
+  description={`Compromiso de ${siteConfig.name} con la accesibilidad digital.`}
+  locale={locale}
+>
+  <div class="grid-container usa-section">
+    <div class="grid-row">
+      <div class="grid-col-12 tablet:grid-col-8">
+        <Breadcrumb items={[
+          { label: 'Inicio', href: '/es/' },
+          { label: 'Accesibilidad', href: '/es/accessibility/' },
+        ]} />
+
+        <h1>Declaración de accesibilidad</h1>
+
+        <div class="usa-prose">
+          <p class="usa-intro">
+            {siteConfig.name} se compromete a hacer que su sitio web sea accesible
+            para todas las personas, incluidas las personas con discapacidades.
+          </p>
+
+          <p>
+            Para leer la declaración completa en inglés, visite{' '}
+            <a href="/accessibility/" class="usa-link" hreflang="en">
+              nuestra página de accesibilidad en inglés
+            </a>.
+          </p>
+
+          <h2>Cómo solicitar asistencia</h2>
+          <p>
+            Si tiene dificultades para acceder a nuestro sitio web o necesita
+            información en otro formato, <a href="/es/contact/" class="usa-link">contáctenos</a>.
+          </p>
+          <ul>
+            <li>
+              <strong>Teléfono:</strong>{' '}
+              <a href="tel:18005550100" class="usa-link">1&#8209;800&#8209;555&#8209;0100</a>
+            </li>
+            <li>
+              <strong>En línea:</strong>{' '}
+              <a href="/es/contact/" class="usa-link">Use nuestro formulario de contacto</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
