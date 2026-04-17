@@ -62,7 +62,7 @@ const currentPath = Astro.url.pathname;
     <link rel="alternate" hreflang="en" href={`https://${siteConfig.domain}${currentPath.replace(/^\/es/, '') || '/'}`} />
     <link rel="alternate" hreflang="es" href={`https://${siteConfig.domain}/es${currentPath.startsWith('/es') ? currentPath.replace(/^\/es/, '') : currentPath}`} />
 
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
 
   <body>

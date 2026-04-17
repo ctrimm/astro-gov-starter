@@ -99,7 +99,7 @@ const resolvedColumns = columns ?? defaultColumns;
           {resolvedColumns.map((col) => (
             <div class="mobile-lg:grid-col-6 desktop:grid-col-3">
               <section class="usa-footer__primary-content usa-footer__primary-content--collapsible">
-                <h4 class="usa-footer__primary-link">{col.heading}</h4>
+                <h2 class="usa-footer__primary-link">{col.heading}</h2>
                 <ul class="usa-list usa-list--unstyled">
                   {col.links.map((link) => (
                     <li class="usa-footer__secondary-link">
@@ -124,9 +124,9 @@ const resolvedColumns = columns ?? defaultColumns;
           </div>
         </div>
         <div class="usa-footer__contact-links mobile-lg:grid-col-6">
-          <h3 class="usa-footer__contact-heading">
+          <h2 class="usa-footer__contact-heading">
             {t('footer.contactUs')}
-          </h3>
+          </h2>
           <address class="usa-footer__address">
             <div class="usa-footer__contact-info grid-row grid-gap">
               <div class="grid-col-auto">

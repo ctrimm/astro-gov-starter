@@ -7,12 +7,12 @@ export const siteConfig = {
 
   // Required links for USA Identifier footer component
   links: {
-    about: '/about',
-    accessibility: '/accessibility',
+    about: '/about/',
+    accessibility: '/accessibility/',
     foia: 'https://www.foia.gov/',
     noFear: 'https://www.eeoc.gov/no-fear-act-data',
     oig: 'https://www.oversight.gov/',
-    privacy: '/privacy',
+    privacy: '/privacy/',
     budget: '/',
     usagov: 'https://www.usa.gov/',
   },
