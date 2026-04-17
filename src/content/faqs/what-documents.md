@@ -5,13 +5,13 @@ order: 3
 esQuestion: ¿Qué documentos necesito para solicitar?
 ---
 
-The exact documents depend on which program you are applying for, but most applications ask for:
+What you bring depends on the program. Most forms ask for:
 
 1. **Proof of identity** — driver's license, state ID, passport, or birth certificate
-2. **Proof of residency** — utility bill, lease or mortgage statement, or bank statement with your address
-3. **Proof of income** — recent pay stubs (last 30 days), employer letter, Social Security award letter, or other benefit statements
-4. **Social Security numbers** — for each household member who is applying
+2. **Proof of address** — utility bill, lease, or bank statement with your address
+3. **Proof of income** — pay stubs, an employer letter, or benefit award letters
+4. **Social Security numbers** — for each person in your home who is applying
 
-You can upload photos of your documents during the online application, or bring originals to your in-person interview.
+You can upload photos in the online form. Or bring originals to an in-person visit.
 
-If you do not have all documents, apply anyway. A caseworker can help you gather what is needed.
+Do not have all your papers? Apply anyway. A caseworker will help you find what you need.

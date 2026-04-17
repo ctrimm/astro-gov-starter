@@ -9,4 +9,4 @@ showInEs: true
 draft: false
 ---
 
-SNAP maximum monthly benefit amounts have increased by 3.1% for fiscal year 2026 due to annual cost-of-living adjustments. Current recipients do not need to take any action — updated amounts will appear on your EBT card automatically starting October 1.
+SNAP monthly benefit amounts went up 3.1% for 2026. This change happens each year to match the cost of living. You do not need to do anything. Your new amount will load to your EBT card on October 1.

@@ -5,8 +5,8 @@ order: 1
 esQuestion: ¿Quién es elegible para SNAP?
 ---
 
-Most households must meet income and resource limits to qualify. Your household's gross monthly income must generally be at or below 130% of the federal poverty level. Your net income must be at or below 100% of the poverty level.
+Most families must meet income limits to qualify. Your gross monthly income must be at or below 130% of the federal poverty level. Your net income must be at or below 100%.
 
-Some households are automatically eligible if all members receive SSI, TANF, or certain other benefits.
+Some families qualify right away if all members get SSI, TANF, or certain other benefits.
 
-Eligibility rules are complex. The best way to find out if you qualify is to submit an application — it is free and there is no penalty for applying and being found ineligible.
+Rules can vary. The best way to find out if you qualify is to apply. It is free. There is no penalty if you apply and are not approved.

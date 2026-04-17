@@ -21,7 +21,8 @@
     "preview": "astro preview",
     "check": "astro check",
     "setup": "node scripts/setup-uswds.mjs",
-    "ci:check": "bash scripts/check.sh"
+    "ci:check": "bash scripts/check.sh",
+    "init-agency": "node scripts/init-agency.mjs"
   },
   "dependencies": {
     "@astrojs/mdx": "^5.0.0",
@@ -31,6 +32,8 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.0",
     "@tailwindcss/vite": "^4.0.0",
+    "html-validate": "^10.13.0",
+    "linkinator": "^7.6.1",
     "sass": "^1.77.0",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.5.0"

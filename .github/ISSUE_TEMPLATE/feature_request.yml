@@ -1,0 +1,68 @@
+name: Feature request
+description: Suggest a new feature or improvement to the starter template.
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Have an idea that would improve this template for government teams?
+        We'd love to hear it. Note that we prioritize features with broad
+        applicability across federal/state/local government sites.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or opportunity
+      description: What problem does this solve, or what opportunity does it unlock?
+      placeholder: e.g. "There's no way to add a news/press-release section without building it from scratch."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe what you'd like to see added or changed.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - New USWDS component wrapper
+        - New page template
+        - New content collection type
+        - CI / quality gate
+        - Accessibility improvement
+        - i18n / additional locale
+        - Developer experience
+        - Documentation
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: How widely applicable is this?
+      options:
+        - Most government sites would benefit
+        - Specific program type (benefits, licensing, etc.)
+        - Agency-specific — probably too niche for the template
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Any other approaches you've thought about?
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Links, screenshots, or examples from other government sites.

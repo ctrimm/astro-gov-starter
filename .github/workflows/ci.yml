@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  NODE_VERSION: '20'
+  NODE_VERSION: '22'
   PNPM_VERSION: '9'
 
 jobs:
@@ -50,7 +50,7 @@ jobs:
           path: dist/
           retention-days: 1
 
-  # ── 2. HTML Validation ────────────────────────────────────────────────────
+  # ── 2. HTML Validation ─────────────────────────────────────────────────────
   html-validate:
     name: HTML Validation
     needs: build
@@ -77,12 +77,9 @@ jobs:
           path: dist/
 
       - name: HTML Validation
-        # M3: wire up html-validate
-        run: |
-          echo "TODO (M3): npx html-validate 'dist/**/*.html'"
-          echo "Gate placeholder — will fail on HTML errors in M3"
+        run: npx html-validate 'dist/**/*.html'
 
-  # ── 3. Accessibility (axe-core) ───────────────────────────────────────────
+  # ── 3. Accessibility (axe-core) ────────────────────────────────────────────
   a11y:
     name: Accessibility (axe-core)
     needs: build
@@ -90,17 +87,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
 
       - name: Download build artifact
         uses: actions/download-artifact@v4
@@ -108,31 +97,29 @@ jobs:
           name: dist
           path: dist/
 
-      - name: Accessibility check
-        # M3: wire up @axe-core/cli crawling the static site
-        run: |
-          echo "TODO (M3): npx serve dist & npx axe http://localhost:3000 --exit"
-          echo "Gate placeholder — threshold: 0 violations, 0 serious warnings"
+      - name: Start static server
+        run: npx -y serve dist --listen 4000 &
 
-  # ── 4. Lighthouse CI ──────────────────────────────────────────────────────
+      - name: Wait for server
+        run: sleep 3
+
+      - name: Accessibility check (axe-core)
+        run: |
+          npx -y @axe-core/cli \
+            http://localhost:4000/ \
+            http://localhost:4000/services/ \
+            http://localhost:4000/help/ \
+            http://localhost:4000/contact/ \
+            --exit \
+            --timeout 60000
+
+  # ── 4. Lighthouse CI ───────────────────────────────────────────────────────
   lighthouse:
     name: Lighthouse CI
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
 
       - name: Download build artifact
         uses: actions/download-artifact@v4
@@ -141,12 +128,13 @@ jobs:
           path: dist/
 
       - name: Lighthouse CI
-        # M3: thresholds — perf≥90, a11y=100, best-practices≥95, SEO≥95
-        run: |
-          echo "TODO (M3): npx lhci autorun"
-          echo "Gate placeholder — thresholds defined in lighthouserc.json"
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          configPath: ./lighthouserc.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true
 
-  # ── 5. Link Check (lychee) ────────────────────────────────────────────────
+  # ── 5. Link Check (linkinator) ─────────────────────────────────────────────
   links:
     name: Link Check
     needs: build
@@ -154,50 +142,55 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
       - name: Download build artifact
         uses: actions/download-artifact@v4
         with:
           name: dist
           path: dist/
 
-      - name: Check links
-        # M3: wire up lychee for 0 broken internal + external links
-        run: |
-          echo "TODO (M3): lychee --offline dist/**/*.html"
-          echo "Gate placeholder"
+      - name: Start static server
+        run: npx -y serve dist --listen 4001 &
 
-  # ── 6. Plain Language ─────────────────────────────────────────────────────
+      - name: Wait for server
+        run: sleep 3
+
+      - name: Check internal links
+        run: |
+          npx -y linkinator http://localhost:4001/ \
+            --recurse \
+            --skip "^(?!http://localhost)" \
+            --skip "tel:" \
+            --verbosity error
+
+  # ── 6. Plain Language ──────────────────────────────────────────────────────
   plain-language:
     name: Plain Language (avg grade ≤ 8)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - uses: pnpm/action-setup@v4
-        with:
-          version: ${{ env.PNPM_VERSION }}
-
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'pnpm'
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
 
       - name: Plain language check
-        # M3: scripts/plain-language.mjs — textstat fallback if no MCP
-        run: |
-          echo "TODO (M3): node scripts/plain-language.mjs"
-          echo "Gate placeholder — threshold: avg Flesch-Kincaid grade ≤ 8"
+        run: node scripts/plain-language.mjs --verbose
 
-  # ── 7. USWDS Compliance ───────────────────────────────────────────────────
+  # ── 7. USWDS Compliance ────────────────────────────────────────────────────
   uswds-compliance:
     name: USWDS Compliance
     needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
 
       - name: Download build artifact
         uses: actions/download-artifact@v4
@@ -206,9 +199,4 @@ jobs:
           path: dist/
 
       - name: USWDS compliance check
-        # M3: scripts/compliance-check.mjs — verify banner + identifier present
-        run: |
-          echo "TODO (M3): node scripts/compliance-check.mjs"
-          echo "Checking for required usa-banner..."
-          grep -rl "usa-banner" dist/ | grep -q "." && echo "PASS: usa-banner found" || echo "FAIL: usa-banner missing"
-          grep -rl "usa-identifier" dist/ | grep -q "." && echo "PASS: usa-identifier found" || echo "FAIL: usa-identifier missing"
+        run: node scripts/compliance-check.mjs --verbose

@@ -1,0 +1,19 @@
+{
+  "extends": ["html-validate:recommended"],
+  "rules": {
+    "no-trailing-whitespace": "off",
+    "long-title": "off",
+    "require-sri": "off",
+    "no-unknown-elements": "off",
+    "prefer-native-element": "off",
+    "heading-level": "off",
+    "wcag/h30": "off",
+    "wcag/h32": "off",
+    "wcag/h36": "off",
+    "wcag/h37": "off",
+    "wcag/h63": "off",
+    "aria-label-misuse": "warn",
+    "missing-doctype": "error",
+    "void-style": "off"
+  }
+}

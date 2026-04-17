@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: USWDS documentation
+    url: https://designsystem.digital.gov/
+    about: Official U.S. Web Design System docs, component guidance, and patterns.
+  - name: Section 508 / accessibility help
+    url: https://www.section508.gov/
+    about: Federal accessibility standards, testing tools, and remediation guidance.
+  - name: Astro documentation
+    url: https://docs.astro.build/
+    about: Astro framework docs, content collections, and deployment guides.
