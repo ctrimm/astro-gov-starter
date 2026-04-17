@@ -7,6 +7,12 @@ import { resolve } from 'path';
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig({
+  // site + base are read from env vars so the same build config works for
+  // local dev (base '/'), GitHub Pages subpath (base '/repo-name'), and
+  // custom domains (base '/'). Set these in your deploy workflow.
+  site: process.env.SITE || 'http://localhost:4321',
+  base: process.env.BASE_PATH || '/',
+
   integrations: [mdx()],
 
   output: 'static',

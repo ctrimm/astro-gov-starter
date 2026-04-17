@@ -19,6 +19,8 @@ interface Props {
   canonicalUrl?: string;
   /** Open Graph image */
   ogImage?: string;
+  /** Set true on dev-only pages to block search engine indexing */
+  noindex?: boolean;
 }
 
 const {
@@ -27,6 +29,7 @@ const {
   locale = 'en',
   canonicalUrl,
   ogImage,
+  noindex = false,
 } = Astro.props;
 
 const t = useTranslations(locale);
@@ -45,6 +48,7 @@ const currentPath = Astro.url.pathname;
 
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
 

@@ -8,7 +8,7 @@
  */
 
 import { createInterface } from 'readline';
-import { readFileSync, writeFileSync } from 'fs';
+import { writeFileSync } from 'fs';
 import { join } from 'path';
 
 const ROOT = process.cwd();
@@ -60,13 +60,15 @@ const description = await ask(
 
 console.log('');
 console.log('── Required USA Identifier links (leave blank to keep placeholder) ──');
-const aboutUrl = await ask('About URL', `https://${domain}/about/`);
-const accessibilityUrl = await ask('Accessibility statement URL', `https://${domain}/accessibility/`);
+console.log('  All U.S. federal executive branch agencies must include these links.');
+const aboutUrl = await ask('About URL', `/about/`);
+const accessibilityUrl = await ask('Accessibility statement URL', `/accessibility/`);
 const foia = await ask('FOIA URL', 'https://www.foia.gov/');
-const noFear = await ask('No FEAR Act URL', 'https://www.opm.gov/about-us/no-fear-act/');
-const inspector = await ask('Inspector General URL', `https://${domain}/inspector-general/`);
-const performance = await ask('Performance reports URL', `https://${domain}/performance/`);
-const privacy = await ask('Privacy policy URL', `https://${domain}/privacy/`);
+const noFear = await ask('No FEAR Act URL', 'https://www.eeoc.gov/no-fear-act-data');
+const oig = await ask('Inspector General URL', 'https://www.oversight.gov/');
+const budget = await ask('Budget & performance URL', `https://${domain}/performance/`);
+const privacy = await ask('Privacy policy URL', `/privacy/`);
+const shortName = await ask('Agency short name (abbreviation)', agencyName.split(' ').map(w => w[0]).join('').toUpperCase() || 'Agency');
 
 console.log('');
 const wantEs = await confirm('Enable Spanish (es) locale?', true);
@@ -76,43 +78,30 @@ const wantEs = await confirm('Enable Spanish (es) locale?', true);
 const siteConfigPath = join(ROOT, 'src/config/site.ts');
 const newConfig = `export const siteConfig = {
   name: ${JSON.stringify(agencyName)},
+  shortName: ${JSON.stringify(shortName)},
   domain: ${JSON.stringify(domain)},
-  url: ${JSON.stringify(siteUrl)},
   description: ${JSON.stringify(description)},
+  locale: 'en-US',
 
   // Required USA Identifier links — all federal executive branch agencies must
-  // include these links on every page. See:
+  // include these links on every page.
   // https://designsystem.digital.gov/components/identifier/
-  identifierLinks: {
+  links: {
     about: ${JSON.stringify(aboutUrl)},
     accessibility: ${JSON.stringify(accessibilityUrl)},
     foia: ${JSON.stringify(foia)},
     noFear: ${JSON.stringify(noFear)},
-    inspector: ${JSON.stringify(inspector)},
-    performance: ${JSON.stringify(performance)},
+    oig: ${JSON.stringify(oig)},
+    budget: ${JSON.stringify(budget)},
     privacy: ${JSON.stringify(privacy)},
+    usagov: 'https://www.usa.gov/',
   },
+} as const;
 
-  locales: ${wantEs ? "['en', 'es']" : "['en']"},
-};
+export type SiteConfig = typeof siteConfig;
 `;
 
 writeFileSync(siteConfigPath, newConfig, 'utf-8');
-
-// ─── Update astro.config.mjs if Spanish was disabled ─────────────────────────
-
-if (!wantEs) {
-  const configPath = join(ROOT, 'astro.config.mjs');
-  let configContent = readFileSync(configPath, 'utf-8');
-  configContent = configContent.replace(
-    /locales:\s*\[['"]en['"],\s*['"]es['"]\]/,
-    "locales: ['en']"
-  );
-  writeFileSync(configPath, configContent, 'utf-8');
-  console.log('');
-  console.log('Note: Spanish locale disabled. You can remove src/pages/es/ if');
-  console.log('you do not plan to add it back.');
-}
 
 // ─── Summary ─────────────────────────────────────────────────────────────────
 

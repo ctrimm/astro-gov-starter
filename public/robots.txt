@@ -1,0 +1,8 @@
+User-agent: *
+Allow: /
+
+# Block the internal dev-only component preview from search engines
+Disallow: /internal/
+
+# Sitemap location (update with your real domain)
+# Sitemap: https://agency.gov/sitemap-index.xml
