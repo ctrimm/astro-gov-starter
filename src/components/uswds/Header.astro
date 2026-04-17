@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '../../i18n/utils';
-import { useTranslations, localizeUrl } from '../../i18n/utils';
+import { useTranslations, localizeUrl, withBase } from '../../i18n/utils';
 import { siteConfig } from '../../config/site';
 
 interface NavLink {
@@ -44,9 +44,11 @@ const navLinks: NavLink[] = [
 // Language toggle
 const altLocale = locale === 'en' ? 'es' : 'en';
 const altLocaleLabel = locale === 'en' ? 'Español' : 'English';
-const altLocalePath = locale === 'en'
-  ? `/es${currentPath === '/' ? '/' : currentPath}`
-  : currentPath.replace(/^\/es/, '') || '/';
+const altLocalePath = withBase(
+  locale === 'en'
+    ? `/es${currentPath === '/' ? '/' : currentPath}`
+    : currentPath.replace(/^\/es/, '') || '/'
+);
 ---
 
 <header class="usa-header usa-header--basic">

@@ -6,6 +6,7 @@ import Accordion from '../../components/uswds/Accordion.astro';
 import AccordionItem from '../../components/uswds/AccordionItem.astro';
 import SummaryBox from '../../components/uswds/SummaryBox.astro';
 import SideNav from '../../components/uswds/SideNav.astro';
+import { withBase } from '../../i18n/utils';
 
 const locale = 'es';
 const faqs = (await getCollection('faqs', ({ data }) => !data.draft))
@@ -25,7 +26,7 @@ const otherFaqs = faqs.filter((f) => !f.data.tags.includes('general') && !f.data
     <h1>Centro de ayuda</h1>
     <p class="usa-intro">
       Encuentre respuestas a preguntas frecuentes. Si no encuentra lo que necesita,{' '}
-      <a href="/es/contact/" class="usa-link">contáctenos</a> y le ayudaremos.
+      <a href={withBase('/es/contact/')} class="usa-link">contáctenos</a> y le ayudaremos.
     </p>
 
     <Search label="Buscar temas de ayuda" action="/es/search" class="margin-bottom-4" />
@@ -97,7 +98,7 @@ const otherFaqs = faqs.filter((f) => !f.data.tags.includes('general') && !f.data
         <SummaryBox heading="¿Aún necesita ayuda?" class="margin-top-4">
           <p>Llámenos al <a href="tel:18005550100" class="usa-link">1&#8209;800&#8209;555&#8209;0100</a></p>
           <p class="font-sans-sm text-base-dark">Lunes a viernes, 8 a.m.–8 p.m. ET</p>
-          <a href="/es/contact/" class="usa-button usa-button--outline">Enviar un mensaje</a>
+          <a href={withBase('/es/contact/')} class="usa-button usa-button--outline">Enviar un mensaje</a>
         </SummaryBox>
       </div>
     </div>

@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/uswds/Breadcrumb.astro';
 import { siteConfig } from '../../config/site';
+import { withBase } from '../../i18n/utils';
 
 const locale = 'es';
 ---
@@ -28,7 +29,7 @@ const locale = 'es';
 
           <p>
             Para leer la política de privacidad completa en inglés, visite{' '}
-            <a href="/privacy/" class="usa-link" hreflang="en">
+            <a href={withBase('/privacy/')} class="usa-link" hreflang="en">
               nuestra política de privacidad en inglés
             </a>.
           </p>
@@ -36,7 +37,7 @@ const locale = 'es';
           <h2>Preguntas</h2>
           <p>
             Si tiene preguntas sobre nuestra política de privacidad,{' '}
-            <a href="/es/contact/" class="usa-link">contáctenos</a>.
+            <a href={withBase('/es/contact/')} class="usa-link">contáctenos</a>.
           </p>
         </div>
       </div>

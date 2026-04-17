@@ -19,6 +19,8 @@ interface Props {
   class?: string;
 }
 
+import { withBase } from '../../i18n/utils';
+
 const { items, label = 'Section navigation', class: className } = Astro.props;
 ---
 
@@ -27,7 +29,7 @@ const { items, label = 'Section navigation', class: className } = Astro.props;
     {items.map((item) => (
       <li class:list={['usa-sidenav__item', item.current && 'usa-current']}>
         <a
-          href={item.href}
+          href={withBase(item.href)}
           aria-current={item.current ? 'page' : undefined}
         >
           {item.label}
@@ -37,7 +39,7 @@ const { items, label = 'Section navigation', class: className } = Astro.props;
             {item.children.map((child) => (
               <li class:list={['usa-sidenav__item', child.current && 'usa-current']}>
                 <a
-                  href={child.href}
+                  href={withBase(child.href)}
                   aria-current={child.current ? 'page' : undefined}
                 >
                   {child.label}

@@ -16,6 +16,8 @@ interface Props {
   class?: string;
 }
 
+import { withBase } from '../../i18n/utils';
+
 const { items, wrap = false, class: className } = Astro.props;
 ---
 
@@ -34,7 +36,7 @@ const { items, wrap = false, class: className } = Astro.props;
           {isCurrent || !item.href ? (
             <span>{item.label}</span>
           ) : (
-            <a href={item.href} class="usa-breadcrumb__link">
+            <a href={withBase(item.href)} class="usa-breadcrumb__link">
               <span>{item.label}</span>
             </a>
           )}

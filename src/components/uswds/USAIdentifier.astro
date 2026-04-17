@@ -1,6 +1,6 @@
 ---
 import type { Locale } from '../../i18n/utils';
-import { useTranslations } from '../../i18n/utils';
+import { useTranslations, withBase } from '../../i18n/utils';
 import { siteConfig } from '../../config/site';
 
 interface Props {
@@ -59,37 +59,37 @@ const links = siteConfig.links;
     <div class="usa-identifier__container">
       <ul class="usa-identifier__required-links-list">
         <li class="usa-identifier__required-links-item">
-          <a href={links.about} class="usa-identifier__required-link usa-link">
+          <a href={withBase(links.about)} class="usa-identifier__required-link usa-link">
             {t('identifier.about')}
           </a>
         </li>
         <li class="usa-identifier__required-links-item">
-          <a href={links.accessibility} class="usa-identifier__required-link usa-link">
+          <a href={withBase(links.accessibility)} class="usa-identifier__required-link usa-link">
             {t('identifier.accessibility')}
           </a>
         </li>
         <li class="usa-identifier__required-links-item">
-          <a href={links.foia} class="usa-identifier__required-link usa-link">
+          <a href={withBase(links.foia)} class="usa-identifier__required-link usa-link">
             {t('identifier.foia')}
           </a>
         </li>
         <li class="usa-identifier__required-links-item">
-          <a href={links.noFear} class="usa-identifier__required-link usa-link">
+          <a href={withBase(links.noFear)} class="usa-identifier__required-link usa-link">
             {t('identifier.noFear')}
           </a>
         </li>
         <li class="usa-identifier__required-links-item">
-          <a href={links.oig} class="usa-identifier__required-link usa-link">
+          <a href={withBase(links.oig)} class="usa-identifier__required-link usa-link">
             {t('identifier.oig')}
           </a>
         </li>
         <li class="usa-identifier__required-links-item">
-          <a href={links.privacy} class="usa-identifier__required-link usa-link">
+          <a href={withBase(links.privacy)} class="usa-identifier__required-link usa-link">
             {t('identifier.privacy')}
           </a>
         </li>
         <li class="usa-identifier__required-links-item">
-          <a href={links.budget} class="usa-identifier__required-link usa-link">
+          <a href={withBase(links.budget)} class="usa-identifier__required-link usa-link">
             {t('identifier.budget')}
           </a>
         </li>

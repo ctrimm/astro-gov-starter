@@ -4,6 +4,7 @@ import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Hero from '../../../components/uswds/Hero.astro';
 import ServiceCard from '../../../components/uswds/ServiceCard.astro';
 import { idToSlug } from '../../../utils/content';
+import { withBase } from '../../../i18n/utils';
 
 const locale = 'es';
 const services = (await getCollection('services', ({ data }) => !data.draft))
@@ -37,8 +38,8 @@ const services = (await getCollection('services', ({ data }) => !data.draft))
     <div class="usa-prose margin-top-6">
       <p>
         <strong>¿No encuentra lo que necesita?</strong> Visite nuestro{' '}
-        <a href="/es/help/" class="usa-link">centro de ayuda</a> o{' '}
-        <a href="/es/contact/" class="usa-link">contáctenos</a>.
+        <a href={withBase('/es/help/')} class="usa-link">centro de ayuda</a> o{' '}
+        <a href={withBase('/es/contact/')} class="usa-link">contáctenos</a>.
       </p>
     </div>
   </div>

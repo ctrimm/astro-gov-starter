@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import ApplyLayout from '../../layouts/ApplyLayout.astro';
 import Alert from '../../components/uswds/Alert.astro';
 import { idToSlug } from '../../utils/content';
+import { withBase } from '../../i18n/utils';
 
 export async function getStaticPaths() {
   const services = await getCollection('services', ({ data }) => !data.draft && !!data.applySlug);
@@ -43,8 +44,8 @@ const steps = [
       <p>The online application requires JavaScript to save your progress across steps. You can apply another way:</p>
       <ul>
         <li><strong>Phone:</strong> <a href="tel:18005550100" class="usa-link">1&#8209;800&#8209;555&#8209;0100</a> (Mon–Fri, 8 a.m.–8 p.m.)</li>
-        <li><strong>In person:</strong> <a href="/contact/" class="usa-link">Find an office near you</a></li>
-        <li><strong>By mail:</strong> <a href="/help/" class="usa-link">Download a paper application</a></li>
+        <li><strong>In person:</strong> <a href={withBase('/contact/')} class="usa-link">Find an office near you</a></li>
+        <li><strong>By mail:</strong> <a href={withBase('/help/')} class="usa-link">Download a paper application</a></li>
       </ul>
     </Alert>
   </noscript>
@@ -84,7 +85,7 @@ const steps = [
         </legend>
         <p class="usa-hint">
           For a family of 4, this is roughly $3,900/month.{' '}
-          <a href="/help/" class="usa-link">See the full income chart</a>.
+          <a href={withBase('/help/')} class="usa-link">See the full income chart</a>.
         </p>
         <div class="usa-radio">
           <input class="usa-radio__input" id="income-yes" type="radio" name="income" value="yes" />

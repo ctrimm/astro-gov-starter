@@ -20,6 +20,8 @@ interface Props {
   class?: string;
 }
 
+import { withBase } from '../../i18n/utils';
+
 const {
   title,
   summary,
@@ -30,6 +32,8 @@ const {
   imageAlt = '',
   class: className,
 } = Astro.props;
+
+const resolvedHref = withBase(href);
 ---
 
 <li class:list={['usa-card', className]}>
@@ -43,7 +47,7 @@ const {
     )}
     <div class="usa-card__header">
       <h2 class="usa-card__heading">
-        <a href={href} class="usa-link">{title}</a>
+        <a href={resolvedHref} class="usa-link">{title}</a>
       </h2>
     </div>
     <div class="usa-card__body">
@@ -51,7 +55,7 @@ const {
     </div>
     <div class="usa-card__footer">
       {acceptingApplications ? (
-        <a href={href} class="usa-button">{ctaText}</a>
+        <a href={resolvedHref} class="usa-button">{ctaText}</a>
       ) : (
         <span class="usa-tag">Not accepting applications</span>
       )}

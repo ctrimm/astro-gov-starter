@@ -6,6 +6,7 @@ import Accordion from '../components/uswds/Accordion.astro';
 import AccordionItem from '../components/uswds/AccordionItem.astro';
 import SummaryBox from '../components/uswds/SummaryBox.astro';
 import SideNav from '../components/uswds/SideNav.astro';
+import { withBase } from '../i18n/utils';
 
 const locale = 'en';
 const faqs = (await getCollection('faqs', ({ data }) => !data.draft))
@@ -25,7 +26,7 @@ const otherFaqs = faqs.filter((f) => !f.data.tags.includes('general') && !f.data
     <h1>Help center</h1>
     <p class="usa-intro">
       Find answers to common questions. If you don't find what you need,{' '}
-      <a href="/contact/" class="usa-link">contact us</a> and we'll help.
+      <a href={withBase('/contact/')} class="usa-link">contact us</a> and we'll help.
     </p>
 
     <Search label="Search help topics" action="/search" class="margin-bottom-4" />
@@ -94,7 +95,7 @@ const otherFaqs = faqs.filter((f) => !f.data.tags.includes('general') && !f.data
         <SummaryBox heading="Still need help?" class="margin-top-4">
           <p>Call us at <a href="tel:18005550100" class="usa-link">1&#8209;800&#8209;555&#8209;0100</a></p>
           <p class="font-sans-sm text-base-dark">Monday–Friday, 8 a.m.–8 p.m. ET</p>
-          <a href="/contact/" class="usa-button usa-button--outline">Send a message</a>
+          <a href={withBase('/contact/')} class="usa-button usa-button--outline">Send a message</a>
         </SummaryBox>
       </div>
     </div>

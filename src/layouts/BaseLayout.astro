@@ -39,7 +39,12 @@ const lang = locale;
 const pageTitle = title === siteConfig.name
   ? title
   : `${title} | ${siteConfig.name}`;
-const currentPath = Astro.url.pathname;
+// Strip the base prefix so Header nav/toggle logic works on base-relative paths
+const basePath = base.slice(0, -1); // '/astro-gov-starter/' -> '/astro-gov-starter'
+const rawPath = Astro.url.pathname;
+const currentPath = basePath && rawPath.startsWith(basePath)
+  ? rawPath.slice(basePath.length) || '/'
+  : rawPath;
 ---
 
 <!doctype html>
