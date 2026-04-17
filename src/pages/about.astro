@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/uswds/Breadcrumb.astro';
 import { siteConfig } from '../config/site';
+import { withBase } from '../i18n/utils';
 
 const locale = 'en';
 ---
@@ -37,12 +38,12 @@ const locale = 'en';
           <p>
             We administer federal and state benefit programs including food assistance,
             health coverage, childcare support, and nutrition services.
-            <a href="/services/" class="usa-link">View all available programs</a>.
+            <a href={withBase('/services/')} class="usa-link">View all available programs</a>.
           </p>
 
           <h2>Contact us</h2>
           <p>
-            <a href="/contact/" class="usa-link">Reach our office</a> by phone, email,
+            <a href={withBase('/contact/')} class="usa-link">Reach our office</a> by phone, email,
             or in person. We are here to help.
           </p>
         </div>

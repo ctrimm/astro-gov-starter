@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/uswds/Breadcrumb.astro';
 import { siteConfig } from '../config/site';
+import { withBase } from '../i18n/utils';
 
 const locale = 'en';
 const updatedDate = new Date('2025-01-01');
@@ -116,13 +117,13 @@ const updatedDate = new Date('2025-01-01');
             <li>Know how your information is being used</li>
           </ul>
           <p>
-            To exercise these rights, <a href="/contact/" class="usa-link">contact us</a>.
+            To exercise these rights, <a href={withBase('/contact/')} class="usa-link">contact us</a>.
           </p>
 
           <h2>Questions or concerns</h2>
           <p>
             If you have questions about this privacy policy or how we handle your information,
-            <a href="/contact/" class="usa-link">contact our Privacy Officer</a>.
+            <a href={withBase('/contact/')} class="usa-link">contact our Privacy Officer</a>.
           </p>
         </div>
       </div>

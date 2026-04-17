@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import ApplyLayout from '../../../layouts/ApplyLayout.astro';
 import Alert from '../../../components/uswds/Alert.astro';
 import { idToSlug } from '../../../utils/content';
+import { withBase } from '../../../i18n/utils';
 
 export async function getStaticPaths() {
   const services = await getCollection('services', ({ data }) => !data.draft && !!data.applySlug);
@@ -37,8 +38,8 @@ const steps = [
       <p>La solicitud en línea requiere JavaScript para guardar su progreso. Puede solicitar de otra manera:</p>
       <ul>
         <li><strong>Teléfono:</strong> <a href="tel:18005550100" class="usa-link">1&#8209;800&#8209;555&#8209;0100</a></li>
-        <li><strong>En persona:</strong> <a href="/es/contact/" class="usa-link">Encuentre una oficina cerca de usted</a></li>
-        <li><strong>Por correo:</strong> <a href="/es/help/" class="usa-link">Descargue una solicitud en papel</a></li>
+        <li><strong>En persona:</strong> <a href={withBase('/es/contact/')} class="usa-link">Encuentre una oficina cerca de usted</a></li>
+        <li><strong>Por correo:</strong> <a href={withBase('/es/help/')} class="usa-link">Descargue una solicitud en papel</a></li>
       </ul>
     </Alert>
   </noscript>

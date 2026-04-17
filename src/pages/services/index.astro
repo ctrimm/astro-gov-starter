@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import Hero from '../../components/uswds/Hero.astro';
 import ServiceCard from '../../components/uswds/ServiceCard.astro';
 import { idToSlug } from '../../utils/content';
+import { withBase } from '../../i18n/utils';
 
 const locale = 'en';
 const services = (await getCollection('services', ({ data }) => !data.draft))
@@ -37,8 +38,8 @@ const services = (await getCollection('services', ({ data }) => !data.draft))
     <div class="usa-prose margin-top-6">
       <p>
         <strong>Don't see what you need?</strong> Visit our{' '}
-        <a href="/help/" class="usa-link">help center</a> or{' '}
-        <a href="/contact/" class="usa-link">contact us</a>.
+        <a href={withBase('/help/')} class="usa-link">help center</a> or{' '}
+        <a href={withBase('/contact/')} class="usa-link">contact us</a>.
       </p>
       <p>
         You can also visit{' '}

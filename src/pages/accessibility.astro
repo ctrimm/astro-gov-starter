@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Breadcrumb from '../components/uswds/Breadcrumb.astro';
 import { siteConfig } from '../config/site';
+import { withBase } from '../i18n/utils';
 
 const locale = 'en';
 const updatedDate = new Date('2025-01-01');
@@ -71,7 +72,7 @@ const updatedDate = new Date('2025-01-01');
             </li>
             <li>
               <strong>Online:</strong>{' '}
-              <a href="/contact/" class="usa-link">Use our contact form</a>
+              <a href={withBase('/contact/')} class="usa-link">Use our contact form</a>
             </li>
           </ul>
           <p>We will respond within 2 business days.</p>
@@ -87,7 +88,7 @@ const updatedDate = new Date('2025-01-01');
           <p>
             We welcome feedback on the accessibility of this website.
             Please let us know if you encounter accessibility barriers by{' '}
-            <a href="/contact/" class="usa-link">contacting us</a>.
+            <a href={withBase('/contact/')} class="usa-link">contacting us</a>.
           </p>
 
           <h2>Formal complaints</h2>

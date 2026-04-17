@@ -37,7 +37,13 @@ export function getLocaleFromUrl(url: URL): Locale {
   return 'en';
 }
 
+export function withBase(path: string): string {
+  if (!path || !path.startsWith('/')) return path;
+  const base = import.meta.env.BASE_URL; // always ends with / (normalized in astro.config.mjs)
+  return base + path.slice(1);
+}
+
 export function localizeUrl(path: string, locale: Locale): string {
-  if (locale === 'en') return path;
-  return `/es${path}`;
+  const localized = locale === 'en' ? path : `/es${path}`;
+  return withBase(localized);
 }

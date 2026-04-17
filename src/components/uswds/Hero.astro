@@ -26,6 +26,8 @@ interface Props {
   class?: string;
 }
 
+import { withBase } from '../../i18n/utils';
+
 const {
   heading,
   headingSuffix,
@@ -56,7 +58,7 @@ const {
       </h1>
       {subheading && <p>{subheading}</p>}
       {ctaText && ctaHref && (
-        <a class="usa-button usa-button--big" href={ctaHref}>
+        <a class="usa-button usa-button--big" href={withBase(ctaHref)}>
           {ctaText}
         </a>
       )}

@@ -18,6 +18,7 @@ import SideNav from '../../components/uswds/SideNav.astro';
 import Search from '../../components/uswds/Search.astro';
 import Tag from '../../components/uswds/Tag.astro';
 import Pagination from '../../components/uswds/Pagination.astro';
+import { withBase } from '../../i18n/utils';
 
 const components = [
   'Alert / SiteAlert', 'Breadcrumb', 'Accordion', 'ProcessList',
@@ -69,7 +70,7 @@ const components = [
       <h3 class="font-heading-sm margin-top-4">SiteAlert — emergency</h3>
       <SiteAlert type="emergency" heading="System maintenance">
         Our online services will be unavailable Saturday 2–6 a.m. ET.{' '}
-        <a href="/contact/" class="usa-link">Learn more</a>
+        <a href={withBase('/contact/')} class="usa-link">Learn more</a>
       </SiteAlert>
     </section>
 
@@ -144,7 +145,7 @@ const components = [
           <SummaryBox heading="Still need help?">
             <p>Call us at <a href="tel:18005550100" class="usa-link">1&#8209;800&#8209;555&#8209;0100</a></p>
             <p class="font-sans-sm text-base-dark">Monday–Friday, 8 a.m.–8 p.m. ET</p>
-            <a href="/contact/" class="usa-button usa-button--outline">Send a message</a>
+            <a href={withBase('/contact/')} class="usa-button usa-button--outline">Send a message</a>
           </SummaryBox>
         </div>
       </div>

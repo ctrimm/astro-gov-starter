@@ -9,7 +9,7 @@
  */
 
 import type { Locale } from '../../i18n/utils';
-import { useTranslations } from '../../i18n/utils';
+import { useTranslations, withBase } from '../../i18n/utils';
 import { siteConfig } from '../../config/site';
 
 interface FooterLink {
@@ -103,7 +103,7 @@ const resolvedColumns = columns ?? defaultColumns;
                 <ul class="usa-list usa-list--unstyled">
                   {col.links.map((link) => (
                     <li class="usa-footer__secondary-link">
-                      <a href={link.href}>{link.label}</a>
+                      <a href={withBase(link.href)}>{link.label}</a>
                     </li>
                   ))}
                 </ul>

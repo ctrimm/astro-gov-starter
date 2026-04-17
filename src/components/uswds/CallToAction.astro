@@ -21,6 +21,8 @@ interface Props {
   class?: string;
 }
 
+import { withBase } from '../../i18n/utils';
+
 const {
   heading,
   body,
@@ -58,7 +60,7 @@ const headingId = `cta-heading-${Math.random().toString(36).slice(2, 8)}`;
       <div class="margin-top-4">
         {primaryCta && (
           <a
-            href={primaryCta.href}
+            href={withBase(primaryCta.href)}
             class:list={[
               'usa-button',
               'usa-button--big',
@@ -70,7 +72,7 @@ const headingId = `cta-heading-${Math.random().toString(36).slice(2, 8)}`;
         )}
         {secondaryCta && (
           <a
-            href={secondaryCta.href}
+            href={withBase(secondaryCta.href)}
             class:list={[
               'usa-button',
               'usa-button--unstyled',

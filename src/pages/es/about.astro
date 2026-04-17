@@ -2,6 +2,7 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Breadcrumb from '../../components/uswds/Breadcrumb.astro';
 import { siteConfig } from '../../config/site';
+import { withBase } from '../../i18n/utils';
 
 const locale = 'es';
 ---
@@ -29,14 +30,14 @@ const locale = 'es';
 
           <p>
             Para leer la información completa en inglés, visite{' '}
-            <a href="/about/" class="usa-link" hreflang="en">
+            <a href={withBase('/about/')} class="usa-link" hreflang="en">
               nuestra página "About" en inglés
             </a>.
           </p>
 
           <h2>Contáctenos</h2>
           <p>
-            <a href="/es/contact/" class="usa-link">Comuníquese con nuestra oficina</a>{' '}
+            <a href={withBase('/es/contact/')} class="usa-link">Comuníquese con nuestra oficina</a>{' '}
             por teléfono, correo electrónico o en persona. Estamos aquí para ayudarle.
           </p>
         </div>

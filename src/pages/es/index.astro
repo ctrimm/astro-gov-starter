@@ -8,7 +8,7 @@ import ProcessListItem from '../../components/uswds/ProcessListItem.astro';
 import CallToAction from '../../components/uswds/CallToAction.astro';
 import SiteAlert from '../../components/uswds/SiteAlert.astro';
 import { siteConfig } from '../../config/site';
-import { useTranslations } from '../../i18n/utils';
+import { useTranslations, withBase } from '../../i18n/utils';
 import { idToSlug } from '../../utils/content';
 
 const locale = 'es';
@@ -66,7 +66,7 @@ const activeAnnouncements = await getCollection('announcements', ({ data }) => {
       </ul>
 
       <p class="margin-top-4">
-        <a href="/es/services/" class="usa-link">Ver todos los programas →</a>
+        <a href={withBase('/es/services/')} class="usa-link">Ver todos los programas →</a>
       </p>
     </div>
   </section>
