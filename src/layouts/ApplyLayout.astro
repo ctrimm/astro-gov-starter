@@ -1,0 +1,86 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { Locale } from '../i18n/utils';
+
+interface Step {
+  label: string;
+  href?: string;
+}
+
+interface Props {
+  title: string;
+  programName: string;
+  locale?: Locale;
+  steps: Step[];
+  /** 1-based current step number */
+  currentStep: number;
+}
+
+const { title, programName, locale = 'en', steps, currentStep } = Astro.props;
+---
+
+<BaseLayout title={title} locale={locale}>
+  <!-- Step indicator -->
+  <div class="bg-primary-dark padding-y-2">
+    <div class="grid-container">
+      <p class="text-white margin-0 font-sans-sm">
+        {locale === 'es' ? 'Solicitud:' : 'Application:'} <strong>{programName}</strong>
+      </p>
+    </div>
+  </div>
+
+  <div class="grid-container usa-section">
+    <!-- Step indicator component -->
+    <div
+      class="usa-step-indicator usa-step-indicator--counters-sm"
+      aria-label={locale === 'es' ? 'Pasos de progreso' : 'Progress steps'}
+    >
+      <ol class="usa-step-indicator__segments">
+        {steps.map((step, i) => {
+          const stepNum = i + 1;
+          const status =
+            stepNum < currentStep ? 'complete' :
+            stepNum === currentStep ? 'current' : 'incomplete';
+          return (
+            <li
+              class:list={[
+                'usa-step-indicator__segment',
+                { 'usa-step-indicator__segment--complete': status === 'complete' },
+                { 'usa-step-indicator__segment--current': status === 'current' },
+              ]}
+              aria-current={status === 'current' ? 'true' : undefined}
+            >
+              <span class="usa-step-indicator__segment-label">
+                {step.label}
+                {status === 'complete' && (
+                  <span class="usa-sr-only">
+                    {locale === 'es' ? 'completado' : 'completed'}
+                  </span>
+                )}
+              </span>
+            </li>
+          );
+        })}
+      </ol>
+      <div class="usa-step-indicator__header">
+        <h2 class="usa-step-indicator__heading">
+          <span class="usa-step-indicator__heading-counter">
+            <span class="usa-sr-only">{locale === 'es' ? 'Paso' : 'Step'}</span>
+            <span class="usa-step-indicator__current-step">{currentStep}</span>
+            <span class="usa-step-indicator__total-pages"> {locale === 'es' ? 'de' : 'of'} {steps.length}</span>
+          </span>
+          <span class="usa-step-indicator__heading-text">
+            {steps[currentStep - 1]?.label}
+          </span>
+        </h2>
+      </div>
+    </div>
+
+    <!-- Step content -->
+    <div class="grid-row grid-gap margin-top-4">
+      <div class="grid-col-12 tablet:grid-col-8">
+        <slot />
+      </div>
+    </div>
+  </div>
+</BaseLayout>

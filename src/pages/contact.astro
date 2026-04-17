@@ -1,0 +1,172 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const locale = 'en';
+---
+
+<BaseLayout
+  title="Contact us"
+  description="Reach our office by phone, email, or in person. We're here to help."
+  locale={locale}
+>
+  <div class="grid-container usa-section">
+    <h1>Contact us</h1>
+    <p class="usa-intro">
+      We're here to help. Reach us by phone, online form, or visit one of our offices.
+    </p>
+
+    <div class="grid-row grid-gap">
+      <!-- Contact form -->
+      <div class="grid-col-12 tablet:grid-col-7">
+        <h2>Send a message</h2>
+
+        <!--
+          FORM SCAFFOLD: Accessible structure with ARIA and proper label/error patterns.
+          Submission handler is a TODO stub — see PRD §3 and CONTRIBUTING.md for options
+          (Formspree, API Gateway + Lambda, etc.)
+        -->
+        <form
+          class="usa-form usa-form--large"
+          method="post"
+          action="#"
+          aria-label="Contact form"
+          novalidate
+        >
+          <p class="usa-hint">Required fields are marked with an asterisk (*).</p>
+
+          <div class="usa-form-group">
+            <label class="usa-label" for="contact-name">
+              Full name <abbr title="required" aria-label="required">*</abbr>
+            </label>
+            <input
+              class="usa-input"
+              id="contact-name"
+              name="name"
+              type="text"
+              autocomplete="name"
+              required
+              aria-required="true"
+            />
+          </div>
+
+          <div class="usa-form-group">
+            <label class="usa-label" for="contact-email">
+              Email address <abbr title="required" aria-label="required">*</abbr>
+            </label>
+            <span class="usa-hint" id="contact-email-hint">
+              We'll use this to respond to your message.
+            </span>
+            <input
+              class="usa-input"
+              id="contact-email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+              aria-required="true"
+              aria-describedby="contact-email-hint"
+            />
+          </div>
+
+          <div class="usa-form-group">
+            <label class="usa-label" for="contact-phone">
+              Phone number <span class="usa-hint">(optional)</span>
+            </label>
+            <input
+              class="usa-input"
+              id="contact-phone"
+              name="phone"
+              type="tel"
+              autocomplete="tel"
+            />
+          </div>
+
+          <fieldset class="usa-fieldset">
+            <legend class="usa-legend">
+              What is your question about? <abbr title="required" aria-label="required">*</abbr>
+            </legend>
+            {['SNAP Benefits', 'Medicaid', 'WIC', 'Child Care Assistance', 'My application status', 'Other'].map((topic) => (
+              <div class="usa-radio">
+                <input
+                  class="usa-radio__input"
+                  id={`topic-${topic.replace(/\s+/g, '-').toLowerCase()}`}
+                  type="radio"
+                  name="topic"
+                  value={topic}
+                  required
+                />
+                <label
+                  class="usa-radio__label"
+                  for={`topic-${topic.replace(/\s+/g, '-').toLowerCase()}`}
+                >
+                  {topic}
+                </label>
+              </div>
+            ))}
+          </fieldset>
+
+          <div class="usa-form-group">
+            <label class="usa-label" for="contact-message">
+              Message <abbr title="required" aria-label="required">*</abbr>
+            </label>
+            <span class="usa-hint" id="contact-message-hint">
+              Do not include your Social Security number or case number in your message.
+            </span>
+            <textarea
+              class="usa-textarea"
+              id="contact-message"
+              name="message"
+              rows={6}
+              required
+              aria-required="true"
+              aria-describedby="contact-message-hint"
+            ></textarea>
+          </div>
+
+          <button type="submit" class="usa-button usa-button--big">
+            Send message
+            <!-- TODO (M3): Wire up to Formspree, API Gateway, or agency backend -->
+          </button>
+        </form>
+      </div>
+
+      <!-- Contact details sidebar -->
+      <div class="grid-col-12 tablet:grid-col-5">
+        <div class="usa-summary-box" role="complementary" aria-label="Other ways to reach us">
+          <div class="usa-summary-box__body">
+            <h2 class="usa-summary-box__heading">Other ways to reach us</h2>
+            <div class="usa-summary-box__text">
+              <h3 class="font-heading-sm margin-bottom-0">Phone</h3>
+              <p>
+                <a href="tel:18005550100" class="usa-link">1-800-555-0100</a>
+                <br />
+                TTY: <a href="tel:18005550101" class="usa-link">1-800-555-0101</a>
+                <br />
+                <span class="text-base font-sans-sm">Monday–Friday, 8 a.m.–8 p.m. ET</span>
+              </p>
+
+              <h3 class="font-heading-sm margin-bottom-0">In person</h3>
+              <p>
+                <a href="https://www.google.com/maps" class="usa-link" rel="noreferrer">
+                  Find an office near you
+                </a>
+                <br />
+                <span class="text-base font-sans-sm">No appointment needed for most services.</span>
+              </p>
+
+              <h3 class="font-heading-sm margin-bottom-0">Mail</h3>
+              <address class="usa-prose">
+                Agency Name<br />
+                123 Main Street, Suite 100<br />
+                City, ST 00000
+              </address>
+
+              <h3 class="font-heading-sm margin-bottom-0">Response time</h3>
+              <p>We respond to messages within 2 business days.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

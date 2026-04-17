@@ -1,10 +1,23 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { useTranslations } from '../i18n/utils';
 import { siteConfig } from '../config/site';
+import { useTranslations } from '../i18n/utils';
+import { idToSlug } from '../utils/content';
 
 const locale = 'en';
 const t = useTranslations(locale);
+
+const services = (await getCollection('services', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+
+const now = new Date();
+const activeAnnouncements = (await getCollection('announcements', ({ data }) => {
+  if (data.draft) return false;
+  if (data.endDate && data.endDate < now) return false;
+  return data.startDate <= now;
+}));
 ---
 
 <BaseLayout
@@ -12,7 +25,28 @@ const t = useTranslations(locale);
   description={siteConfig.description}
   locale={locale}
 >
-  <!-- Hero section -->
+  {activeAnnouncements.map((ann) => (
+    <div
+      class:list={[
+        'usa-site-alert',
+        ann.data.severity === 'warning' && 'usa-site-alert--emergency',
+        ann.data.severity === 'info' && 'usa-site-alert--info',
+      ]}
+      role="alert"
+    >
+      <div class="usa-alert">
+        <div class="usa-alert__body">
+          <h2 class="usa-alert__heading">{ann.data.title}</h2>
+          {ann.data.linkText && ann.data.linkUrl && (
+            <p class="usa-alert__text">
+              <a href={ann.data.linkUrl} class="usa-link">{ann.data.linkText}</a>
+            </p>
+          )}
+        </div>
+      </div>
+    </div>
+  ))}
+
   <section class="usa-hero" aria-label="Introduction">
     <div class="grid-container">
       <div class="usa-hero__callout">
@@ -28,106 +62,58 @@ const t = useTranslations(locale);
     </div>
   </section>
 
-  <!-- Announcement bar placeholder -->
-  <div class="usa-alert usa-alert--info usa-alert--slim" role="status">
-    <div class="usa-alert__body">
-      <p class="usa-alert__text">
-        <strong>Notice:</strong> Replace this announcement with your agency's current notice.
-        See <code>src/content/announcements/</code> in M2.
-      </p>
-    </div>
-  </div>
-
-  <!-- Services overview -->
   <section class="usa-section" aria-labelledby="services-heading">
     <div class="grid-container">
       <h2 id="services-heading" class="font-heading-xl">{t('home.servicesHeading')}</h2>
       <p class="usa-intro">{t('home.servicesSubheading')}</p>
 
       <ul class="usa-card-group">
-        <!-- Seed service cards — replace with dynamic content from content collections in M2 -->
-        <li class="usa-card tablet:grid-col-4">
-          <div class="usa-card__container">
-            <div class="usa-card__header">
-              <h3 class="usa-card__heading">SNAP Benefits</h3>
-            </div>
-            <div class="usa-card__body">
-              <p>
-                The Supplemental Nutrition Assistance Program helps eligible
-                low-income individuals and families buy nutritious food.
-              </p>
-            </div>
-            <div class="usa-card__footer">
-              <a href="/services/snap" class="usa-button">{t('home.learnMore')}</a>
-            </div>
-          </div>
-        </li>
-
-        <li class="usa-card tablet:grid-col-4">
-          <div class="usa-card__container">
-            <div class="usa-card__header">
-              <h3 class="usa-card__heading">Medicaid</h3>
-            </div>
-            <div class="usa-card__body">
-              <p>
-                Medicaid provides free or low-cost health coverage to eligible
-                people, including children and pregnant women.
-              </p>
-            </div>
-            <div class="usa-card__footer">
-              <a href="/services/medicaid" class="usa-button">{t('home.learnMore')}</a>
-            </div>
-          </div>
-        </li>
-
-        <li class="usa-card tablet:grid-col-4">
-          <div class="usa-card__container">
-            <div class="usa-card__header">
-              <h3 class="usa-card__heading">WIC</h3>
-            </div>
-            <div class="usa-card__body">
-              <p>
-                WIC provides nutritious foods, nutrition education, and referrals
-                to women who are pregnant, recently gave birth, or are breastfeeding.
-              </p>
-            </div>
-            <div class="usa-card__footer">
-              <a href="/services/wic" class="usa-button">{t('home.learnMore')}</a>
-            </div>
-          </div>
-        </li>
+        {services.map((service) => {
+          const slug = idToSlug(service.id);
+          return (
+            <li class="usa-card tablet:grid-col-4">
+              <div class="usa-card__container">
+                <div class="usa-card__header">
+                  <h3 class="usa-card__heading">{service.data.title}</h3>
+                </div>
+                <div class="usa-card__body">
+                  <p>{service.data.summary}</p>
+                </div>
+                <div class="usa-card__footer">
+                  <a href={`/services/${slug}/`} class="usa-button">
+                    {t('home.learnMore')}
+                  </a>
+                </div>
+              </div>
+            </li>
+          );
+        })}
       </ul>
+
+      <p class="margin-top-4">
+        <a href="/services/" class="usa-link">View all programs →</a>
+      </p>
     </div>
   </section>
 
-  <!-- Process section -->
   <section class="usa-section bg-primary-darker" aria-labelledby="process-heading">
     <div class="grid-container">
       <h2 id="process-heading" class="font-heading-xl text-white">How to apply</h2>
       <ol class="usa-process-list">
         <li class="usa-process-list__item">
           <h3 class="usa-process-list__heading">Check eligibility</h3>
-          <p>
-            Answer a few questions to find out which programs you may qualify for.
-            This takes about 5 minutes and does not start an application.
-          </p>
+          <p>Answer a few questions to find out which programs you may qualify for. This takes about 5 minutes and does not start an application.</p>
         </li>
         <li class="usa-process-list__item">
           <h3 class="usa-process-list__heading">Gather documents</h3>
-          <p>
-            You may need proof of identity, income, and residency. Our checklist
-            will tell you exactly what to bring.
-          </p>
+          <p>You may need proof of identity, income, and residency. Our checklist will tell you exactly what to bring.</p>
         </li>
         <li class="usa-process-list__item">
           <h3 class="usa-process-list__heading">Submit your application</h3>
-          <p>
-            Apply online in about 20 minutes. You'll get a confirmation number
-            immediately and a decision within 30 days.
-          </p>
+          <p>Apply online in about 20 minutes. You'll get a confirmation number immediately and a decision within 30 days.</p>
         </li>
       </ol>
-      <a href="/apply/" class="usa-button usa-button--outline usa-button--inverse">
+      <a href="/services/" class="usa-button usa-button--outline usa-button--inverse">
         {t('home.applyNow')}
       </a>
     </div>

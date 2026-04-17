@@ -1,0 +1,103 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import type { Locale } from '../i18n/utils';
+import { useTranslations } from '../i18n/utils';
+
+interface Breadcrumb {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  title: string;
+  description?: string;
+  locale?: Locale;
+  breadcrumbs?: Breadcrumb[];
+  /** Whether this service is accepting applications */
+  acceptingApplications?: boolean;
+  /** href to the apply page */
+  applyHref?: string;
+}
+
+const {
+  title,
+  description,
+  locale = 'en',
+  breadcrumbs = [],
+  acceptingApplications = true,
+  applyHref,
+} = Astro.props;
+
+const t = useTranslations(locale);
+const allCrumbs: Breadcrumb[] = [
+  { label: locale === 'es' ? 'Inicio' : 'Home', href: locale === 'es' ? '/es/' : '/' },
+  { label: locale === 'es' ? 'Servicios' : 'Services', href: locale === 'es' ? '/es/services/' : '/services/' },
+  ...breadcrumbs,
+];
+---
+
+<BaseLayout title={title} description={description} locale={locale}>
+  <!-- Breadcrumb navigation -->
+  <nav class="usa-breadcrumb usa-breadcrumb--wrap" aria-label="Breadcrumbs">
+    <ol class="usa-breadcrumb__list">
+      {allCrumbs.map((crumb, i) => (
+        <li class:list={['usa-breadcrumb__list-item', { 'usa-current': i === allCrumbs.length - 1 }]}
+            aria-current={i === allCrumbs.length - 1 ? 'page' : undefined}>
+          {i < allCrumbs.length - 1
+            ? <a href={crumb.href} class="usa-breadcrumb__link"><span>{crumb.label}</span></a>
+            : <span>{crumb.label}</span>
+          }
+        </li>
+      ))}
+    </ol>
+  </nav>
+
+  <div class="grid-container usa-section">
+    <div class="grid-row grid-gap">
+      <!-- Main content -->
+      <div class="grid-col-12 tablet:grid-col-8">
+        {!acceptingApplications && (
+          <div class="usa-alert usa-alert--warning usa-alert--slim" role="alert">
+            <div class="usa-alert__body">
+              <p class="usa-alert__text">
+                {locale === 'es'
+                  ? 'Este programa no está aceptando solicitudes nuevas en este momento.'
+                  : 'This program is not accepting new applications at this time.'}
+              </p>
+            </div>
+          </div>
+        )}
+
+        <h1>{title}</h1>
+        <div class="usa-prose">
+          <slot />
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="grid-col-12 tablet:grid-col-4">
+        <slot name="sidebar" />
+
+        {applyHref && acceptingApplications && (
+          <div class="usa-summary-box margin-top-4" role="complementary" aria-label="Apply now">
+            <div class="usa-summary-box__body">
+              <h2 class="usa-summary-box__heading">
+                {locale === 'es' ? 'Solicitar ahora' : 'Ready to apply?'}
+              </h2>
+              <div class="usa-summary-box__text">
+                <p>
+                  {locale === 'es'
+                    ? 'La solicitud en línea tarda aproximadamente 20 minutos.'
+                    : 'The online application takes about 20 minutes.'}
+                </p>
+                <a href={applyHref} class="usa-button usa-button--big">
+                  {t('home.applyNow')}
+                </a>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</BaseLayout>

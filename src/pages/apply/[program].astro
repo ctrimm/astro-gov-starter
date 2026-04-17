@@ -1,0 +1,123 @@
+---
+import { getCollection } from 'astro:content';
+import ApplyLayout from '../../layouts/ApplyLayout.astro';
+import { idToSlug } from '../../utils/content';
+
+export async function getStaticPaths() {
+  const services = await getCollection('services', ({ data }) => !data.draft && !!data.applySlug);
+  return services.map((service) => ({
+    params: { program: service.data.applySlug },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props;
+const slug = idToSlug(service.id);
+const locale = 'en';
+
+const steps = [
+  { label: 'Eligibility check' },
+  { label: 'Personal information' },
+  { label: 'Household & income' },
+  { label: 'Documents' },
+  { label: 'Review & submit' },
+];
+---
+
+<ApplyLayout
+  title={`Apply for ${service.data.title}`}
+  programName={service.data.title}
+  locale={locale}
+  steps={steps}
+  currentStep={1}
+>
+  <!--
+    M2 SCAFFOLD: Structural skeleton for the 5-step apply flow.
+    In M3, each step becomes a client-side island with preserved state.
+    With JS disabled the <noscript> message below is shown (acceptance criteria §6).
+  -->
+
+  <noscript>
+    <div class="usa-alert usa-alert--warning" role="alert">
+      <div class="usa-alert__body">
+        <h2 class="usa-alert__heading">JavaScript is required for the online application</h2>
+        <p class="usa-alert__text">
+          The online application requires JavaScript to save your progress across steps.
+          You can apply another way:
+        </p>
+        <ul>
+          <li><strong>Phone:</strong> <a href="tel:18005550100" class="usa-link">1-800-555-0100</a> (Mon–Fri, 8 a.m.–8 p.m.)</li>
+          <li><strong>In person:</strong> <a href="/contact/" class="usa-link">Find an office near you</a></li>
+          <li><strong>By mail:</strong> <a href="/help/" class="usa-link">Download a paper application</a></li>
+        </ul>
+      </div>
+    </div>
+  </noscript>
+
+  <div id="apply-step-1" data-apply-program={service.data.applySlug}>
+    <h2>Step 1: Check your eligibility</h2>
+    <p class="usa-intro">
+      Answer a few questions to see if you may qualify for {service.data.title}.
+      This does not start your application.
+    </p>
+
+    {service.data.eligibility.length > 0 && (
+      <div class="usa-alert usa-alert--info usa-alert--slim margin-bottom-3">
+        <div class="usa-alert__body">
+          <p class="usa-alert__text">
+            <strong>General requirements:</strong>{' '}
+            {service.data.eligibility.map((e) => `${e.label}: ${e.value}`).join(' · ')}
+          </p>
+        </div>
+      </div>
+    )}
+
+    <form class="usa-form usa-form--large" method="post" action="/apply/check-eligibility">
+      <input type="hidden" name="program" value={service.data.applySlug} />
+
+      <fieldset class="usa-fieldset">
+        <legend class="usa-legend usa-legend--large">Do you live in this state?</legend>
+        <div class="usa-radio">
+          <input class="usa-radio__input" id="residency-yes" type="radio" name="residency" value="yes" />
+          <label class="usa-radio__label" for="residency-yes">Yes</label>
+        </div>
+        <div class="usa-radio">
+          <input class="usa-radio__input" id="residency-no" type="radio" name="residency" value="no" />
+          <label class="usa-radio__label" for="residency-no">No</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="usa-fieldset">
+        <legend class="usa-legend usa-legend--large">
+          Is your household income below 130% of the federal poverty level?
+        </legend>
+        <p class="usa-hint">
+          For a family of 4, this is roughly $3,900/month.{' '}
+          <a href="/help/" class="usa-link">See the full income chart</a>.
+        </p>
+        <div class="usa-radio">
+          <input class="usa-radio__input" id="income-yes" type="radio" name="income" value="yes" />
+          <label class="usa-radio__label" for="income-yes">Yes</label>
+        </div>
+        <div class="usa-radio">
+          <input class="usa-radio__input" id="income-no" type="radio" name="income" value="no" />
+          <label class="usa-radio__label" for="income-no">No</label>
+        </div>
+        <div class="usa-radio">
+          <input class="usa-radio__input" id="income-unsure" type="radio" name="income" value="unsure" />
+          <label class="usa-radio__label" for="income-unsure">I'm not sure</label>
+        </div>
+      </fieldset>
+
+      <div class="margin-top-4">
+        <!-- TODO (M3): Replace submit with client-side navigation to step 2 -->
+        <button type="submit" class="usa-button usa-button--big">
+          Check eligibility and continue
+        </button>
+        <a href={`/services/${slug}/`} class="usa-button usa-button--unstyled margin-left-3">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </div>
+</ApplyLayout>

@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { idToSlug } from '../../utils/content';
+
+const locale = 'en';
+const services = (await getCollection('services', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="Services" description="Find programs and services you may be eligible for." locale={locale}>
+  <div class="usa-hero usa-hero--small" aria-label="Services">
+    <div class="grid-container">
+      <h1 class="usa-hero__heading font-heading-2xl">Programs &amp; services</h1>
+      <p class="usa-intro">
+        We offer assistance programs for eligible residents. Select a program below
+        to learn more and start your application.
+      </p>
+    </div>
+  </div>
+
+  <div class="grid-container usa-section">
+    <p class="text-base font-sans-sm">Showing {services.length} programs</p>
+
+    <ul class="usa-card-group">
+      {services.map((service) => {
+        const slug = idToSlug(service.id);
+        return (
+          <li class="usa-card tablet:grid-col-6 desktop:grid-col-4">
+            <div class="usa-card__container">
+              <div class="usa-card__header">
+                <h2 class="usa-card__heading">
+                  <a href={`/services/${slug}/`} class="usa-link">
+                    {service.data.title}
+                  </a>
+                </h2>
+              </div>
+              <div class="usa-card__body">
+                <p>{service.data.summary}</p>
+              </div>
+              <div class="usa-card__footer">
+                {service.data.acceptingApplications ? (
+                  <a href={`/services/${slug}/`} class="usa-button">
+                    Learn more
+                  </a>
+                ) : (
+                  <span class="usa-tag usa-tag--big">Not accepting applications</span>
+                )}
+              </div>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+
+    <div class="usa-prose margin-top-6">
+      <p>
+        <strong>Don't see what you need?</strong> Visit our{' '}
+        <a href="/help/" class="usa-link">help center</a> or{' '}
+        <a href="/contact/" class="usa-link">contact us</a> for more information.
+      </p>
+      <p>
+        You can also visit{' '}
+        <a href="https://www.benefits.gov/" class="usa-link" rel="noreferrer">
+          Benefits.gov
+        </a>{' '}
+        to find additional federal benefit programs.
+      </p>
+    </div>
+  </div>
+</BaseLayout>

@@ -1,0 +1,99 @@
+---
+import { getCollection } from 'astro:content';
+import ApplyLayout from '../../../layouts/ApplyLayout.astro';
+import { idToSlug } from '../../../utils/content';
+
+export async function getStaticPaths() {
+  const services = await getCollection('services', ({ data }) => !data.draft && !!data.applySlug);
+  return services.map((service) => ({
+    params: { program: service.data.applySlug },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props;
+const slug = idToSlug(service.id);
+const locale = 'es';
+
+const steps = [
+  { label: 'Verificar elegibilidad' },
+  { label: 'Información personal' },
+  { label: 'Hogar e ingresos' },
+  { label: 'Documentos' },
+  { label: 'Revisar y enviar' },
+];
+---
+
+<ApplyLayout
+  title={`Solicitar: ${service.data.title}`}
+  programName={service.data.title}
+  locale={locale}
+  steps={steps}
+  currentStep={1}
+>
+  <noscript>
+    <div class="usa-alert usa-alert--warning" role="alert">
+      <div class="usa-alert__body">
+        <h2 class="usa-alert__heading">Se requiere JavaScript para la solicitud en línea</h2>
+        <p class="usa-alert__text">
+          La solicitud en línea requiere JavaScript para guardar su progreso. Puede solicitar de otra manera:
+        </p>
+        <ul>
+          <li><strong>Teléfono:</strong> <a href="tel:18005550100" class="usa-link">1-800-555-0100</a></li>
+          <li><strong>En persona:</strong> <a href="/es/contact/" class="usa-link">Encuentre una oficina cerca de usted</a></li>
+          <li><strong>Por correo:</strong> <a href="/es/help/" class="usa-link">Descargue una solicitud en papel</a></li>
+        </ul>
+      </div>
+    </div>
+  </noscript>
+
+  <div id="apply-step-1-es" data-apply-program={service.data.applySlug}>
+    <h2>Paso 1: Verificar su elegibilidad</h2>
+    <p class="usa-intro">
+      Responda algunas preguntas para ver si podría calificar para {service.data.title}.
+    </p>
+
+    <form class="usa-form usa-form--large" method="post" action="/es/apply/check-eligibility">
+      <input type="hidden" name="program" value={service.data.applySlug} />
+
+      <fieldset class="usa-fieldset">
+        <legend class="usa-legend usa-legend--large">¿Vive usted en este estado?</legend>
+        <div class="usa-radio">
+          <input class="usa-radio__input" id="residency-yes-es" type="radio" name="residency" value="yes" />
+          <label class="usa-radio__label" for="residency-yes-es">Sí</label>
+        </div>
+        <div class="usa-radio">
+          <input class="usa-radio__input" id="residency-no-es" type="radio" name="residency" value="no" />
+          <label class="usa-radio__label" for="residency-no-es">No</label>
+        </div>
+      </fieldset>
+
+      <fieldset class="usa-fieldset">
+        <legend class="usa-legend usa-legend--large">
+          ¿El ingreso de su hogar es inferior al 130% del nivel federal de pobreza?
+        </legend>
+        <div class="usa-radio">
+          <input class="usa-radio__input" id="income-yes-es" type="radio" name="income" value="yes" />
+          <label class="usa-radio__label" for="income-yes-es">Sí</label>
+        </div>
+        <div class="usa-radio">
+          <input class="usa-radio__input" id="income-no-es" type="radio" name="income" value="no" />
+          <label class="usa-radio__label" for="income-no-es">No</label>
+        </div>
+        <div class="usa-radio">
+          <input class="usa-radio__input" id="income-unsure-es" type="radio" name="income" value="unsure" />
+          <label class="usa-radio__label" for="income-unsure-es">No estoy seguro/a</label>
+        </div>
+      </fieldset>
+
+      <div class="margin-top-4">
+        <button type="submit" class="usa-button usa-button--big">
+          Verificar elegibilidad y continuar
+        </button>
+        <a href={`/es/services/${slug}/`} class="usa-button usa-button--unstyled margin-left-3">
+          Cancelar
+        </a>
+      </div>
+    </form>
+  </div>
+</ApplyLayout>

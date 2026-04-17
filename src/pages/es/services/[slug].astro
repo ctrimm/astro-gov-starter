@@ -1,0 +1,77 @@
+---
+import { getCollection, render } from 'astro:content';
+import ServiceLayout from '../../../layouts/ServiceLayout.astro';
+import { idToSlug } from '../../../utils/content';
+
+export async function getStaticPaths() {
+  const services = await getCollection('services', ({ data }) => !data.draft);
+  return services.map((service) => ({
+    params: { slug: idToSlug(service.id) },
+    props: { service },
+  }));
+}
+
+const { service } = Astro.props;
+const { Content } = await render(service);
+const slug = idToSlug(service.id);
+const locale = 'es';
+const applyHref = service.data.applySlug ? `/es/apply/${service.data.applySlug}/` : undefined;
+---
+
+<ServiceLayout
+  title={service.data.title}
+  description={service.data.description}
+  locale={locale}
+  breadcrumbs={[{ label: service.data.title, href: `/es/services/${slug}/` }]}
+  acceptingApplications={service.data.acceptingApplications}
+  applyHref={applyHref}
+>
+  <Content />
+
+  <Fragment slot="sidebar">
+    {service.data.eligibility.length > 0 && (
+      <div class="usa-summary-box" role="complementary" aria-label="Elegibilidad en resumen">
+        <div class="usa-summary-box__body">
+          <h2 class="usa-summary-box__heading">Elegibilidad en resumen</h2>
+          <div class="usa-summary-box__text">
+            <dl>
+              {service.data.eligibility.map((item) => (
+                <>
+                  <dt class="text-bold">{item.label}</dt>
+                  <dd class="margin-left-0 margin-bottom-1">{item.value}</dd>
+                </>
+              ))}
+            </dl>
+          </div>
+        </div>
+      </div>
+    )}
+
+    {service.data.keyFacts.length > 0 && (
+      <div class="border border-base-light padding-2 margin-top-3">
+        <h2 class="font-heading-md margin-top-0">Datos clave</h2>
+        <dl>
+          {service.data.keyFacts.map((fact) => (
+            <>
+              <dt class="text-bold">{fact.label}</dt>
+              <dd class="margin-left-0 margin-bottom-1">{fact.value}</dd>
+            </>
+          ))}
+        </dl>
+      </div>
+    )}
+
+    {service.data.related.length > 0 && (
+      <div class="margin-top-3">
+        <h2 class="font-heading-md">Programas relacionados</h2>
+        <ul class="usa-list">
+          {service.data.related.map((relSlug) => (
+            <li>
+              <a href={`/es/services/${relSlug}/`} class="usa-link">{relSlug.toUpperCase()}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )}
+  </Fragment>
+</ServiceLayout>

@@ -1,0 +1,70 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const locale = 'es';
+const faqs = (await getCollection('faqs', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="Centro de ayuda"
+  description="Encuentre respuestas a preguntas frecuentes sobre nuestros programas y servicios."
+  locale={locale}
+>
+  <div class="grid-container usa-section">
+    <h1>Centro de ayuda</h1>
+    <p class="usa-intro">
+      Encuentre respuestas a preguntas frecuentes. Si no encuentra lo que necesita,{' '}
+      <a href="/es/contact/" class="usa-link">contáctenos</a> y le ayudaremos.
+    </p>
+
+    <div class="grid-row grid-gap">
+      <div class="grid-col-12 tablet:grid-col-8">
+        <section aria-labelledby="faqs-heading-es">
+          <h2 id="faqs-heading-es">Preguntas frecuentes</h2>
+          <div class="usa-accordion" aria-multiselectable="true">
+            {faqs.map(async (faq, i) => {
+              const { Content } = await faq.render();
+              const question = faq.data.esQuestion ?? faq.data.question;
+              return (
+                <div class="usa-accordion__item">
+                  <h3 class="usa-accordion__heading">
+                    <button
+                      type="button"
+                      class="usa-accordion__button"
+                      aria-expanded={i === 0 ? 'true' : 'false'}
+                      aria-controls={`faq-es-${i}`}
+                    >
+                      {question}
+                    </button>
+                  </h3>
+                  <div
+                    id={`faq-es-${i}`}
+                    class="usa-accordion__content usa-prose"
+                    hidden={i !== 0}
+                  >
+                    <Content />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+      </div>
+
+      <div class="grid-col-12 tablet:grid-col-4">
+        <div class="usa-summary-box margin-top-4">
+          <div class="usa-summary-box__body">
+            <h2 class="usa-summary-box__heading">¿Aún necesita ayuda?</h2>
+            <div class="usa-summary-box__text">
+              <p>Llámenos al <a href="tel:18005550100" class="usa-link">1-800-555-0100</a></p>
+              <p class="font-sans-sm text-base">Lunes a viernes, 8 a.m.–8 p.m. ET</p>
+              <a href="/es/contact/" class="usa-button usa-button--outline">Enviar un mensaje</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

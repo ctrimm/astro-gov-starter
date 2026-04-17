@@ -1,0 +1,68 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import { idToSlug } from '../../../utils/content';
+
+const locale = 'es';
+const services = (await getCollection('services', ({ data }) => !data.draft))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout
+  title="Programas y servicios"
+  description="Encuentre los programas y servicios para los que puede ser elegible."
+  locale={locale}
+>
+  <div class="usa-hero usa-hero--small" aria-label="Servicios">
+    <div class="grid-container">
+      <h1 class="usa-hero__heading font-heading-2xl">Programas y servicios</h1>
+      <p class="usa-intro">
+        Ofrecemos programas de asistencia para residentes elegibles. Seleccione
+        un programa a continuación para obtener más información e iniciar su solicitud.
+      </p>
+    </div>
+  </div>
+
+  <div class="grid-container usa-section">
+    <p class="text-base font-sans-sm">Mostrando {services.length} programas</p>
+
+    <ul class="usa-card-group">
+      {services.map((service) => {
+        const slug = idToSlug(service.id);
+        return (
+          <li class="usa-card tablet:grid-col-6 desktop:grid-col-4">
+            <div class="usa-card__container">
+              <div class="usa-card__header">
+                <h2 class="usa-card__heading">
+                  <a href={`/es/services/${slug}/`} class="usa-link">
+                    {service.data.title}
+                  </a>
+                </h2>
+              </div>
+              <div class="usa-card__body">
+                <p>{service.data.summary}</p>
+              </div>
+              <div class="usa-card__footer">
+                {service.data.acceptingApplications ? (
+                  <a href={`/es/services/${slug}/`} class="usa-button">
+                    Más información
+                  </a>
+                ) : (
+                  <span class="usa-tag usa-tag--big">No acepta solicitudes</span>
+                )}
+              </div>
+            </div>
+          </li>
+        );
+      })}
+    </ul>
+
+    <div class="usa-prose margin-top-6">
+      <p>
+        <strong>¿No encuentra lo que necesita?</strong> Visite nuestro{' '}
+        <a href="/es/help/" class="usa-link">centro de ayuda</a> o{' '}
+        <a href="/es/contact/" class="usa-link">contáctenos</a> para más información.
+      </p>
+    </div>
+  </div>
+</BaseLayout>
