@@ -29,6 +29,9 @@ const {
   label = 'Pagination',
 } = Astro.props;
 
+const base = import.meta.env.BASE_URL;
+const sprite = `${base}uswds/img/sprite.svg`;
+
 function pageUrl(page: number): string {
   return urlPattern.replace('%d', String(page));
 }
@@ -64,7 +67,7 @@ const pages = visiblePages();
           aria-label="Previous page"
         >
           <svg class="usa-icon" aria-hidden="true" role="img">
-            <use href="/uswds/img/sprite.svg#navigate_before"></use>
+            <use href={`${sprite}#navigate_before`}></use>
           </svg>
           <span class="usa-pagination__link-text">Previous</span>
         </a>
@@ -111,7 +114,7 @@ const pages = visiblePages();
         >
           <span class="usa-pagination__link-text">Next</span>
           <svg class="usa-icon" aria-hidden="true" role="img">
-            <use href="/uswds/img/sprite.svg#navigate_next"></use>
+            <use href={`${sprite}#navigate_next`}></use>
           </svg>
         </a>
       </li>
