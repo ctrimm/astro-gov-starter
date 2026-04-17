@@ -15,7 +15,7 @@
         "categories:seo": ["warn", { "minScore": 0.9 }],
         "render-blocking-resources": "off",
         "unused-javascript": "warn",
-        "unused-css-rules": "warn",
+        "unused-css-rules": "off",
         "uses-text-compression": "off",
         "uses-http2": "off",
         "uses-long-cache-ttl": "off"

@@ -142,8 +142,8 @@ const components = [
         </div>
         <div class="grid-col-12 tablet:grid-col-6">
           <SummaryBox heading="Still need help?">
-            <p>Call us at <a href="tel:18005550100" class="usa-link">1-800-555-0100</a></p>
-            <p class="font-sans-sm text-base">Monday–Friday, 8 a.m.–8 p.m. ET</p>
+            <p>Call us at <a href="tel:18005550100" class="usa-link">1&#8209;800&#8209;555&#8209;0100</a></p>
+            <p class="font-sans-sm text-base-dark">Monday–Friday, 8 a.m.–8 p.m. ET</p>
             <a href="/contact/" class="usa-button usa-button--outline">Send a message</a>
           </SummaryBox>
         </div>
@@ -235,8 +235,8 @@ const components = [
     </section>
 
     <!-- ─── CallToAction ─── -->
-    <section aria-labelledby="cta-heading" class="margin-bottom-8">
-      <h2 id="cta-heading" class="border-bottom border-base-light padding-bottom-1">CallToAction</h2>
+    <section aria-labelledby="cta-section-heading" class="margin-bottom-8">
+      <h2 id="cta-section-heading" class="border-bottom border-base-light padding-bottom-1">CallToAction</h2>
       <CallToAction
         heading="Ready to apply?"
         primaryCta={{ label: 'Start application', href: '/services/' }}
@@ -306,13 +306,13 @@ const components = [
       <h2 id="pagination-heading" class="border-bottom border-base-light padding-bottom-1">Pagination</h2>
 
       <h3 class="font-heading-sm margin-top-4">Page 1 of 10</h3>
-      <Pagination totalPages={10} currentPage={1} urlPattern="/news/page/%d/" />
+      <Pagination totalPages={10} currentPage={1} urlPattern="/news/page/%d/" label="Page 1 of 10 example" />
 
       <h3 class="font-heading-sm margin-top-4">Page 5 of 10 (middle — ellipsis on both sides)</h3>
-      <Pagination totalPages={10} currentPage={5} urlPattern="/news/page/%d/" />
+      <Pagination totalPages={10} currentPage={5} urlPattern="/news/page/%d/" label="Page 5 of 10 example" />
 
       <h3 class="font-heading-sm margin-top-4">Page 10 of 10 (last)</h3>
-      <Pagination totalPages={10} currentPage={10} urlPattern="/news/page/%d/" />
+      <Pagination totalPages={10} currentPage={10} urlPattern="/news/page/%d/" label="Page 10 of 10 example" />
     </section>
   </div>
 </BaseLayout>

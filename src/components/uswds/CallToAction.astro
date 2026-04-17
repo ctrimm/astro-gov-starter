@@ -30,15 +30,17 @@ const {
   textColor = 'white',
   class: className,
 } = Astro.props;
+
+const headingId = `cta-heading-${Math.random().toString(36).slice(2, 8)}`;
 ---
 
 <section
   class:list={[`bg-${bg}`, 'usa-section', className]}
-  aria-labelledby="cta-heading"
+  aria-labelledby={headingId}
 >
   <div class="grid-container">
     <h2
-      id="cta-heading"
+      id={headingId}
       class:list={[
         'font-heading-xl',
         textColor === 'white' && 'text-white',

@@ -44,7 +44,6 @@ const resolvedItems = items?.map((item, i) => ({
 
 <div
   class:list={['usa-accordion', bordered && 'usa-accordion--bordered', className]}
-  aria-multiselectable={multiselectable ? 'true' : undefined}
 >
   {resolvedItems ? (
     resolvedItems.map((item) => (
