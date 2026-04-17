@@ -11,7 +11,8 @@ export default defineConfig({
   // local dev (base '/'), GitHub Pages subpath (base '/repo-name'), and
   // custom domains (base '/'). Set these in your deploy workflow.
   site: process.env.SITE || 'http://localhost:4321',
-  base: process.env.BASE_PATH || '/',
+  // Ensure BASE_URL always ends with / so ${base}asset paths join correctly
+  base: (process.env.BASE_PATH || '/').replace(/\/?$/, '/'),
 
   integrations: [mdx()],
 

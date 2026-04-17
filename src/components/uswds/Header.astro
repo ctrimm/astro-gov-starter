@@ -16,6 +16,7 @@ interface Props {
 
 const { locale = 'en', currentPath = '/' } = Astro.props;
 const t = useTranslations(locale);
+const base = import.meta.env.BASE_URL;
 
 const navLinks: NavLink[] = [
   {
@@ -72,7 +73,7 @@ const altLocalePath = locale === 'en'
       class="usa-nav"
     >
       <button type="button" class="usa-nav__close" aria-label={t('nav.close')}>
-        <img src="/uswds/img/usa-icons/close.svg" role="img" alt="" />
+        <img src={`${base}uswds/img/usa-icons/close.svg`} role="img" alt="" />
       </button>
 
       <ul class="usa-nav__primary usa-accordion">

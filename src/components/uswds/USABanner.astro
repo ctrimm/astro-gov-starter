@@ -11,6 +11,7 @@ interface Props {
 const { locale = 'en', id = 'default' } = Astro.props;
 const t = useTranslations(locale);
 const bannerId = `gov-banner-${id}`;
+const base = import.meta.env.BASE_URL;
 ---
 
 <section
@@ -24,7 +25,7 @@ const bannerId = `gov-banner-${id}`;
           <img
             aria-hidden="true"
             class="usa-banner__header-flag"
-            src="/uswds/img/us_flag_small.png"
+            src={`${base}uswds/img/us_flag_small.png`}
             alt=""
           />
         </div>
@@ -47,7 +48,7 @@ const bannerId = `gov-banner-${id}`;
         <div class="usa-banner__guidance tablet:grid-col-6">
           <img
             class="usa-media-block__img"
-            src="/uswds/img/icon-dot-gov.svg"
+            src={`${base}uswds/img/icon-dot-gov.svg`}
             role="img"
             alt=""
           />
@@ -63,7 +64,7 @@ const bannerId = `gov-banner-${id}`;
         <div class="usa-banner__guidance tablet:grid-col-6">
           <img
             class="usa-media-block__img"
-            src="/uswds/img/icon-https.svg"
+            src={`${base}uswds/img/icon-https.svg`}
             role="img"
             alt=""
           />
