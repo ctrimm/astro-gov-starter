@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/uswds/Breadcrumb.astro';
 import { siteConfig } from '../config/site';
 
 const locale = 'en';
@@ -14,16 +15,10 @@ const updatedDate = new Date('2025-01-01');
   <div class="grid-container usa-section">
     <div class="grid-row">
       <div class="grid-col-12 tablet:grid-col-8">
-        <nav class="usa-breadcrumb" aria-label="Breadcrumbs">
-          <ol class="usa-breadcrumb__list">
-            <li class="usa-breadcrumb__list-item">
-              <a href="/" class="usa-breadcrumb__link"><span>Home</span></a>
-            </li>
-            <li class="usa-breadcrumb__list-item usa-current" aria-current="page">
-              <span>Accessibility statement</span>
-            </li>
-          </ol>
-        </nav>
+        <Breadcrumb items={[
+          { label: 'Home', href: '/' },
+          { label: 'Accessibility statement', href: '/accessibility/' },
+        ]} />
 
         <h1>Accessibility statement</h1>
 

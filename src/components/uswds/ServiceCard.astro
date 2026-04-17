@@ -1,0 +1,60 @@
+---
+/**
+ * ServiceCard — usa-card variant for service/program listings
+ * https://designsystem.digital.gov/components/card/
+ *
+ * Wraps the USWDS card pattern with service-specific props
+ * so the service index and homepage can stay clean.
+ */
+
+interface Props {
+  title: string;
+  summary: string;
+  href: string;
+  /** Link text for the primary CTA button */
+  ctaText?: string;
+  acceptingApplications?: boolean;
+  /** Optional image URL for media variant */
+  imageSrc?: string;
+  imageAlt?: string;
+  class?: string;
+}
+
+const {
+  title,
+  summary,
+  href,
+  ctaText = 'Learn more',
+  acceptingApplications = true,
+  imageSrc,
+  imageAlt = '',
+  class: className,
+} = Astro.props;
+---
+
+<li class:list={['usa-card', className]}>
+  <div class="usa-card__container">
+    {imageSrc && (
+      <div class="usa-card__media">
+        <div class="usa-card__img">
+          <img src={imageSrc} alt={imageAlt} loading="lazy" />
+        </div>
+      </div>
+    )}
+    <div class="usa-card__header">
+      <h2 class="usa-card__heading">
+        <a href={href} class="usa-link">{title}</a>
+      </h2>
+    </div>
+    <div class="usa-card__body">
+      <p>{summary}</p>
+    </div>
+    <div class="usa-card__footer">
+      {acceptingApplications ? (
+        <a href={href} class="usa-button">{ctaText}</a>
+      ) : (
+        <span class="usa-tag">Not accepting applications</span>
+      )}
+    </div>
+  </div>
+</li>

@@ -1,6 +1,7 @@
 ---
 import { getCollection, render } from 'astro:content';
 import ServiceLayout from '../../layouts/ServiceLayout.astro';
+import SummaryBox from '../../components/uswds/SummaryBox.astro';
 import { idToSlug } from '../../utils/content';
 
 export async function getStaticPaths() {
@@ -30,26 +31,20 @@ const applyHref = service.data.applySlug ? `/apply/${service.data.applySlug}/` :
 
   <Fragment slot="sidebar">
     {service.data.eligibility.length > 0 && (
-      <div class="usa-summary-box" role="complementary" aria-label="Eligibility at a glance">
-        <div class="usa-summary-box__body">
-          <h2 class="usa-summary-box__heading">Eligibility at a glance</h2>
-          <div class="usa-summary-box__text">
-            <dl>
-              {service.data.eligibility.map((item) => (
-                <>
-                  <dt class="text-bold">{item.label}</dt>
-                  <dd class="margin-left-0 margin-bottom-1">{item.value}</dd>
-                </>
-              ))}
-            </dl>
-          </div>
-        </div>
-      </div>
+      <SummaryBox heading="Eligibility at a glance" label="Eligibility at a glance">
+        <dl>
+          {service.data.eligibility.map((item) => (
+            <>
+              <dt class="text-bold">{item.label}</dt>
+              <dd class="margin-left-0 margin-bottom-1">{item.value}</dd>
+            </>
+          ))}
+        </dl>
+      </SummaryBox>
     )}
 
     {service.data.keyFacts.length > 0 && (
-      <div class="border border-base-light padding-2 margin-top-3">
-        <h2 class="font-heading-md margin-top-0">Key facts</h2>
+      <SummaryBox heading="Key facts" class="margin-top-3">
         <dl>
           {service.data.keyFacts.map((fact) => (
             <>
@@ -58,7 +53,7 @@ const applyHref = service.data.applySlug ? `/apply/${service.data.applySlug}/` :
             </>
           ))}
         </dl>
-      </div>
+      </SummaryBox>
     )}
 
     {service.data.related.length > 0 && (

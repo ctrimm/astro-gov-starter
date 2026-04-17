@@ -1,10 +1,19 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Search from '../../components/uswds/Search.astro';
+import Accordion from '../../components/uswds/Accordion.astro';
+import AccordionItem from '../../components/uswds/AccordionItem.astro';
+import SummaryBox from '../../components/uswds/SummaryBox.astro';
+import SideNav from '../../components/uswds/SideNav.astro';
 
 const locale = 'es';
 const faqs = (await getCollection('faqs', ({ data }) => !data.draft))
   .sort((a, b) => a.data.order - b.data.order);
+
+const generalFaqs = faqs.filter((f) => f.data.tags.includes('general'));
+const snapFaqs = faqs.filter((f) => f.data.tags.includes('snap') && !f.data.tags.includes('general'));
+const otherFaqs = faqs.filter((f) => !f.data.tags.includes('general') && !f.data.tags.includes('snap'));
 ---
 
 <BaseLayout
@@ -19,51 +28,77 @@ const faqs = (await getCollection('faqs', ({ data }) => !data.draft))
       <a href="/es/contact/" class="usa-link">contáctenos</a> y le ayudaremos.
     </p>
 
+    <Search label="Buscar temas de ayuda" action="/es/search" class="margin-bottom-4" />
+
     <div class="grid-row grid-gap">
       <div class="grid-col-12 tablet:grid-col-8">
-        <section aria-labelledby="faqs-heading-es">
-          <h2 id="faqs-heading-es">Preguntas frecuentes</h2>
-          <div class="usa-accordion" aria-multiselectable="true">
-            {faqs.map(async (faq, i) => {
-              const { Content } = await render(faq);
-              const question = faq.data.esQuestion ?? faq.data.question;
-              return (
-                <div class="usa-accordion__item">
-                  <h3 class="usa-accordion__heading">
-                    <button
-                      type="button"
-                      class="usa-accordion__button"
-                      aria-expanded={i === 0 ? 'true' : 'false'}
-                      aria-controls={`faq-es-${i}`}
-                    >
-                      {question}
-                    </button>
-                  </h3>
-                  <div
-                    id={`faq-es-${i}`}
-                    class="usa-accordion__content usa-prose"
-                    hidden={i !== 0}
-                  >
+        {generalFaqs.length > 0 && (
+          <section aria-labelledby="general-faqs-heading-es">
+            <h2 id="general-faqs-heading-es">Preguntas generales</h2>
+            <Accordion multiselectable>
+              {generalFaqs.map(async (faq, i) => {
+                const { Content } = await render(faq);
+                const heading = faq.data.esQuestion ?? faq.data.question;
+                return (
+                  <AccordionItem heading={heading} expanded={i === 0} headingLevel="h3">
                     <Content />
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </section>
+                  </AccordionItem>
+                );
+              })}
+            </Accordion>
+          </section>
+        )}
+
+        {snapFaqs.length > 0 && (
+          <section aria-labelledby="snap-faqs-heading-es" class="margin-top-5">
+            <h2 id="snap-faqs-heading-es">Preguntas sobre SNAP</h2>
+            <Accordion multiselectable>
+              {snapFaqs.map(async (faq) => {
+                const { Content } = await render(faq);
+                const heading = faq.data.esQuestion ?? faq.data.question;
+                return (
+                  <AccordionItem heading={heading} headingLevel="h3">
+                    <Content />
+                  </AccordionItem>
+                );
+              })}
+            </Accordion>
+          </section>
+        )}
+
+        {otherFaqs.length > 0 && (
+          <section class="margin-top-5" aria-labelledby="all-faqs-heading-es">
+            <h2 id="all-faqs-heading-es">Más preguntas</h2>
+            <Accordion multiselectable>
+              {otherFaqs.map(async (faq) => {
+                const { Content } = await render(faq);
+                const heading = faq.data.esQuestion ?? faq.data.question;
+                return (
+                  <AccordionItem heading={heading} headingLevel="h3">
+                    <Content />
+                  </AccordionItem>
+                );
+              })}
+            </Accordion>
+          </section>
+        )}
       </div>
 
       <div class="grid-col-12 tablet:grid-col-4">
-        <div class="usa-summary-box margin-top-4">
-          <div class="usa-summary-box__body">
-            <h2 class="usa-summary-box__heading">¿Aún necesita ayuda?</h2>
-            <div class="usa-summary-box__text">
-              <p>Llámenos al <a href="tel:18005550100" class="usa-link">1-800-555-0100</a></p>
-              <p class="font-sans-sm text-base">Lunes a viernes, 8 a.m.–8 p.m. ET</p>
-              <a href="/es/contact/" class="usa-button usa-button--outline">Enviar un mensaje</a>
-            </div>
-          </div>
-        </div>
+        <SideNav
+          label="Temas de ayuda"
+          items={[
+            { label: 'Preguntas generales', href: '#general-faqs-heading-es' },
+            { label: 'Preguntas sobre SNAP', href: '#snap-faqs-heading-es' },
+            { label: 'Contáctenos', href: '/es/contact/' },
+          ]}
+        />
+
+        <SummaryBox heading="¿Aún necesita ayuda?" class="margin-top-4">
+          <p>Llámenos al <a href="tel:18005550100" class="usa-link">1-800-555-0100</a></p>
+          <p class="font-sans-sm text-base">Lunes a viernes, 8 a.m.–8 p.m. ET</p>
+          <a href="/es/contact/" class="usa-button usa-button--outline">Enviar un mensaje</a>
+        </SummaryBox>
       </div>
     </div>
   </div>

@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import ApplyLayout from '../../layouts/ApplyLayout.astro';
+import Alert from '../../components/uswds/Alert.astro';
 import { idToSlug } from '../../utils/content';
 
 export async function getStaticPaths() {
@@ -38,20 +39,14 @@ const steps = [
   -->
 
   <noscript>
-    <div class="usa-alert usa-alert--warning" role="alert">
-      <div class="usa-alert__body">
-        <h2 class="usa-alert__heading">JavaScript is required for the online application</h2>
-        <p class="usa-alert__text">
-          The online application requires JavaScript to save your progress across steps.
-          You can apply another way:
-        </p>
-        <ul>
-          <li><strong>Phone:</strong> <a href="tel:18005550100" class="usa-link">1-800-555-0100</a> (Mon–Fri, 8 a.m.–8 p.m.)</li>
-          <li><strong>In person:</strong> <a href="/contact/" class="usa-link">Find an office near you</a></li>
-          <li><strong>By mail:</strong> <a href="/help/" class="usa-link">Download a paper application</a></li>
-        </ul>
-      </div>
-    </div>
+    <Alert type="warning" heading="JavaScript is required for the online application">
+      <p>The online application requires JavaScript to save your progress across steps. You can apply another way:</p>
+      <ul>
+        <li><strong>Phone:</strong> <a href="tel:18005550100" class="usa-link">1-800-555-0100</a> (Mon–Fri, 8 a.m.–8 p.m.)</li>
+        <li><strong>In person:</strong> <a href="/contact/" class="usa-link">Find an office near you</a></li>
+        <li><strong>By mail:</strong> <a href="/help/" class="usa-link">Download a paper application</a></li>
+      </ul>
+    </Alert>
   </noscript>
 
   <div id="apply-step-1" data-apply-program={service.data.applySlug}>
@@ -62,14 +57,10 @@ const steps = [
     </p>
 
     {service.data.eligibility.length > 0 && (
-      <div class="usa-alert usa-alert--info usa-alert--slim margin-bottom-3">
-        <div class="usa-alert__body">
-          <p class="usa-alert__text">
-            <strong>General requirements:</strong>{' '}
-            {service.data.eligibility.map((e) => `${e.label}: ${e.value}`).join(' · ')}
-          </p>
-        </div>
-      </div>
+      <Alert type="info" slim class="margin-bottom-3">
+        <strong>General requirements:</strong>{' '}
+        {service.data.eligibility.map((e) => `${e.label}: ${e.value}`).join(' · ')}
+      </Alert>
     )}
 
     <form class="usa-form usa-form--large" method="post" action="/apply/check-eligibility">

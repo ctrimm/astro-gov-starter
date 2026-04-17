@@ -1,6 +1,12 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/uswds/Hero.astro';
+import ServiceCard from '../components/uswds/ServiceCard.astro';
+import ProcessList from '../components/uswds/ProcessList.astro';
+import ProcessListItem from '../components/uswds/ProcessListItem.astro';
+import CallToAction from '../components/uswds/CallToAction.astro';
+import SiteAlert from '../components/uswds/SiteAlert.astro';
 import { siteConfig } from '../config/site';
 import { useTranslations } from '../i18n/utils';
 import { idToSlug } from '../utils/content';
@@ -13,54 +19,32 @@ const services = (await getCollection('services', ({ data }) => !data.draft))
   .slice(0, 3);
 
 const now = new Date();
-const activeAnnouncements = (await getCollection('announcements', ({ data }) => {
+const activeAnnouncements = await getCollection('announcements', ({ data }) => {
   if (data.draft) return false;
   if (data.endDate && data.endDate < now) return false;
   return data.startDate <= now;
-}));
+});
 ---
 
-<BaseLayout
-  title={siteConfig.name}
-  description={siteConfig.description}
-  locale={locale}
->
+<BaseLayout title={siteConfig.name} description={siteConfig.description} locale={locale}>
   {activeAnnouncements.map((ann) => (
-    <div
-      class:list={[
-        'usa-site-alert',
-        ann.data.severity === 'warning' && 'usa-site-alert--emergency',
-        ann.data.severity === 'info' && 'usa-site-alert--info',
-      ]}
-      role="alert"
+    <SiteAlert
+      type={ann.data.severity === 'warning' ? 'emergency' : 'info'}
+      heading={ann.data.title}
     >
-      <div class="usa-alert">
-        <div class="usa-alert__body">
-          <h2 class="usa-alert__heading">{ann.data.title}</h2>
-          {ann.data.linkText && ann.data.linkUrl && (
-            <p class="usa-alert__text">
-              <a href={ann.data.linkUrl} class="usa-link">{ann.data.linkText}</a>
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
+      {ann.data.linkText && ann.data.linkUrl && (
+        <a href={ann.data.linkUrl} class="usa-link">{ann.data.linkText}</a>
+      )}
+    </SiteAlert>
   ))}
 
-  <section class="usa-hero" aria-label="Introduction">
-    <div class="grid-container">
-      <div class="usa-hero__callout">
-        <h1 class="usa-hero__heading">
-          <span class="usa-hero__heading--alt">{t('home.heroHeading')}</span>
-          {t('home.heroHeadingAlt')}
-        </h1>
-        <p>{t('home.heroSubheading')}</p>
-        <a class="usa-button usa-button--big" href="/services/">
-          {t('home.heroCta')}
-        </a>
-      </div>
-    </div>
-  </section>
+  <Hero
+    heading={t('home.heroHeading')}
+    headingSuffix={t('home.heroHeadingAlt')}
+    subheading={t('home.heroSubheading')}
+    ctaText={t('home.heroCta')}
+    ctaHref="/services/"
+  />
 
   <section class="usa-section" aria-labelledby="services-heading">
     <div class="grid-container">
@@ -68,26 +52,16 @@ const activeAnnouncements = (await getCollection('announcements', ({ data }) => 
       <p class="usa-intro">{t('home.servicesSubheading')}</p>
 
       <ul class="usa-card-group">
-        {services.map((service) => {
-          const slug = idToSlug(service.id);
-          return (
-            <li class="usa-card tablet:grid-col-4">
-              <div class="usa-card__container">
-                <div class="usa-card__header">
-                  <h3 class="usa-card__heading">{service.data.title}</h3>
-                </div>
-                <div class="usa-card__body">
-                  <p>{service.data.summary}</p>
-                </div>
-                <div class="usa-card__footer">
-                  <a href={`/services/${slug}/`} class="usa-button">
-                    {t('home.learnMore')}
-                  </a>
-                </div>
-              </div>
-            </li>
-          );
-        })}
+        {services.map((service) => (
+          <ServiceCard
+            title={service.data.title}
+            summary={service.data.summary}
+            href={`/services/${idToSlug(service.id)}/`}
+            ctaText={t('home.learnMore')}
+            acceptingApplications={service.data.acceptingApplications}
+            class="tablet:grid-col-4"
+          />
+        ))}
       </ul>
 
       <p class="margin-top-4">
@@ -96,26 +70,20 @@ const activeAnnouncements = (await getCollection('announcements', ({ data }) => 
     </div>
   </section>
 
-  <section class="usa-section bg-primary-darker" aria-labelledby="process-heading">
-    <div class="grid-container">
-      <h2 id="process-heading" class="font-heading-xl text-white">How to apply</h2>
-      <ol class="usa-process-list">
-        <li class="usa-process-list__item">
-          <h3 class="usa-process-list__heading">Check eligibility</h3>
-          <p>Answer a few questions to find out which programs you may qualify for. This takes about 5 minutes and does not start an application.</p>
-        </li>
-        <li class="usa-process-list__item">
-          <h3 class="usa-process-list__heading">Gather documents</h3>
-          <p>You may need proof of identity, income, and residency. Our checklist will tell you exactly what to bring.</p>
-        </li>
-        <li class="usa-process-list__item">
-          <h3 class="usa-process-list__heading">Submit your application</h3>
-          <p>Apply online in about 20 minutes. You'll get a confirmation number immediately and a decision within 30 days.</p>
-        </li>
-      </ol>
-      <a href="/services/" class="usa-button usa-button--outline usa-button--inverse">
-        {t('home.applyNow')}
-      </a>
-    </div>
-  </section>
+  <CallToAction
+    heading="How to apply"
+    primaryCta={{ label: t('home.applyNow'), href: '/services/' }}
+  >
+    <ProcessList>
+      <ProcessListItem heading="Check eligibility">
+        <p>Answer a few questions to find out which programs you may qualify for. This takes about 5 minutes and does not start an application.</p>
+      </ProcessListItem>
+      <ProcessListItem heading="Gather documents">
+        <p>You may need proof of identity, income, and residency. Our checklist will tell you exactly what to bring.</p>
+      </ProcessListItem>
+      <ProcessListItem heading="Submit your application">
+        <p>Apply online in about 20 minutes. You'll get a confirmation number immediately and a decision within 30 days.</p>
+      </ProcessListItem>
+    </ProcessList>
+  </CallToAction>
 </BaseLayout>

@@ -2,6 +2,7 @@
 import USABanner from '../components/uswds/USABanner.astro';
 import USAIdentifier from '../components/uswds/USAIdentifier.astro';
 import Header from '../components/uswds/Header.astro';
+import Footer from '../components/uswds/Footer.astro';
 import type { Locale } from '../i18n/utils';
 import { useTranslations } from '../i18n/utils';
 import { siteConfig } from '../config/site';
@@ -76,6 +77,9 @@ const currentPath = Astro.url.pathname;
     <main id="main-content" tabindex="-1">
       <slot />
     </main>
+
+    <!-- Site footer with navigation links -->
+    <Footer locale={locale} />
 
     <!-- Required: Agency identifier footer -->
     <USAIdentifier locale={locale} />

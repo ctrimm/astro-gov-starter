@@ -1,14 +1,19 @@
 ---
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Search from '../components/uswds/Search.astro';
+import Accordion from '../components/uswds/Accordion.astro';
+import AccordionItem from '../components/uswds/AccordionItem.astro';
+import SummaryBox from '../components/uswds/SummaryBox.astro';
+import SideNav from '../components/uswds/SideNav.astro';
 
 const locale = 'en';
 const faqs = (await getCollection('faqs', ({ data }) => !data.draft))
   .sort((a, b) => a.data.order - b.data.order);
 
-// Group by general vs. service-specific
 const generalFaqs = faqs.filter((f) => f.data.tags.includes('general'));
 const snapFaqs = faqs.filter((f) => f.data.tags.includes('snap') && !f.data.tags.includes('general'));
+const otherFaqs = faqs.filter((f) => !f.data.tags.includes('general') && !f.data.tags.includes('snap'));
 ---
 
 <BaseLayout
@@ -23,144 +28,74 @@ const snapFaqs = faqs.filter((f) => f.data.tags.includes('snap') && !f.data.tags
       <a href="/contact/" class="usa-link">contact us</a> and we'll help.
     </p>
 
-    <!-- Search hint (full search is Pagefind in M3) -->
-    <div class="usa-search margin-bottom-4" role="search">
-      <label class="usa-sr-only" for="help-search">Search for help topics</label>
-      <input
-        class="usa-input"
-        id="help-search"
-        type="search"
-        name="q"
-        placeholder="Search help topics…"
-        aria-label="Search help topics"
-      />
-      <button class="usa-button" type="submit">
-        <span class="usa-search__submit-text">Search</span>
-      </button>
-    </div>
+    <Search label="Search help topics" action="/search" class="margin-bottom-4" />
 
     <div class="grid-row grid-gap">
       <div class="grid-col-12 tablet:grid-col-8">
-        <!-- General FAQs -->
         {generalFaqs.length > 0 && (
           <section aria-labelledby="general-faqs-heading">
             <h2 id="general-faqs-heading">General questions</h2>
-            <div class="usa-accordion" aria-multiselectable="true">
+            <Accordion multiselectable>
               {generalFaqs.map(async (faq, i) => {
                 const { Content } = await render(faq);
                 return (
-                  <div class="usa-accordion__item">
-                    <h3 class="usa-accordion__heading">
-                      <button
-                        type="button"
-                        class="usa-accordion__button"
-                        aria-expanded={i === 0 ? 'true' : 'false'}
-                        aria-controls={`faq-general-${i}`}
-                      >
-                        {faq.data.question}
-                      </button>
-                    </h3>
-                    <div
-                      id={`faq-general-${i}`}
-                      class="usa-accordion__content usa-prose"
-                      hidden={i !== 0}
-                    >
-                      <Content />
-                    </div>
-                  </div>
+                  <AccordionItem heading={faq.data.question} expanded={i === 0} headingLevel="h3">
+                    <Content />
+                  </AccordionItem>
                 );
               })}
-            </div>
+            </Accordion>
           </section>
         )}
 
-        <!-- SNAP FAQs -->
         {snapFaqs.length > 0 && (
           <section aria-labelledby="snap-faqs-heading" class="margin-top-5">
             <h2 id="snap-faqs-heading">SNAP questions</h2>
-            <div class="usa-accordion" aria-multiselectable="true">
-              {snapFaqs.map(async (faq, i) => {
+            <Accordion multiselectable>
+              {snapFaqs.map(async (faq) => {
                 const { Content } = await render(faq);
                 return (
-                  <div class="usa-accordion__item">
-                    <h3 class="usa-accordion__heading">
-                      <button
-                        type="button"
-                        class="usa-accordion__button"
-                        aria-expanded="false"
-                        aria-controls={`faq-snap-${i}`}
-                      >
-                        {faq.data.question}
-                      </button>
-                    </h3>
-                    <div
-                      id={`faq-snap-${i}`}
-                      class="usa-accordion__content usa-prose"
-                      hidden
-                    >
-                      <Content />
-                    </div>
-                  </div>
+                  <AccordionItem heading={faq.data.question} headingLevel="h3">
+                    <Content />
+                  </AccordionItem>
                 );
               })}
-            </div>
+            </Accordion>
           </section>
         )}
 
-        <!-- All remaining FAQs not already shown -->
-        <section class="margin-top-5" aria-labelledby="all-faqs-heading">
-          <h2 id="all-faqs-heading">More questions</h2>
-          <div class="usa-accordion" aria-multiselectable="true">
-            {faqs
-              .filter((f) => !f.data.tags.includes('general') && !f.data.tags.includes('snap'))
-              .map(async (faq, i) => {
+        {otherFaqs.length > 0 && (
+          <section class="margin-top-5" aria-labelledby="all-faqs-heading">
+            <h2 id="all-faqs-heading">More questions</h2>
+            <Accordion multiselectable>
+              {otherFaqs.map(async (faq) => {
                 const { Content } = await render(faq);
                 return (
-                  <div class="usa-accordion__item">
-                    <h3 class="usa-accordion__heading">
-                      <button
-                        type="button"
-                        class="usa-accordion__button"
-                        aria-expanded="false"
-                        aria-controls={`faq-other-${i}`}
-                      >
-                        {faq.data.question}
-                      </button>
-                    </h3>
-                    <div
-                      id={`faq-other-${i}`}
-                      class="usa-accordion__content usa-prose"
-                      hidden
-                    >
-                      <Content />
-                    </div>
-                  </div>
+                  <AccordionItem heading={faq.data.question} headingLevel="h3">
+                    <Content />
+                  </AccordionItem>
                 );
               })}
-          </div>
-        </section>
+            </Accordion>
+          </section>
+        )}
       </div>
 
-      <!-- Sidebar: quick links -->
       <div class="grid-col-12 tablet:grid-col-4">
-        <nav class="usa-sidenav" aria-label="Help topics">
-          <ul class="usa-sidenav__item">
-            <li><a href="#general-faqs-heading" class="usa-link">General questions</a></li>
-            <li><a href="#snap-faqs-heading" class="usa-link">SNAP questions</a></li>
-            <li><a href="/contact/" class="usa-link">Contact us</a></li>
-          </ul>
-        </nav>
+        <SideNav
+          label="Help topics"
+          items={[
+            { label: 'General questions', href: '#general-faqs-heading' },
+            { label: 'SNAP questions', href: '#snap-faqs-heading' },
+            { label: 'Contact us', href: '/contact/' },
+          ]}
+        />
 
-        <div class="usa-summary-box margin-top-4">
-          <div class="usa-summary-box__body">
-            <h2 class="usa-summary-box__heading">Still need help?</h2>
-            <div class="usa-summary-box__text">
-              <p>Call us at <a href="tel:18005550100" class="usa-link">1-800-555-0100</a></p>
-              <p class="font-sans-sm text-base">Monday–Friday, 8 a.m.–8 p.m. ET</p>
-              <a href="/contact/" class="usa-button usa-button--outline">Send a message</a>
-            </div>
-          </div>
-        </div>
+        <SummaryBox heading="Still need help?" class="margin-top-4">
+          <p>Call us at <a href="tel:18005550100" class="usa-link">1-800-555-0100</a></p>
+          <p class="font-sans-sm text-base">Monday–Friday, 8 a.m.–8 p.m. ET</p>
+          <a href="/contact/" class="usa-button usa-button--outline">Send a message</a>
+        </SummaryBox>
       </div>
     </div>
   </div>

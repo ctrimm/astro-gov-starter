@@ -1,0 +1,68 @@
+---
+/**
+ * Search — usa-search
+ * https://designsystem.digital.gov/components/search/
+ *
+ * Renders the USWDS accessible search input pattern.
+ * Wiring to a search backend (Pagefind, API) is left to the page.
+ */
+
+type SearchSize = 'big' | 'default' | 'small';
+
+interface Props {
+  /** Input name attribute */
+  name?: string;
+  /** Placeholder / accessible label */
+  label?: string;
+  /** Form action URL */
+  action?: string;
+  /** Size variant */
+  size?: SearchSize;
+  /** Default value */
+  value?: string;
+  /** Input id (auto-generated if omitted) */
+  id?: string;
+  class?: string;
+}
+
+const {
+  name = 'q',
+  label = 'Search',
+  action = '/search',
+  size = 'default',
+  value,
+  id = `search-${Math.random().toString(36).slice(2, 8)}`,
+  class: className,
+} = Astro.props;
+---
+
+<section
+  aria-label={label}
+  class:list={[
+    'usa-search',
+    size === 'big' && 'usa-search--big',
+    size === 'small' && 'usa-search--small',
+    className,
+  ]}
+>
+  <form role="search" method="get" action={action}>
+    <label class="usa-sr-only" for={id}>{label}</label>
+    <input
+      class="usa-input"
+      id={id}
+      type="search"
+      name={name}
+      value={value}
+      aria-label={label}
+    />
+    <button class="usa-button" type="submit">
+      <img
+        src="/uswds/img/usa-icons-bg/search--white.svg"
+        class="usa-search__submit-icon"
+        alt="Search"
+        aria-hidden="true"
+      />
+      <span class="usa-search__submit-text">{label}</span>
+    </button>
+  </form>
+</section>

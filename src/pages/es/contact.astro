@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import SummaryBox from '../../components/uswds/SummaryBox.astro';
 
 const locale = 'es';
 ---
@@ -78,21 +79,16 @@ const locale = 'es';
       </div>
 
       <div class="grid-col-12 tablet:grid-col-5">
-        <div class="usa-summary-box" role="complementary" aria-label="Otras formas de contactarnos">
-          <div class="usa-summary-box__body">
-            <h2 class="usa-summary-box__heading">Otras formas de contactarnos</h2>
-            <div class="usa-summary-box__text">
-              <h3 class="font-heading-sm margin-bottom-0">Teléfono</h3>
-              <p>
-                <a href="tel:18005550100" class="usa-link">1-800-555-0100</a><br />
-                TTY: <a href="tel:18005550101" class="usa-link">1-800-555-0101</a><br />
-                <span class="text-base font-sans-sm">Lunes a viernes, 8 a.m.–8 p.m. ET</span>
-              </p>
-              <h3 class="font-heading-sm margin-bottom-0">Tiempo de respuesta</h3>
-              <p>Respondemos a los mensajes en 2 días hábiles.</p>
-            </div>
-          </div>
-        </div>
+        <SummaryBox heading="Otras formas de contactarnos" label="Otras formas de contactarnos">
+          <h3 class="font-heading-sm margin-bottom-0">Teléfono</h3>
+          <p>
+            <a href="tel:18005550100" class="usa-link">1-800-555-0100</a><br />
+            TTY: <a href="tel:18005550101" class="usa-link">1-800-555-0101</a><br />
+            <span class="text-base font-sans-sm">Lunes a viernes, 8 a.m.–8 p.m. ET</span>
+          </p>
+          <h3 class="font-heading-sm margin-bottom-0">Tiempo de respuesta</h3>
+          <p>Respondemos a los mensajes en 2 días hábiles.</p>
+        </SummaryBox>
       </div>
     </div>
   </div>

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import SummaryBox from '../components/uswds/SummaryBox.astro';
 
 const locale = 'en';
 ---
@@ -132,40 +133,35 @@ const locale = 'en';
 
       <!-- Contact details sidebar -->
       <div class="grid-col-12 tablet:grid-col-5">
-        <div class="usa-summary-box" role="complementary" aria-label="Other ways to reach us">
-          <div class="usa-summary-box__body">
-            <h2 class="usa-summary-box__heading">Other ways to reach us</h2>
-            <div class="usa-summary-box__text">
-              <h3 class="font-heading-sm margin-bottom-0">Phone</h3>
-              <p>
-                <a href="tel:18005550100" class="usa-link">1-800-555-0100</a>
-                <br />
-                TTY: <a href="tel:18005550101" class="usa-link">1-800-555-0101</a>
-                <br />
-                <span class="text-base font-sans-sm">Monday–Friday, 8 a.m.–8 p.m. ET</span>
-              </p>
+        <SummaryBox heading="Other ways to reach us" label="Other ways to reach us">
+          <h3 class="font-heading-sm margin-bottom-0">Phone</h3>
+          <p>
+            <a href="tel:18005550100" class="usa-link">1-800-555-0100</a>
+            <br />
+            TTY: <a href="tel:18005550101" class="usa-link">1-800-555-0101</a>
+            <br />
+            <span class="text-base font-sans-sm">Monday–Friday, 8 a.m.–8 p.m. ET</span>
+          </p>
 
-              <h3 class="font-heading-sm margin-bottom-0">In person</h3>
-              <p>
-                <a href="https://www.google.com/maps" class="usa-link" rel="noreferrer">
-                  Find an office near you
-                </a>
-                <br />
-                <span class="text-base font-sans-sm">No appointment needed for most services.</span>
-              </p>
+          <h3 class="font-heading-sm margin-bottom-0">In person</h3>
+          <p>
+            <a href="https://www.google.com/maps" class="usa-link" rel="noreferrer">
+              Find an office near you
+            </a>
+            <br />
+            <span class="text-base font-sans-sm">No appointment needed for most services.</span>
+          </p>
 
-              <h3 class="font-heading-sm margin-bottom-0">Mail</h3>
-              <address class="usa-prose">
-                Agency Name<br />
-                123 Main Street, Suite 100<br />
-                City, ST 00000
-              </address>
+          <h3 class="font-heading-sm margin-bottom-0">Mail</h3>
+          <address class="usa-prose">
+            Agency Name<br />
+            123 Main Street, Suite 100<br />
+            City, ST 00000
+          </address>
 
-              <h3 class="font-heading-sm margin-bottom-0">Response time</h3>
-              <p>We respond to messages within 2 business days.</p>
-            </div>
-          </div>
-        </div>
+          <h3 class="font-heading-sm margin-bottom-0">Response time</h3>
+          <p>We respond to messages within 2 business days.</p>
+        </SummaryBox>
       </div>
     </div>
   </div>

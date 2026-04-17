@@ -1,0 +1,50 @@
+---
+/**
+ * Alert — usa-alert
+ * https://designsystem.digital.gov/components/alert/
+ *
+ * Use for page-level informational messages.
+ * For site-wide banners above the header, use SiteAlert.
+ */
+
+interface Props {
+  /** Visual style and semantic meaning */
+  type?: 'info' | 'success' | 'warning' | 'error';
+  /** Optional heading text */
+  heading?: string;
+  /** Slimmer, single-line variant without icon */
+  slim?: boolean;
+  /** Remove the left border/icon (rarely needed) */
+  noIcon?: boolean;
+  /** ARIA role — 'alert' for urgent, 'status' for non-urgent */
+  role?: 'alert' | 'status' | 'region';
+  class?: string;
+}
+
+const {
+  type = 'info',
+  heading,
+  slim = false,
+  noIcon = false,
+  role = type === 'error' || type === 'warning' ? 'alert' : 'status',
+  class: className,
+} = Astro.props;
+---
+
+<div
+  class:list={[
+    'usa-alert',
+    `usa-alert--${type}`,
+    slim && 'usa-alert--slim',
+    noIcon && 'usa-alert--no-icon',
+    className,
+  ]}
+  role={role}
+>
+  <div class="usa-alert__body">
+    {heading && <h4 class="usa-alert__heading">{heading}</h4>}
+    <div class="usa-alert__text">
+      <slot />
+    </div>
+  </div>
+</div>

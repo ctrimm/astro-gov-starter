@@ -1,0 +1,49 @@
+---
+/**
+ * SiteAlert — usa-site-alert
+ * https://designsystem.digital.gov/components/site-alert/
+ *
+ * Full-width banner above or below the header for site-wide notices.
+ * Use for maintenance windows, major service disruptions, or emergencies.
+ */
+
+interface Props {
+  type?: 'info' | 'emergency';
+  heading?: string;
+  /** Show the "official" header variant (narrower, no heading) */
+  slim?: boolean;
+  /** Remove icon */
+  noIcon?: boolean;
+  role?: 'alert' | 'status';
+  class?: string;
+}
+
+const {
+  type = 'info',
+  heading,
+  slim = false,
+  noIcon = false,
+  role = type === 'emergency' ? 'alert' : 'status',
+  class: className,
+} = Astro.props;
+---
+
+<section
+  class:list={[
+    'usa-site-alert',
+    type === 'emergency' ? 'usa-site-alert--emergency' : 'usa-site-alert--info',
+    slim && 'usa-site-alert--slim',
+    noIcon && 'usa-site-alert--no-icon',
+    className,
+  ]}
+  aria-label={type === 'emergency' ? 'Emergency alert' : 'Site alert'}
+>
+  <div class="usa-alert" role={role}>
+    <div class="usa-alert__body">
+      {heading && <h2 class="usa-alert__heading">{heading}</h2>}
+      <div class="usa-alert__text">
+        <slot />
+      </div>
+    </div>
+  </div>
+</section>
