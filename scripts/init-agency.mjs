@@ -26,17 +26,6 @@ function ask(question, defaultValue = '') {
   });
 }
 
-function confirm(question, defaultYes = true) {
-  const hint = defaultYes ? '[Y/n]' : '[y/N]';
-  return new Promise((resolve) => {
-    rl.question(`${question} ${hint}: `, (answer) => {
-      const a = answer.trim().toLowerCase();
-      if (!a) resolve(defaultYes);
-      else resolve(a === 'y' || a === 'yes');
-    });
-  });
-}
-
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 console.log('');
@@ -52,7 +41,6 @@ console.log('');
 
 const agencyName = await ask('Agency / site name', 'My Agency');
 const domain = await ask('Agency domain (no https://)', 'myagency.gov');
-const siteUrl = await ask('Full site URL', `https://${domain}`);
 const description = await ask(
   'Site description (meta description)',
   `${agencyName} — programs and services for eligible residents.`
@@ -69,9 +57,6 @@ const oig = await ask('Inspector General URL', 'https://www.oversight.gov/');
 const budget = await ask('Budget & performance URL', `https://${domain}/performance/`);
 const privacy = await ask('Privacy policy URL', `/privacy/`);
 const shortName = await ask('Agency short name (abbreviation)', agencyName.split(' ').map(w => w[0]).join('').toUpperCase() || 'Agency');
-
-console.log('');
-const wantEs = await confirm('Enable Spanish (es) locale?', true);
 
 // ─── Write site.ts ────────────────────────────────────────────────────────────
 

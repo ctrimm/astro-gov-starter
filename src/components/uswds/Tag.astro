@@ -7,8 +7,12 @@
  */
 
 interface Props {
-  /** Background color token applied via usa-tag--{color} */
-  color?: 'new' | 'informative' | 'cool' | 'warn' | 'error' | 'success';
+  /**
+   * Background color applied via usa-tag--{color} or a USWDS bg- utility class.
+   * USWDS standard status colors: 'new' | 'informative' | 'cool' | 'warn' | 'error' | 'success'
+   * Pass any string to use arbitrary USWDS color tokens.
+   */
+  color?: string;
   /** Larger font size */
   big?: boolean;
   class?: string;

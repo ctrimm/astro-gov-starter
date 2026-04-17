@@ -5,7 +5,7 @@ export type Locale = 'en' | 'es';
 
 const translations = { en, es } as const;
 
-type TranslationKeys = typeof en;
+export type TranslationKeys = typeof en;
 
 export function useTranslations(locale: Locale) {
   return function t(key: string): string {

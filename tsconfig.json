@@ -10,5 +10,11 @@
       "@i18n/*": ["src/i18n/*"],
       "@config/*": ["src/config/*"]
     }
-  }
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    "public",
+    "scripts"
+  ]
 }
