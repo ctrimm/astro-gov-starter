@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 const locale = 'es';
@@ -25,7 +25,7 @@ const faqs = (await getCollection('faqs', ({ data }) => !data.draft))
           <h2 id="faqs-heading-es">Preguntas frecuentes</h2>
           <div class="usa-accordion" aria-multiselectable="true">
             {faqs.map(async (faq, i) => {
-              const { Content } = await faq.render();
+              const { Content } = await render(faq);
               const question = faq.data.esQuestion ?? faq.data.question;
               return (
                 <div class="usa-accordion__item">

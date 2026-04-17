@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 
 const locale = 'en';
@@ -47,7 +47,7 @@ const snapFaqs = faqs.filter((f) => f.data.tags.includes('snap') && !f.data.tags
             <h2 id="general-faqs-heading">General questions</h2>
             <div class="usa-accordion" aria-multiselectable="true">
               {generalFaqs.map(async (faq, i) => {
-                const { Content } = await faq.render();
+                const { Content } = await render(faq);
                 return (
                   <div class="usa-accordion__item">
                     <h3 class="usa-accordion__heading">
@@ -80,7 +80,7 @@ const snapFaqs = faqs.filter((f) => f.data.tags.includes('snap') && !f.data.tags
             <h2 id="snap-faqs-heading">SNAP questions</h2>
             <div class="usa-accordion" aria-multiselectable="true">
               {snapFaqs.map(async (faq, i) => {
-                const { Content } = await faq.render();
+                const { Content } = await render(faq);
                 return (
                   <div class="usa-accordion__item">
                     <h3 class="usa-accordion__heading">
@@ -114,7 +114,7 @@ const snapFaqs = faqs.filter((f) => f.data.tags.includes('snap') && !f.data.tags
             {faqs
               .filter((f) => !f.data.tags.includes('general') && !f.data.tags.includes('snap'))
               .map(async (faq, i) => {
-                const { Content } = await faq.render();
+                const { Content } = await render(faq);
                 return (
                   <div class="usa-accordion__item">
                     <h3 class="usa-accordion__heading">
