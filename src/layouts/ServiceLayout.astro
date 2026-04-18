@@ -38,9 +38,8 @@ const allCrumbs = [
 ---
 
 <BaseLayout title={title} description={description} locale={locale}>
-  <Breadcrumb items={allCrumbs} wrap />
-
   <div class="grid-container usa-section">
+    <Breadcrumb items={allCrumbs} wrap />
     <div class="grid-row grid-gap">
       <div class="grid-col-12 tablet:grid-col-8">
         {!acceptingApplications && (
