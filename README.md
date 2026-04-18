@@ -10,6 +10,10 @@
 
 ---
 
+<img width="2619" height="2157" alt="pretty_snap_2026_3_18_6_15" src="https://github.com/user-attachments/assets/f7c5085c-6fe2-4aac-9f37-a3eda91f597d" />
+
+---
+
 ## Use this template
 
 Click **"Use this template"** on GitHub to create your own repository, then run the setup wizard:
