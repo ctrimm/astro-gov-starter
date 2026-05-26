@@ -98,14 +98,26 @@ jobs:
           name: dist
           path: dist/
 
-      # Install a matched Chrome + ChromeDriver pair so the versions never drift.
-      # install-chromedriver: true is required — without it the action skips
-      # ChromeDriver and chromedriver-path output is empty.
-      # Passing --chromedriver-path overrides the driver @axe-core/cli bundles.
-      - uses: browser-actions/setup-chrome@v1
-        id: setup-chrome
-        with:
-          install-chromedriver: true
+      # @axe-core/cli bundles the latest ChromeDriver, which is typically one
+      # version ahead of the Chrome pre-installed on the runner. Fix by using
+      # browser-driver-manager (the tool axe-core itself recommends) to install
+      # a ChromeDriver that exactly matches the runner's installed Chrome version.
+      # After install, browser-driver-manager writes paths to
+      # ~/.browser-driver-manager/.env (CHROMEDRIVER_TEST_PATH, CHROME_TEST_PATH).
+      - name: Install ChromeDriver matching runner Chrome
+        run: |
+          CHROME_VER=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+\.\d+')
+          echo "Runner Chrome: $CHROME_VER"
+          npx -y browser-driver-manager install chrome@${CHROME_VER}
+          source "$HOME/.browser-driver-manager/.env"
+          # Paths in .env are relative to $HOME when they don't start with /
+          DRIVER="$CHROMEDRIVER_TEST_PATH"
+          [[ "$DRIVER" != /* ]] && DRIVER="$HOME/$DRIVER"
+          if [ ! -f "$DRIVER" ]; then
+            echo "::error::ChromeDriver not found at $DRIVER" && exit 1
+          fi
+          echo "CHROMEDRIVER_PATH=$DRIVER" >> "$GITHUB_ENV"
+          echo "Ready: $($DRIVER --version)"
 
       - name: Start static server
         run: npx -y serve dist --listen 4000 &
@@ -120,7 +132,7 @@ jobs:
             http://localhost:4000/services/ \
             http://localhost:4000/help/ \
             http://localhost:4000/contact/ \
-            --chromedriver-path "${{ steps.setup-chrome.outputs.chromedriver-path }}" \
+            --chromedriver-path "$CHROMEDRIVER_PATH" \
             --exit \
             --timeout 60000
 
