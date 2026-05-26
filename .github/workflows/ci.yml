@@ -99,10 +99,13 @@ jobs:
           path: dist/
 
       # Install a matched Chrome + ChromeDriver pair so the versions never drift.
-      # @axe-core/cli bundles its own ChromeDriver; passing --chromedriver-path
-      # overrides it with the version that matches the Chrome we just installed.
+      # install-chromedriver: true is required — without it the action skips
+      # ChromeDriver and chromedriver-path output is empty.
+      # Passing --chromedriver-path overrides the driver @axe-core/cli bundles.
       - uses: browser-actions/setup-chrome@v1
         id: setup-chrome
+        with:
+          install-chromedriver: true
 
       - name: Start static server
         run: npx -y serve dist --listen 4000 &
