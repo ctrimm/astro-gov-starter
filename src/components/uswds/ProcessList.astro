@@ -16,6 +16,11 @@
 
 interface Step {
   heading: string;
+  /**
+   * Rendered as raw HTML via set:html — NEVER pass unsanitized
+   * user- or CMS-supplied content here (XSS risk). For untrusted
+   * content, use the slot-based <ProcessListItem> API with text children.
+   */
   content: string;
 }
 

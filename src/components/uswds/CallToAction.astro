@@ -33,7 +33,7 @@ const {
   class: className,
 } = Astro.props;
 
-const headingId = `cta-heading-${Math.random().toString(36).slice(2, 8)}`;
+const headingId = `cta-heading-${crypto.randomUUID().slice(0, 8)}`;
 ---
 
 <section

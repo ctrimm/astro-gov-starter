@@ -31,7 +31,7 @@ const {
   action = '/search',
   size = 'default',
   value,
-  id = `search-${Math.random().toString(36).slice(2, 8)}`,
+  id = `search-${crypto.randomUUID().slice(0, 8)}`,
   class: className,
 } = Astro.props;
 

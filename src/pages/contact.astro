@@ -1,8 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SummaryBox from '../components/uswds/SummaryBox.astro';
+import { useTranslations } from '../i18n/utils';
 
 const locale = 'en';
+const t = useTranslations(locale);
 ---
 
 <BaseLayout
@@ -33,7 +35,7 @@ const locale = 'en';
           aria-label="Contact form"
           novalidate
         >
-          <p class="usa-hint">Required fields are marked with an asterisk (*).</p>
+          <p class="usa-hint">{t('a11y.requiredFields')}.</p>
 
           <div class="usa-form-group">
             <label class="usa-label" for="contact-name">

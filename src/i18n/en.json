@@ -48,7 +48,19 @@
     "contactUs": "Contact us",
     "phone": "1\u2011800\u20115550100",
     "email": "contact@agency.gov",
-    "hours": "Monday–Friday, 8 a.m.–8 p.m. ET"
+    "hours": "Monday–Friday, 8 a.m.–8 p.m. ET",
+    "returnToTop": "Return to top"
+  },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Previous",
+    "previousPage": "Previous page",
+    "next": "Next",
+    "nextPage": "Next page",
+    "page": "Page"
+  },
+  "serviceCard": {
+    "notAccepting": "Not accepting applications"
   },
   "a11y": {
     "requiredFields": "Required fields are marked with an asterisk (*)",

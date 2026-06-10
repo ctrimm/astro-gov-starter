@@ -30,6 +30,7 @@ const services = (await getCollection('services', ({ data }) => !data.draft))
           href={`/es/services/${idToSlug(service.id)}/`}
           ctaText="Más información"
           acceptingApplications={service.data.acceptingApplications}
+          locale={locale}
           class="tablet:grid-col-6 desktop:grid-col-4"
         />
       ))}
@@ -40,6 +41,11 @@ const services = (await getCollection('services', ({ data }) => !data.draft))
         <strong>¿No encuentra lo que necesita?</strong> Visite nuestro{' '}
         <a href={withBase('/es/help/')} class="usa-link">centro de ayuda</a> o{' '}
         <a href={withBase('/es/contact/')} class="usa-link">contáctenos</a>.
+      </p>
+      <p>
+        También puede visitar{' '}
+        <a href="https://www.benefits.gov/es" class="usa-link" rel="noreferrer">Benefits.gov</a>{' '}
+        para encontrar programas federales adicionales.
       </p>
     </div>
   </div>

@@ -1,3 +1,7 @@
+# NOTE: GitHub Pages does not support custom HTTP response headers, so the
+# security headers in public/_headers (frame-ancestors, X-Frame-Options, HSTS…)
+# are NOT applied on this deployment target. See the "Security headers" note in
+# README.md for alternatives (Netlify/Cloudflare Pages, or a CDN in front).
 name: Deploy to GitHub Pages
 
 on:

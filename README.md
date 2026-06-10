@@ -37,7 +37,7 @@ Your site will be at `http://localhost:4321`.
 | **Required components** | USA Banner + USA Identifier on every page |
 | **Component library** | 20 thin Astro wrappers for USWDS patterns |
 | **i18n** | English (`/`) and Spanish (`/es/`) with Astro's built-in routing |
-| **Content collections** | Services, announcements, FAQs, pages — Zod-typed, MDX-ready |
+| **Content collections** | Services, announcements, FAQs — Zod-typed, MDX-ready |
 | **CI quality gates** | TypeScript, HTML, axe-core, Lighthouse, links, plain language, USWDS compliance |
 | **Output** | Static — deploys to GitHub Pages, Cloud.gov Pages, Netlify, Vercel, S3 |
 
@@ -72,19 +72,23 @@ All agency-specific settings live in one file:
 // src/config/site.ts
 export const siteConfig = {
   name: 'Department of Human Services',
+  shortName: 'DHS',
   domain: 'dhs.state.gov',
-  url: 'https://dhs.state.gov',
   description: 'Programs and services for eligible residents.',
-  identifierLinks: {
-    about: 'https://dhs.state.gov/about/',
-    accessibility: 'https://dhs.state.gov/accessibility/',
+  locale: 'en-US',
+
+  // Required links for the USA Identifier footer component
+  links: {
+    about: '/about/',
+    accessibility: '/accessibility/',
     foia: 'https://www.foia.gov/',
-    noFear: 'https://www.opm.gov/about-us/no-fear-act/',
-    inspector: 'https://dhs.state.gov/inspector-general/',
-    performance: 'https://dhs.state.gov/performance/',
-    privacy: 'https://dhs.state.gov/privacy/',
+    noFear: 'https://www.eeoc.gov/no-fear-act-data',
+    oig: 'https://www.oversight.gov/',
+    privacy: '/privacy/',
+    budget: '/',
+    usagov: 'https://www.usa.gov/',
   },
-};
+} as const;
 ```
 
 ---
@@ -94,7 +98,7 @@ export const siteConfig = {
 ```
 src/
 ├── config/site.ts              # Agency name, domain, identifier links ← edit this first
-├── content/                    # Markdown content (services, faqs, announcements, pages)
+├── content/                    # Markdown content (services, faqs, announcements)
 ├── components/uswds/           # 20 USWDS pattern wrappers (Alert, Accordion, Hero, …)
 ├── i18n/                       # Translation strings (en, es) + useTranslations helper
 ├── layouts/                    # BaseLayout, ServiceLayout, ApplyLayout
@@ -167,6 +171,14 @@ bash scripts/check.sh --verbose # same, with per-file output
 Push to `main`. The workflow in `.github/workflows/deploy-pages.yml` deploys automatically.
 Enable Pages: **Settings → Pages → Source: GitHub Actions**.
 
+> **⚠️ Security headers:** GitHub Pages does **not** support custom HTTP response
+> headers, so the headers in `public/_headers` (clickjacking protection via
+> `frame-ancestors`, `X-Frame-Options`, HSTS, etc.) are silently ignored on
+> GitHub Pages. They only take effect on Netlify or Cloudflare Pages. If you need
+> these protections — and production government sites should have them — deploy
+> to a host that supports response headers, or put a CDN/reverse proxy (e.g.
+> CloudFront) in front of Pages and set the headers there.
+
 ### Cloud.gov Pages
 
 ```yaml
@@ -189,6 +201,34 @@ Both auto-detect Astro. Set **build command** to `pnpm build` and **publish dire
 pnpm build   # outputs to dist/
 ```
 Upload the contents of `dist/` to your bucket or CDN origin.
+
+---
+
+## Forms
+
+The contact form (`/contact/`) and eligibility screeners (`/apply/*`) are
+**accessible scaffolding only** — they do not submit anywhere out of the box.
+Before launch, wire the `action` attributes to your backend of choice
+(Formspree, API Gateway + Lambda, your agency's form service, etc.). Look for
+the `TODO (M3)` comments in `src/pages/contact.astro`,
+`src/pages/es/contact.astro`, and the apply page templates.
+
+---
+
+## Adding a new language
+
+The template ships with English (`/`) and Spanish (`/es/`). To add another
+language (e.g. French):
+
+1. Add `'fr'` to `i18n.locales` in `astro.config.mjs` and to the sitemap
+   integration's `i18n.locales` map
+2. Create `src/i18n/fr.json` (copy `en.json` and translate) and register it in
+   `src/i18n/utils.ts` (`Locale` type + `translations` map)
+3. Create `src/pages/fr/` mirroring the routes in `src/pages/`
+4. Add translated fields to content collections as needed (see `esSlug` /
+   `esQuestion` in `src/content.config.ts` for the pattern)
+5. Add the locale to the hreflang/og:locale logic in
+   `src/layouts/BaseLayout.astro` and the language toggle in the Header
 
 ---
 

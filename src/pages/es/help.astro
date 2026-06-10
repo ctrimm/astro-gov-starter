@@ -6,9 +6,10 @@ import Accordion from '../../components/uswds/Accordion.astro';
 import AccordionItem from '../../components/uswds/AccordionItem.astro';
 import SummaryBox from '../../components/uswds/SummaryBox.astro';
 import SideNav from '../../components/uswds/SideNav.astro';
-import { withBase } from '../../i18n/utils';
+import { useTranslations, withBase } from '../../i18n/utils';
 
 const locale = 'es';
+const t = useTranslations(locale);
 const faqs = (await getCollection('faqs', ({ data }) => !data.draft))
   .sort((a, b) => a.data.order - b.data.order);
 
@@ -96,8 +97,8 @@ const otherFaqs = faqs.filter((f) => !f.data.tags.includes('general') && !f.data
         />
 
         <SummaryBox heading="¿Aún necesita ayuda?" class="margin-top-4">
-          <p>Llámenos al <a href="tel:18005550100" class="usa-link">1&#8209;800&#8209;555&#8209;0100</a></p>
-          <p class="font-sans-sm text-base-dark">Lunes a viernes, 8 a.m.–8 p.m. ET</p>
+          <p>Llámenos al <a href={`tel:${t('footer.phone').replace(/[^0-9]/g, '')}`} class="usa-link">{t('footer.phone')}</a></p>
+          <p class="font-sans-sm text-base-dark">{t('footer.hours')}</p>
           <a href={withBase('/es/contact/')} class="usa-button usa-button--outline">Enviar un mensaje</a>
         </SummaryBox>
       </div>

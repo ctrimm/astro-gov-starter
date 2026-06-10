@@ -20,7 +20,7 @@ interface Props {
 const {
   heading,
   expanded = false,
-  id = `accordion-${Math.random().toString(36).slice(2, 8)}`,
+  id = `accordion-${crypto.randomUUID().slice(0, 8)}`,
   headingLevel: HeadingTag = 'h3',
 } = Astro.props;
 ---

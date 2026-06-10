@@ -60,6 +60,7 @@ const activeAnnouncements = await getCollection('announcements', ({ data }) => {
             href={`/es/services/${idToSlug(service.id)}/`}
             ctaText={t('home.learnMore')}
             acceptingApplications={service.data.acceptingApplications}
+            locale={locale}
             class="tablet:grid-col-4"
           />
         ))}

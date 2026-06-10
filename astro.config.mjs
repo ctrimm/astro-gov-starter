@@ -1,5 +1,6 @@
 import { defineConfig, envField } from 'astro/config';
 import mdx from '@astrojs/mdx';
+import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath } from 'url';
 import { resolve } from 'path';
@@ -14,7 +15,18 @@ export default defineConfig({
   // Ensure BASE_URL always ends with / so ${base}asset paths join correctly
   base: (process.env.BASE_PATH || '/').replace(/\/?$/, '/'),
 
-  integrations: [mdx()],
+  integrations: [
+    mdx(),
+    // Generates /sitemap-index.xml at build time using the SITE env var.
+    // The dev-only component preview is excluded from indexing.
+    sitemap({
+      filter: (page) => !page.includes('/internal/'),
+      i18n: {
+        defaultLocale: 'en',
+        locales: { en: 'en-US', es: 'es-US' },
+      },
+    }),
+  ],
 
   output: 'static',
 

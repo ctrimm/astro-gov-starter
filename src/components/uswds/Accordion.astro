@@ -13,7 +13,11 @@
 
 interface AccordionItem {
   heading: string;
-  /** Rendered as HTML — sanitize externally if user-supplied */
+  /**
+   * Rendered as raw HTML via set:html — NEVER pass unsanitized
+   * user- or CMS-supplied content here (XSS risk). For untrusted
+   * content, use the slot-based <AccordionItem> API with text children.
+   */
   content?: string;
   expanded?: boolean;
   id?: string;
@@ -36,14 +40,16 @@ const {
 } = Astro.props;
 
 // Auto-generate IDs when not provided
+const uid = crypto.randomUUID().slice(0, 8);
 const resolvedItems = items?.map((item, i) => ({
   ...item,
-  id: item.id ?? `accordion-item-${Math.random().toString(36).slice(2, 8)}-${i}`,
+  id: item.id ?? `accordion-item-${uid}-${i}`,
 }));
 ---
 
 <div
   class:list={['usa-accordion', bordered && 'usa-accordion--bordered', className]}
+  data-allow-multiple={multiselectable ? '' : undefined}
 >
   {resolvedItems ? (
     resolvedItems.map((item) => (
