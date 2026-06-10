@@ -6,14 +6,17 @@
     "require-sri": "off",
     "no-unknown-elements": "off",
     "prefer-native-element": "off",
-    "heading-level": "off",
-    "wcag/h30": "off",
-    "wcag/h32": "off",
-    "wcag/h36": "off",
-    "wcag/h37": "off",
-    "wcag/h63": "off",
     "aria-label-misuse": "warn",
     "missing-doctype": "error",
-    "void-style": "off"
+    "void-style": "off",
+    "heading-level": "error",
+    "input-missing-label": "error",
+    "wcag/h30": "error",
+    "wcag/h32": "error",
+    "wcag/h36": "error",
+    "wcag/h37": "error",
+    "wcag/h63": "error",
+    "wcag/h67": "error",
+    "wcag/h71": "error"
   }
 }

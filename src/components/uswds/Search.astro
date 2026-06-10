@@ -28,14 +28,18 @@ interface Props {
 const {
   name = 'q',
   label = 'Search',
-  action = '/search',
+  action = '/search/',
   size = 'default',
   value,
-  id = `search-${Math.random().toString(36).slice(2, 8)}`,
+  id = `search-${crypto.randomUUID().slice(0, 8)}`,
   class: className,
 } = Astro.props;
 
+import { withBase } from '../../i18n/utils';
+
 const base = import.meta.env.BASE_URL;
+// Site-relative actions get the deployment base path prepended
+const resolvedAction = action.startsWith('/') ? withBase(action) : action;
 ---
 
 <section
@@ -47,7 +51,7 @@ const base = import.meta.env.BASE_URL;
     className,
   ]}
 >
-  <form role="search" method="get" action={action}>
+  <form role="search" method="get" action={resolvedAction}>
     <label class="usa-sr-only" for={id}>{label}</label>
     <input
       class="usa-input"

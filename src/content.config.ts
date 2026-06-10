@@ -53,17 +53,4 @@ const faqs = defineCollection({
   }),
 });
 
-// ── Pages ─────────────────────────────────────────────────────────────────────
-const pages = defineCollection({
-  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/pages' }),
-  schema: z.object({
-    title: z.string(),
-    description: z.string().optional(),
-    shortTitle: z.string().optional(),
-    noindex: z.boolean().default(false),
-    updatedDate: z.coerce.date().optional(),
-    draft: z.boolean().default(false),
-  }),
-});
-
-export const collections = { services, announcements, faqs, pages };
+export const collections = { services, announcements, faqs };

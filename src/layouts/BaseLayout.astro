@@ -45,6 +45,16 @@ const rawPath = Astro.url.pathname;
 const currentPath = basePath && rawPath.startsWith(basePath)
   ? rawPath.slice(basePath.length) || '/'
   : rawPath;
+
+// Absolute URLs for canonical/hreflang/og — include the base path so
+// subpath deployments (e.g. GitHub Pages project sites) emit correct URLs
+const siteOrigin = `https://${siteConfig.domain}`;
+const enPath = currentPath.replace(/^\/es/, '') || '/';
+const esPath = `/es${currentPath.startsWith('/es') ? currentPath.replace(/^\/es/, '') : currentPath}`;
+const pageUrl = `${siteOrigin}${basePath}${currentPath}`;
+const resolvedCanonical = canonicalUrl ?? pageUrl;
+const ogLocale = locale === 'es' ? 'es_US' : 'en_US';
+const ogLocaleAlternate = locale === 'es' ? 'en_US' : 'es_US';
 ---
 
 <!doctype html>
@@ -57,17 +67,20 @@ const currentPath = basePath && rawPath.startsWith(basePath)
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
 
-    {canonicalUrl && <link rel="canonical" href={canonicalUrl} />}
+    {!noindex && <link rel="canonical" href={resolvedCanonical} />}
 
     <!-- Open Graph -->
     <meta property="og:title" content={pageTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale:alternate" content={ogLocaleAlternate} />
     {ogImage && <meta property="og:image" content={ogImage} />}
 
     <!-- Alternate languages -->
-    <link rel="alternate" hreflang="en" href={`https://${siteConfig.domain}${currentPath.replace(/^\/es/, '') || '/'}`} />
-    <link rel="alternate" hreflang="es" href={`https://${siteConfig.domain}/es${currentPath.startsWith('/es') ? currentPath.replace(/^\/es/, '') : currentPath}`} />
+    <link rel="alternate" hreflang="en" href={`${siteOrigin}${basePath}${enPath}`} />
+    <link rel="alternate" hreflang="es" href={`${siteOrigin}${basePath}${esPath}`} />
 
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
   </head>

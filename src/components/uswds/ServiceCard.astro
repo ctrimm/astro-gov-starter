@@ -17,23 +17,28 @@ interface Props {
   /** Optional image URL for media variant */
   imageSrc?: string;
   imageAlt?: string;
+  locale?: Locale;
   class?: string;
 }
 
-import { withBase } from '../../i18n/utils';
+import type { Locale } from '../../i18n/utils';
+import { useTranslations, withBase } from '../../i18n/utils';
 
 const {
   title,
   summary,
   href,
-  ctaText = 'Learn more',
+  ctaText,
   acceptingApplications = true,
   imageSrc,
   imageAlt = '',
+  locale = 'en',
   class: className,
 } = Astro.props;
 
+const t = useTranslations(locale);
 const resolvedHref = withBase(href);
+const resolvedCta = ctaText ?? t('home.learnMore');
 ---
 
 <li class:list={['usa-card', className]}>
@@ -55,9 +60,9 @@ const resolvedHref = withBase(href);
     </div>
     <div class="usa-card__footer">
       {acceptingApplications ? (
-        <a href={resolvedHref} class="usa-button">{ctaText}</a>
+        <a href={resolvedHref} class="usa-button">{resolvedCta}</a>
       ) : (
-        <span class="usa-tag">Not accepting applications</span>
+        <span class="usa-tag">{t('serviceCard.notAccepting')}</span>
       )}
     </div>
   </div>

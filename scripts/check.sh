@@ -32,7 +32,9 @@ node scripts/compliance-check.mjs $VERBOSE_FLAG
 
 echo ""
 echo "==> HTML validation"
-npx html-validate 'dist/**/*.html'
+# The dev-only /internal/ component preview intentionally renders components
+# out of document context (multiple <h1> Heroes, etc.) and is excluded.
+find dist -name '*.html' -not -path 'dist/internal/*' -print0 | xargs -0 npx html-validate
 
 echo ""
 echo "All local checks passed."

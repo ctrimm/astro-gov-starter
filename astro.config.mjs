@@ -1,10 +1,16 @@
 import { defineConfig, envField } from 'astro/config';
 import mdx from '@astrojs/mdx';
+import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath } from 'url';
 import { resolve } from 'path';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
+
+// Single source of truth for the locale set. Add new locales here, then see
+// "Adding a new language" in README.md for the remaining steps.
+const LOCALES = { en: 'en-US', es: 'es-US' };
+const DEFAULT_LOCALE = 'en';
 
 export default defineConfig({
   // site + base are read from env vars so the same build config works for
@@ -14,14 +20,25 @@ export default defineConfig({
   // Ensure BASE_URL always ends with / so ${base}asset paths join correctly
   base: (process.env.BASE_PATH || '/').replace(/\/?$/, '/'),
 
-  integrations: [mdx()],
+  integrations: [
+    mdx(),
+    // Generates /sitemap-index.xml at build time using the SITE env var.
+    // The dev-only component preview is excluded from indexing.
+    sitemap({
+      filter: (page) => !page.includes('/internal/'),
+      i18n: {
+        defaultLocale: DEFAULT_LOCALE,
+        locales: LOCALES,
+      },
+    }),
+  ],
 
   output: 'static',
 
   // i18n: English at /, Spanish at /es/
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'es'],
+    defaultLocale: DEFAULT_LOCALE,
+    locales: Object.keys(LOCALES),
     routing: {
       prefixDefaultLocale: false,
     },
@@ -120,10 +137,14 @@ export default defineConfig({
       // script-src: USWDS JS is loaded from /uswds/js/uswds.min.js (same origin).
       // Astro auto-hashes any inline scripts it generates, so no 'unsafe-inline' needed.
       //
+      // 'wasm-unsafe-eval' is required by Pagefind, which runs its search index
+      // as WebAssembly (see /search/). It permits same-origin WASM only — it
+      // does NOT allow JavaScript eval().
+      //
       // To allow the Digital Analytics Program (DAP) or another approved script CDN:
       //   resources: ["'self'", "https://dap.digitalgov.gov"]
       scriptDirective: {
-        resources: ["'self'"],
+        resources: ["'self'", "'wasm-unsafe-eval'"],
       },
 
       // style-src: Astro auto-hashes the inline <style> blocks it generates.

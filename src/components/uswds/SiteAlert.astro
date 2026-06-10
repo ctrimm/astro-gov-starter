@@ -40,7 +40,10 @@ const {
 >
   <div class="usa-alert" role={role}>
     <div class="usa-alert__body">
-      {heading && <h2 class="usa-alert__heading">{heading}</h2>}
+      {/* Not a real heading: the site alert renders above the page <h1>, and a
+          heading element here would break document heading order. The section's
+          aria-label + alert role provide the semantics for assistive tech. */}
+      {heading && <p class="usa-alert__heading">{heading}</p>}
       <div class="usa-alert__text">
         <slot />
       </div>

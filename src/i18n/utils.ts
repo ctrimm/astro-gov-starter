@@ -3,6 +3,25 @@ import es from './es.json';
 
 export type Locale = 'en' | 'es';
 
+/** All locales served by the site. Keep in sync with LOCALES in astro.config.mjs. */
+export const locales: Locale[] = ['en', 'es'];
+
+/** URL path segment for a locale: undefined for the default (unprefixed) locale. */
+export function localeParam(locale: Locale): string | undefined {
+  return locale === 'en' ? undefined : locale;
+}
+
+/**
+ * getStaticPaths() entries for the [...lang] locale routes:
+ * English at /, Spanish at /es/. Pages receive `locale` as a prop.
+ */
+export function localeStaticPaths() {
+  return locales.map((locale) => ({
+    params: { lang: localeParam(locale) },
+    props: { locale },
+  }));
+}
+
 const translations = { en, es } as const;
 
 export type TranslationKeys = typeof en;
@@ -46,4 +65,9 @@ export function withBase(path: string): string {
 export function localizeUrl(path: string, locale: Locale): string {
   const localized = locale === 'en' ? path : `/es${path}`;
   return withBase(localized);
+}
+
+/** Build a tel: URL from a display phone number (strips formatting). */
+export function telHref(phone: string): string {
+  return `tel:${phone.replace(/[^0-9+]/g, '')}`;
 }

@@ -36,8 +36,9 @@ Your site will be at `http://localhost:4321`.
 | **Accessibility** | Section 508 / WCAG 2.1 AA — skip nav, landmarks, focus management |
 | **Required components** | USA Banner + USA Identifier on every page |
 | **Component library** | 20 thin Astro wrappers for USWDS patterns |
-| **i18n** | English (`/`) and Spanish (`/es/`) with Astro's built-in routing |
-| **Content collections** | Services, announcements, FAQs, pages — Zod-typed, MDX-ready |
+| **i18n** | English (`/`) and Spanish (`/es/`) — one route file per page serves both locales |
+| **Search** | [Pagefind](https://pagefind.app/) static search at `/search/` — self-hosted, language-aware |
+| **Content collections** | Services, announcements, FAQs — Zod-typed, MDX-ready |
 | **CI quality gates** | TypeScript, HTML, axe-core, Lighthouse, links, plain language, USWDS compliance |
 | **Output** | Static — deploys to GitHub Pages, Cloud.gov Pages, Netlify, Vercel, S3 |
 
@@ -72,19 +73,23 @@ All agency-specific settings live in one file:
 // src/config/site.ts
 export const siteConfig = {
   name: 'Department of Human Services',
+  shortName: 'DHS',
   domain: 'dhs.state.gov',
-  url: 'https://dhs.state.gov',
   description: 'Programs and services for eligible residents.',
-  identifierLinks: {
-    about: 'https://dhs.state.gov/about/',
-    accessibility: 'https://dhs.state.gov/accessibility/',
+  locale: 'en-US',
+
+  // Required links for the USA Identifier footer component
+  links: {
+    about: '/about/',
+    accessibility: '/accessibility/',
     foia: 'https://www.foia.gov/',
-    noFear: 'https://www.opm.gov/about-us/no-fear-act/',
-    inspector: 'https://dhs.state.gov/inspector-general/',
-    performance: 'https://dhs.state.gov/performance/',
-    privacy: 'https://dhs.state.gov/privacy/',
+    noFear: 'https://www.eeoc.gov/no-fear-act-data',
+    oig: 'https://www.oversight.gov/',
+    privacy: '/privacy/',
+    budget: '/',
+    usagov: 'https://www.usa.gov/',
   },
-};
+} as const;
 ```
 
 ---
@@ -94,12 +99,18 @@ export const siteConfig = {
 ```
 src/
 ├── config/site.ts              # Agency name, domain, identifier links ← edit this first
-├── content/                    # Markdown content (services, faqs, announcements, pages)
+├── content/                    # Markdown content (services, faqs, announcements)
 ├── components/uswds/           # 20 USWDS pattern wrappers (Alert, Accordion, Hero, …)
 ├── i18n/                       # Translation strings (en, es) + useTranslations helper
 ├── layouts/                    # BaseLayout, ServiceLayout, ApplyLayout
-├── pages/                      # Route files — English at /, Spanish at /es/
-│   └── internal/components/    # Dev-only component preview (not linked publicly)
+├── pages/
+│   ├── [...lang]/              # One route file per page serves BOTH / and /es/
+│   │   ├── index.astro         #   (locale comes from getStaticPaths via localeStaticPaths())
+│   │   ├── services/           #   services index + [slug] detail pages
+│   │   ├── apply/[program].astro
+│   │   └── search.astro        #   Pagefind-powered site search
+│   ├── 404.astro
+│   └── internal/components.astro  # Dev-only component preview (not linked publicly)
 └── styles/
     ├── uswds-theme.scss         # USWDS entry point (settings + full import)
     └── globals.css              # Tailwind utilities + custom CSS
@@ -167,6 +178,14 @@ bash scripts/check.sh --verbose # same, with per-file output
 Push to `main`. The workflow in `.github/workflows/deploy-pages.yml` deploys automatically.
 Enable Pages: **Settings → Pages → Source: GitHub Actions**.
 
+> **⚠️ Security headers:** GitHub Pages does **not** support custom HTTP response
+> headers, so the headers in `public/_headers` (clickjacking protection via
+> `frame-ancestors`, `X-Frame-Options`, HSTS, etc.) are silently ignored on
+> GitHub Pages. They only take effect on Netlify or Cloudflare Pages. If you need
+> these protections — and production government sites should have them — deploy
+> to a host that supports response headers, or put a CDN/reverse proxy (e.g.
+> CloudFront) in front of Pages and set the headers there.
+
 ### Cloud.gov Pages
 
 ```yaml
@@ -189,6 +208,53 @@ Both auto-detect Astro. Set **build command** to `pnpm build` and **publish dire
 pnpm build   # outputs to dist/
 ```
 Upload the contents of `dist/` to your bucket or CDN origin.
+
+---
+
+## Search
+
+Site search is powered by [Pagefind](https://pagefind.app/). The `pnpm build`
+script indexes `dist/` after the Astro build and writes the index to
+`dist/pagefind/`. Results are served at `/search/` (English) and `/es/search/`
+(Spanish) — Pagefind splits the index by each page's `<html lang>`, so each
+locale searches its own content.
+
+- Search only works on a **production build** (`pnpm build && pnpm preview`);
+  the dev server has no index.
+- The CSP includes `'wasm-unsafe-eval'` because Pagefind runs its index as
+  same-origin WebAssembly (this does **not** allow JavaScript `eval()`).
+- No third-party requests: the index and UI are self-hosted static files.
+
+---
+
+## Forms
+
+The contact form (`/contact/`) and eligibility screeners (`/apply/*`) are
+**accessible scaffolding only** — they do not submit anywhere out of the box.
+Before launch, wire the `action` attributes to your backend of choice
+(Formspree, API Gateway + Lambda, your agency's form service, etc.). Look for
+the `TODO (M3)` comments in `src/pages/[...lang]/contact.astro` and
+`src/pages/[...lang]/apply/[program].astro`.
+
+---
+
+## Adding a new language
+
+The template ships with English (`/`) and Spanish (`/es/`). Every page lives
+once in `src/pages/[...lang]/` and renders for each locale returned by
+`localeStaticPaths()`, so there is no page tree to mirror. To add another
+language (e.g. French):
+
+1. Add `fr: 'fr-FR'` to `LOCALES` in `astro.config.mjs`
+2. Add `'fr'` to the `Locale` type and `locales` array, and register
+   `fr.json` in the `translations` map, in `src/i18n/utils.ts`
+   (create `src/i18n/fr.json` by copying `en.json` and translating)
+3. Add a `fr` entry to each page's `copy` object in
+   `src/pages/[...lang]/*.astro` — TypeScript will point you at every one
+4. Add translated fields to content collections as needed (see `esSlug` /
+   `esQuestion` in `src/content.config.ts` for the pattern)
+5. Add the locale to the hreflang/og:locale logic in
+   `src/layouts/BaseLayout.astro` and the language toggle in the Header
 
 ---
 

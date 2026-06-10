@@ -30,7 +30,7 @@ reader testing with VoiceOver/NVDA is required before production launch.
 |---|---|---|
 | Mobile-friendly | ✅ Included | USWDS responsive grid; Astro static output |
 | Accessible | ✅ Included | See Section 508 above |
-| Discoverable | ⬜ Stub | `sitemap.xml` via `@astrojs/sitemap` (add in M2) |
+| Discoverable | ✅ Included | `sitemap-index.xml` generated at build by `@astrojs/sitemap` |
 | Secure (HTTPS) | ✅ By host | All recommended hosts enforce HTTPS |
 | Plain language | ✅ Seed content | Seed copy targets ≤ grade 8; verified by plain-language gate |
 | No broken links | ✅ CI gate | lychee link checker in CI (M3) |
