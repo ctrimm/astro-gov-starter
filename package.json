@@ -17,7 +17,7 @@
   },
   "scripts": {
     "dev": "node scripts/setup-uswds.mjs && astro dev",
-    "build": "node scripts/setup-uswds.mjs && astro build",
+    "build": "node scripts/setup-uswds.mjs && astro build && pagefind --site dist",
     "preview": "astro preview",
     "check": "astro check",
     "setup": "node scripts/setup-uswds.mjs",
@@ -35,6 +35,7 @@
     "@tailwindcss/vite": "^4.0.0",
     "html-validate": "^10.13.0",
     "linkinator": "^7.6.1",
+    "pagefind": "^1.5.2",
     "sass": "^1.77.0",
     "tailwindcss": "^4.0.0",
     "typescript": "^5.5.0"

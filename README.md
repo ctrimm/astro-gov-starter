@@ -36,7 +36,8 @@ Your site will be at `http://localhost:4321`.
 | **Accessibility** | Section 508 / WCAG 2.1 AA — skip nav, landmarks, focus management |
 | **Required components** | USA Banner + USA Identifier on every page |
 | **Component library** | 20 thin Astro wrappers for USWDS patterns |
-| **i18n** | English (`/`) and Spanish (`/es/`) with Astro's built-in routing |
+| **i18n** | English (`/`) and Spanish (`/es/`) — one route file per page serves both locales |
+| **Search** | [Pagefind](https://pagefind.app/) static search at `/search/` — self-hosted, language-aware |
 | **Content collections** | Services, announcements, FAQs — Zod-typed, MDX-ready |
 | **CI quality gates** | TypeScript, HTML, axe-core, Lighthouse, links, plain language, USWDS compliance |
 | **Output** | Static — deploys to GitHub Pages, Cloud.gov Pages, Netlify, Vercel, S3 |
@@ -102,8 +103,14 @@ src/
 ├── components/uswds/           # 20 USWDS pattern wrappers (Alert, Accordion, Hero, …)
 ├── i18n/                       # Translation strings (en, es) + useTranslations helper
 ├── layouts/                    # BaseLayout, ServiceLayout, ApplyLayout
-├── pages/                      # Route files — English at /, Spanish at /es/
-│   └── internal/components/    # Dev-only component preview (not linked publicly)
+├── pages/
+│   ├── [...lang]/              # One route file per page serves BOTH / and /es/
+│   │   ├── index.astro         #   (locale comes from getStaticPaths via localeStaticPaths())
+│   │   ├── services/           #   services index + [slug] detail pages
+│   │   ├── apply/[program].astro
+│   │   └── search.astro        #   Pagefind-powered site search
+│   ├── 404.astro
+│   └── internal/components.astro  # Dev-only component preview (not linked publicly)
 └── styles/
     ├── uswds-theme.scss         # USWDS entry point (settings + full import)
     └── globals.css              # Tailwind utilities + custom CSS
@@ -204,27 +211,46 @@ Upload the contents of `dist/` to your bucket or CDN origin.
 
 ---
 
+## Search
+
+Site search is powered by [Pagefind](https://pagefind.app/). The `pnpm build`
+script indexes `dist/` after the Astro build and writes the index to
+`dist/pagefind/`. Results are served at `/search/` (English) and `/es/search/`
+(Spanish) — Pagefind splits the index by each page's `<html lang>`, so each
+locale searches its own content.
+
+- Search only works on a **production build** (`pnpm build && pnpm preview`);
+  the dev server has no index.
+- The CSP includes `'wasm-unsafe-eval'` because Pagefind runs its index as
+  same-origin WebAssembly (this does **not** allow JavaScript `eval()`).
+- No third-party requests: the index and UI are self-hosted static files.
+
+---
+
 ## Forms
 
 The contact form (`/contact/`) and eligibility screeners (`/apply/*`) are
 **accessible scaffolding only** — they do not submit anywhere out of the box.
 Before launch, wire the `action` attributes to your backend of choice
 (Formspree, API Gateway + Lambda, your agency's form service, etc.). Look for
-the `TODO (M3)` comments in `src/pages/contact.astro`,
-`src/pages/es/contact.astro`, and the apply page templates.
+the `TODO (M3)` comments in `src/pages/[...lang]/contact.astro` and
+`src/pages/[...lang]/apply/[program].astro`.
 
 ---
 
 ## Adding a new language
 
-The template ships with English (`/`) and Spanish (`/es/`). To add another
+The template ships with English (`/`) and Spanish (`/es/`). Every page lives
+once in `src/pages/[...lang]/` and renders for each locale returned by
+`localeStaticPaths()`, so there is no page tree to mirror. To add another
 language (e.g. French):
 
-1. Add `'fr'` to `i18n.locales` in `astro.config.mjs` and to the sitemap
-   integration's `i18n.locales` map
-2. Create `src/i18n/fr.json` (copy `en.json` and translate) and register it in
-   `src/i18n/utils.ts` (`Locale` type + `translations` map)
-3. Create `src/pages/fr/` mirroring the routes in `src/pages/`
+1. Add `fr: 'fr-FR'` to `LOCALES` in `astro.config.mjs`
+2. Add `'fr'` to the `Locale` type and `locales` array, and register
+   `fr.json` in the `translations` map, in `src/i18n/utils.ts`
+   (create `src/i18n/fr.json` by copying `en.json` and translating)
+3. Add a `fr` entry to each page's `copy` object in
+   `src/pages/[...lang]/*.astro` — TypeScript will point you at every one
 4. Add translated fields to content collections as needed (see `esSlug` /
    `esQuestion` in `src/content.config.ts` for the pattern)
 5. Add the locale to the hreflang/og:locale logic in

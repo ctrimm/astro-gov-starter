@@ -137,10 +137,14 @@ export default defineConfig({
       // script-src: USWDS JS is loaded from /uswds/js/uswds.min.js (same origin).
       // Astro auto-hashes any inline scripts it generates, so no 'unsafe-inline' needed.
       //
+      // 'wasm-unsafe-eval' is required by Pagefind, which runs its search index
+      // as WebAssembly (see /search/). It permits same-origin WASM only — it
+      // does NOT allow JavaScript eval().
+      //
       // To allow the Digital Analytics Program (DAP) or another approved script CDN:
       //   resources: ["'self'", "https://dap.digitalgov.gov"]
       scriptDirective: {
-        resources: ["'self'"],
+        resources: ["'self'", "'wasm-unsafe-eval'"],
       },
 
       // style-src: Astro auto-hashes the inline <style> blocks it generates.
