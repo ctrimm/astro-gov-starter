@@ -19,6 +19,7 @@ const copy = {
     title: 'Search',
     description: 'Search this site for programs, services, and answers.',
     heading: 'Search',
+    label: 'Search this site',
     placeholder: 'Search programs, services, and help topics',
     noscript: 'Search requires JavaScript. If you cannot enable JavaScript, visit the help center or contact us for assistance.',
     devNote: 'The search index is generated at build time by Pagefind. Run a production build (pnpm build) and preview it (pnpm preview) to test search — it is not available in the dev server.',
@@ -27,6 +28,7 @@ const copy = {
     title: 'Buscar',
     description: 'Busque programas, servicios y respuestas en este sitio.',
     heading: 'Buscar',
+    label: 'Buscar en este sitio',
     placeholder: 'Busque programas, servicios y temas de ayuda',
     noscript: 'La búsqueda requiere JavaScript. Si no puede habilitar JavaScript, visite el centro de ayuda o contáctenos para recibir asistencia.',
     devNote: 'El índice de búsqueda se genera durante la compilación con Pagefind. Ejecute una compilación de producción (pnpm build) y previsualícela (pnpm preview) para probar la búsqueda — no está disponible en el servidor de desarrollo.',
@@ -52,9 +54,10 @@ const copy = {
           </div>
         )}
 
+        <label class="usa-label" for="pagefind-search-input">{copy.label}</label>
         <div
           id="pagefind-search"
-          class="margin-top-2"
+          class="margin-top-1"
           data-placeholder={copy.placeholder}
           data-base={base}
         ></div>
@@ -85,6 +88,22 @@ const copy = {
         showSubResults: true,
         translations: { placeholder: el.dataset.placeholder },
       });
+
+      // Pagefind's input is labeled only via a title attribute, which fails
+      // axe's label-title-only rule. Bind it to our visible <label> instead.
+      function labelInput(): boolean {
+        const input = el!.querySelector('input.pagefind-ui__search-input');
+        if (!input) return false;
+        input.id = 'pagefind-search-input';
+        input.removeAttribute('title');
+        return true;
+      }
+      if (!labelInput()) {
+        new MutationObserver((_records, observer) => {
+          if (labelInput()) observer.disconnect();
+        }).observe(el, { childList: true, subtree: true });
+      }
+
       const q = new URLSearchParams(window.location.search).get('q');
       if (q) ui.triggerSearch(q);
     }
