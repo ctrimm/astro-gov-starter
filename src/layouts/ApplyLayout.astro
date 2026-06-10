@@ -28,6 +28,8 @@ const { title, programName, locale = 'en', steps, currentStep } = Astro.props;
   </div>
 
   <div class="grid-container usa-section">
+    <h1>{title}</h1>
+
     <StepIndicator
       steps={steps}
       currentStep={currentStep}

@@ -77,8 +77,11 @@ jobs:
           name: dist
           path: dist/
 
+      # The dev-only /internal/ component preview intentionally renders
+      # components out of document context (multiple <h1> Heroes, etc.)
+      # and is excluded — same as in the axe-core job below.
       - name: HTML Validation
-        run: npx html-validate 'dist/**/*.html'
+        run: find dist -name '*.html' -not -path 'dist/internal/*' -print0 | xargs -0 npx html-validate
 
   # ── 3. Accessibility (axe-core) ────────────────────────────────────────────
   a11y:
@@ -125,11 +128,12 @@ jobs:
       - name: Wait for server
         run: sleep 3
 
-      # Test every built page (English and Spanish) by deriving the URL list
-      # from the dist output. The dev-only /internal/ preview is excluded.
+      # Test every built page (English and Spanish, including 404) by deriving
+      # the URL list from the dist output. The dev-only /internal/ preview is
+      # excluded.
       - name: Accessibility check (axe-core)
         run: |
-          URLS=$(cd dist && find . -name index.html -not -path './internal/*' \
+          URLS=$(cd dist && find . \( -name index.html -o -name 404.html \) -not -path './internal/*' \
             | sed 's|^\.||; s|index\.html$||; s|^|http://localhost:4000|' \
             | sort | tr '\n' ' ')
           echo "Testing URLs: $URLS"

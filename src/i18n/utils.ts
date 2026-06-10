@@ -47,3 +47,8 @@ export function localizeUrl(path: string, locale: Locale): string {
   const localized = locale === 'en' ? path : `/es${path}`;
   return withBase(localized);
 }
+
+/** Build a tel: URL from a display phone number (strips formatting). */
+export function telHref(phone: string): string {
+  return `tel:${phone.replace(/[^0-9+]/g, '')}`;
+}

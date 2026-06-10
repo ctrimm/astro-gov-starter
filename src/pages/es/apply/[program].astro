@@ -34,7 +34,7 @@ const steps = [
   currentStep={1}
 >
   <noscript>
-    <Alert type="warning" heading="Se requiere JavaScript para la solicitud en línea">
+    <Alert type="warning" heading="Se requiere JavaScript para la solicitud en línea" headingLevel="h2">
       <p>La solicitud en línea requiere JavaScript para guardar su progreso. Puede solicitar de otra manera:</p>
       <ul>
         <li><strong>Teléfono:</strong> <a href="tel:18005550100" class="usa-link">1&#8209;800&#8209;555&#8209;0100</a></li>
@@ -87,7 +87,7 @@ const steps = [
         <button type="submit" class="usa-button usa-button--big">
           Verificar elegibilidad y continuar
         </button>
-        <a href={`/es/services/${slug}/`} class="usa-button usa-button--unstyled margin-left-3">
+        <a href={withBase(`/es/services/${slug}/`)} class="usa-button usa-button--unstyled margin-left-3">
           Cancelar
         </a>
       </div>

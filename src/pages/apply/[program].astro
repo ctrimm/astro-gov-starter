@@ -40,7 +40,7 @@ const steps = [
   -->
 
   <noscript>
-    <Alert type="warning" heading="JavaScript is required for the online application">
+    <Alert type="warning" heading="JavaScript is required for the online application" headingLevel="h2">
       <p>The online application requires JavaScript to save your progress across steps. You can apply another way:</p>
       <ul>
         <li><strong>Phone:</strong> <a href="tel:18005550100" class="usa-link">1&#8209;800&#8209;555&#8209;0100</a> (Mon–Fri, 8 a.m.–8 p.m.)</li>
@@ -106,7 +106,7 @@ const steps = [
         <button type="submit" class="usa-button usa-button--big">
           Check eligibility and continue
         </button>
-        <a href={`/services/${slug}/`} class="usa-button usa-button--unstyled margin-left-3">
+        <a href={withBase(`/services/${slug}/`)} class="usa-button usa-button--unstyled margin-left-3">
           Cancel
         </a>
       </div>

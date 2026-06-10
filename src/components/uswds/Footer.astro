@@ -9,7 +9,7 @@
  */
 
 import type { Locale } from '../../i18n/utils';
-import { useTranslations, withBase } from '../../i18n/utils';
+import { useTranslations, telHref, withBase } from '../../i18n/utils';
 import { siteConfig } from '../../config/site';
 
 interface FooterLink {
@@ -130,7 +130,7 @@ const resolvedColumns = columns ?? defaultColumns;
           <address class="usa-footer__address">
             <div class="usa-footer__contact-info grid-row grid-gap">
               <div class="grid-col-auto">
-                <a href={`tel:${t('footer.phone').replace(/[^0-9]/g, '')}`}>
+                <a href={telHref(t('footer.phone'))}>
                   {t('footer.phone')}
                 </a>
               </div>

@@ -7,6 +7,11 @@ import { resolve } from 'path';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
+// Single source of truth for the locale set. Add new locales here, then see
+// "Adding a new language" in README.md for the remaining steps.
+const LOCALES = { en: 'en-US', es: 'es-US' };
+const DEFAULT_LOCALE = 'en';
+
 export default defineConfig({
   // site + base are read from env vars so the same build config works for
   // local dev (base '/'), GitHub Pages subpath (base '/repo-name'), and
@@ -22,8 +27,8 @@ export default defineConfig({
     sitemap({
       filter: (page) => !page.includes('/internal/'),
       i18n: {
-        defaultLocale: 'en',
-        locales: { en: 'en-US', es: 'es-US' },
+        defaultLocale: DEFAULT_LOCALE,
+        locales: LOCALES,
       },
     }),
   ],
@@ -32,8 +37,8 @@ export default defineConfig({
 
   // i18n: English at /, Spanish at /es/
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en', 'es'],
+    defaultLocale: DEFAULT_LOCALE,
+    locales: Object.keys(LOCALES),
     routing: {
       prefixDefaultLocale: false,
     },

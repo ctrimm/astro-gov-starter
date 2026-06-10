@@ -6,7 +6,7 @@ import Accordion from '../components/uswds/Accordion.astro';
 import AccordionItem from '../components/uswds/AccordionItem.astro';
 import SummaryBox from '../components/uswds/SummaryBox.astro';
 import SideNav from '../components/uswds/SideNav.astro';
-import { useTranslations, withBase } from '../i18n/utils';
+import { useTranslations, telHref, withBase } from '../i18n/utils';
 
 const locale = 'en';
 const t = useTranslations(locale);
@@ -94,7 +94,7 @@ const otherFaqs = faqs.filter((f) => !f.data.tags.includes('general') && !f.data
         />
 
         <SummaryBox heading="Still need help?" class="margin-top-4">
-          <p>Call us at <a href={`tel:${t('footer.phone').replace(/[^0-9]/g, '')}`} class="usa-link">{t('footer.phone')}</a></p>
+          <p>Call us at <a href={telHref(t('footer.phone'))} class="usa-link">{t('footer.phone')}</a></p>
           <p class="font-sans-sm text-base-dark">{t('footer.hours')}</p>
           <a href={withBase('/contact/')} class="usa-button usa-button--outline">Send a message</a>
         </SummaryBox>

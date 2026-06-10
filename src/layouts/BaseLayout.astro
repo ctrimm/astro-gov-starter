@@ -67,7 +67,7 @@ const ogLocaleAlternate = locale === 'es' ? 'en_US' : 'es_US';
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex, nofollow" />}
 
-    <link rel="canonical" href={resolvedCanonical} />
+    {!noindex && <link rel="canonical" href={resolvedCanonical} />}
 
     <!-- Open Graph -->
     <meta property="og:title" content={pageTitle} />
