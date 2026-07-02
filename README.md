@@ -246,15 +246,19 @@ once in `src/pages/[...lang]/` and renders for each locale returned by
 language (e.g. French):
 
 1. Add `fr: 'fr-FR'` to `LOCALES` in `astro.config.mjs`
-2. Add `'fr'` to the `Locale` type and `locales` array, and register
-   `fr.json` in the `translations` map, in `src/i18n/utils.ts`
+2. In `src/i18n/utils.ts`: add `'fr'` to the `Locale` type and `locales`
+   array, add a `fr` entry to `localeMeta` (native label + og:locale), and
+   register `fr.json` in the `translations` map
    (create `src/i18n/fr.json` by copying `en.json` and translating)
 3. Add a `fr` entry to each page's `copy` object in
    `src/pages/[...lang]/*.astro` — TypeScript will point you at every one
 4. Add translated fields to content collections as needed (see `esSlug` /
    `esQuestion` in `src/content.config.ts` for the pattern)
-5. Add the locale to the hreflang/og:locale logic in
-   `src/layouts/BaseLayout.astro` and the language toggle in the Header
+
+That's it — the header's language selector, hreflang tags, and og:locale
+meta tags all read from `locales`/`localeMeta`, so they update automatically
+(the header even switches from a simple toggle link to the USWDS dropdown
+once there are 3+ locales).
 
 ---
 

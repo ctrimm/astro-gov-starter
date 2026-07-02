@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { useTranslations, getLocaleFromUrl, withBase } from '../i18n/utils';
+import { useTranslations, getLocaleFromUrl, localizeUrl } from '../i18n/utils';
 
 const locale = getLocaleFromUrl(Astro.url);
 const t = useTranslations(locale);
@@ -19,17 +19,17 @@ const t = useTranslations(locale);
           <p>You can:</p>
           <ul>
             <li>
-              <a href={withBase(locale === 'es' ? '/es/' : '/')} class="usa-link">
+              <a href={localizeUrl('/', locale)} class="usa-link">
                 {t('404.homeCta')}
               </a>
             </li>
             <li>
-              <a href={withBase(locale === 'es' ? '/es/help/' : '/help/')} class="usa-link">
+              <a href={localizeUrl('/help/', locale)} class="usa-link">
                 {t('404.helpCta')}
               </a>
             </li>
             <li>
-              <a href={withBase(locale === 'es' ? '/es/contact/' : '/contact/')} class="usa-link">
+              <a href={localizeUrl('/contact/', locale)} class="usa-link">
                 {locale === 'es' ? 'Contáctenos' : 'Contact us for help'}
               </a>
             </li>

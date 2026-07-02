@@ -4,7 +4,7 @@ import USAIdentifier from '../components/uswds/USAIdentifier.astro';
 import Header from '../components/uswds/Header.astro';
 import Footer from '../components/uswds/Footer.astro';
 import type { Locale } from '../i18n/utils';
-import { useTranslations } from '../i18n/utils';
+import { useTranslations, locales, localeMeta, localizePath, stripLocaleFromPath } from '../i18n/utils';
 import { siteConfig } from '../config/site';
 
 // Import global styles — USWDS first, then Tailwind utilities
@@ -49,12 +49,18 @@ const currentPath = basePath && rawPath.startsWith(basePath)
 // Absolute URLs for canonical/hreflang/og — include the base path so
 // subpath deployments (e.g. GitHub Pages project sites) emit correct URLs
 const siteOrigin = `https://${siteConfig.domain}`;
-const enPath = currentPath.replace(/^\/es/, '') || '/';
-const esPath = `/es${currentPath.startsWith('/es') ? currentPath.replace(/^\/es/, '') : currentPath}`;
+const barePath = stripLocaleFromPath(currentPath);
+const alternateLocales = locales.map((code) => ({
+  code,
+  ogLocale: localeMeta[code].ogLocale,
+  href: `${siteOrigin}${basePath}${localizePath(barePath, code)}`,
+}));
 const pageUrl = `${siteOrigin}${basePath}${currentPath}`;
 const resolvedCanonical = canonicalUrl ?? pageUrl;
-const ogLocale = locale === 'es' ? 'es_US' : 'en_US';
-const ogLocaleAlternate = locale === 'es' ? 'en_US' : 'es_US';
+const ogLocale = localeMeta[locale].ogLocale;
+const ogLocaleAlternates = alternateLocales
+  .filter((alt) => alt.code !== locale)
+  .map((alt) => alt.ogLocale);
 ---
 
 <!doctype html>
@@ -75,12 +81,11 @@ const ogLocaleAlternate = locale === 'es' ? 'en_US' : 'es_US';
     <meta property="og:type" content="website" />
     <meta property="og:url" content={pageUrl} />
     <meta property="og:locale" content={ogLocale} />
-    <meta property="og:locale:alternate" content={ogLocaleAlternate} />
+    {ogLocaleAlternates.map((alt) => <meta property="og:locale:alternate" content={alt} />)}
     {ogImage && <meta property="og:image" content={ogImage} />}
 
     <!-- Alternate languages -->
-    <link rel="alternate" hreflang="en" href={`${siteOrigin}${basePath}${enPath}`} />
-    <link rel="alternate" hreflang="es" href={`${siteOrigin}${basePath}${esPath}`} />
+    {alternateLocales.map((alt) => <link rel="alternate" hreflang={alt.code} href={alt.href} />)}
 
     <link rel="icon" type="image/svg+xml" href={`${base}favicon.svg`} />
   </head>
