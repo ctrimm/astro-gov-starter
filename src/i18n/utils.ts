@@ -6,9 +6,22 @@ export type Locale = 'en' | 'es';
 /** All locales served by the site. Keep in sync with LOCALES in astro.config.mjs. */
 export const locales: Locale[] = ['en', 'es'];
 
+/** The unprefixed locale (served at `/`). Keep in sync with DEFAULT_LOCALE in astro.config.mjs. */
+export const defaultLocale: Locale = 'en';
+
+/**
+ * Metadata for each locale, keyed off `locales` so the language selector,
+ * og:locale tags, and hreflang links all stay in sync automatically when a
+ * locale is added — see "Adding a new language" in README.md.
+ */
+export const localeMeta: Record<Locale, { label: string; ogLocale: string }> = {
+  en: { label: 'English', ogLocale: 'en_US' },
+  es: { label: 'Español', ogLocale: 'es_US' },
+};
+
 /** URL path segment for a locale: undefined for the default (unprefixed) locale. */
 export function localeParam(locale: Locale): string | undefined {
-  return locale === 'en' ? undefined : locale;
+  return locale === defaultLocale ? undefined : locale;
 }
 
 /**
@@ -52,8 +65,7 @@ export function useTranslations(locale: Locale) {
 
 export function getLocaleFromUrl(url: URL): Locale {
   const [, first] = url.pathname.split('/');
-  if (first === 'es') return 'es';
-  return 'en';
+  return locales.find((locale) => localeParam(locale) === first) ?? defaultLocale;
 }
 
 export function withBase(path: string): string {
@@ -62,9 +74,30 @@ export function withBase(path: string): string {
   return base + path.slice(1);
 }
 
+/** Prefix an unlocalized path (e.g. `/services/`) with a locale's URL segment. */
+export function localizePath(path: string, locale: Locale): string {
+  const param = localeParam(locale);
+  if (!param) return path;
+  return path === '/' ? `/${param}/` : `/${param}${path}`;
+}
+
 export function localizeUrl(path: string, locale: Locale): string {
-  const localized = locale === 'en' ? path : `/es${path}`;
-  return withBase(localized);
+  return withBase(localizePath(path, locale));
+}
+
+/**
+ * Remove any locale prefix from a path, e.g. `/es/services/` -> `/services/`.
+ * Used to translate the *current* page's path into another locale, since the
+ * current locale isn't necessarily the default one.
+ */
+export function stripLocaleFromPath(path: string): string {
+  for (const locale of locales) {
+    const param = localeParam(locale);
+    if (!param) continue;
+    if (path === `/${param}` || path === `/${param}/`) return '/';
+    if (path.startsWith(`/${param}/`)) return path.slice(param.length + 1);
+  }
+  return path;
 }
 
 /** Build a tel: URL from a display phone number (strips formatting). */

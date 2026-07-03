@@ -9,7 +9,7 @@
  */
 
 import type { Locale } from '../../i18n/utils';
-import { useTranslations, telHref, withBase } from '../../i18n/utils';
+import { useTranslations, telHref, localizeUrl } from '../../i18n/utils';
 import { siteConfig } from '../../config/site';
 
 interface FooterLink {
@@ -39,23 +39,24 @@ const {
 
 const t = useTranslations(locale);
 
+// hrefs are unlocalized (bare) paths — localized via localizeUrl() when rendered below.
 const defaultColumns: FooterColumn[] =
   locale === 'es'
     ? [
         {
           heading: 'Servicios',
           links: [
-            { label: 'SNAP', href: '/es/services/snap/' },
-            { label: 'Medicaid', href: '/es/services/medicaid/' },
-            { label: 'WIC', href: '/es/services/wic/' },
-            { label: 'Cuidado infantil', href: '/es/services/childcare/' },
+            { label: 'SNAP', href: '/services/snap/' },
+            { label: 'Medicaid', href: '/services/medicaid/' },
+            { label: 'WIC', href: '/services/wic/' },
+            { label: 'Cuidado infantil', href: '/services/childcare/' },
           ],
         },
         {
           heading: 'Ayuda',
           links: [
-            { label: 'Centro de ayuda', href: '/es/help/' },
-            { label: 'Contáctenos', href: '/es/contact/' },
+            { label: 'Centro de ayuda', href: '/help/' },
+            { label: 'Contáctenos', href: '/contact/' },
             { label: 'Accesibilidad', href: '/accessibility/' },
             { label: 'Privacidad', href: '/privacy/' },
           ],
@@ -103,7 +104,7 @@ const resolvedColumns = columns ?? defaultColumns;
                 <ul class="usa-list usa-list--unstyled">
                   {col.links.map((link) => (
                     <li class="usa-footer__secondary-link">
-                      <a href={withBase(link.href)}>{link.label}</a>
+                      <a href={localizeUrl(link.href, locale)}>{link.label}</a>
                     </li>
                   ))}
                 </ul>

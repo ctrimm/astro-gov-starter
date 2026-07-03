@@ -6,7 +6,6 @@ summary: Monthly food assistance benefits loaded onto an EBT card, accepted at m
 applySlug: snap
 acceptingApplications: true
 order: 1
-esSlug: snap-es
 pubDate: 2024-01-01
 updatedDate: 2025-01-15
 eligibility:
@@ -32,6 +31,8 @@ related:
   - medicaid
 ---
 
+import IconList from '../../components/uswds/IconList.astro';
+
 ## What is SNAP?
 
 SNAP — formerly known as food stamps — provides monthly benefits that help people buy food. Benefits are loaded onto an Electronic Benefits Transfer (EBT) card, which works like a debit card at most grocery stores, supercenters, and farmers markets.
@@ -42,17 +43,21 @@ SNAP is the nation's largest nutrition assistance program. In an average month, 
 
 SNAP benefits can be used to buy:
 
-- Fruits, vegetables, meat, fish, and poultry
-- Dairy products
-- Breads and cereals
-- Snack foods and non-alcoholic beverages
-- Seeds and plants that produce food
+<IconList items={[
+  { icon: 'check_circle', color: 'green', content: 'Fruits, vegetables, meat, fish, and poultry' },
+  { icon: 'check_circle', color: 'green', content: 'Dairy products' },
+  { icon: 'check_circle', color: 'green', content: 'Breads and cereals' },
+  { icon: 'check_circle', color: 'green', content: 'Snack foods and non-alcoholic beverages' },
+  { icon: 'check_circle', color: 'green', content: 'Seeds and plants that produce food' },
+]} />
 
 SNAP benefits **cannot** be used to buy:
 
-- Alcoholic beverages, tobacco, or vitamins
-- Hot foods or foods that will be eaten in the store
-- Non-food items like pet food, cleaning supplies, or hygiene products
+<IconList items={[
+  { icon: 'cancel', color: 'red', content: 'Alcoholic beverages, tobacco, or vitamins' },
+  { icon: 'cancel', color: 'red', content: 'Hot foods or foods that will be eaten in the store' },
+  { icon: 'cancel', color: 'red', content: 'Non-food items like pet food, cleaning supplies, or hygiene products' },
+]} />
 
 ## How to apply
 

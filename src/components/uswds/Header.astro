@@ -1,7 +1,8 @@
 ---
 import type { Locale } from '../../i18n/utils';
-import { useTranslations, localizeUrl, withBase } from '../../i18n/utils';
+import { useTranslations, localizeUrl } from '../../i18n/utils';
 import { siteConfig } from '../../config/site';
+import LanguageSelector from './LanguageSelector.astro';
 
 interface NavLink {
   label: string;
@@ -41,14 +42,6 @@ const navLinks: NavLink[] = [
   },
 ];
 
-// Language toggle
-const altLocale = locale === 'en' ? 'es' : 'en';
-const altLocaleLabel = locale === 'en' ? 'Español' : 'English';
-const altLocalePath = withBase(
-  locale === 'en'
-    ? `/es${currentPath === '/' ? '/' : currentPath}`
-    : currentPath.replace(/^\/es/, '') || '/'
-);
 ---
 
 <header class="usa-header usa-header--basic">
@@ -61,6 +54,14 @@ const altLocalePath = withBase(
           </a>
         </em>
       </div>
+
+      <LanguageSelector
+        locale={locale}
+        currentPath={currentPath}
+        submenuId="language-options-mobile"
+        class="display-block desktop:display-none"
+      />
+
       <button
         type="button"
         class="usa-menu-btn"
@@ -91,16 +92,13 @@ const altLocalePath = withBase(
           </li>
         ))}
       </ul>
-
-      <div class="usa-nav__secondary">
-        <ul class="usa-nav__secondary-links">
-          <li class="usa-nav__secondary-item">
-            <a href={altLocalePath} hreflang={altLocale} lang={altLocale}>
-              {altLocaleLabel}
-            </a>
-          </li>
-        </ul>
-      </div>
     </nav>
+
+    <LanguageSelector
+      locale={locale}
+      currentPath={currentPath}
+      submenuId="language-options-desktop"
+      class="display-none desktop:display-block"
+    />
   </div>
 </header>

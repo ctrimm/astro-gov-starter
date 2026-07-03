@@ -23,6 +23,7 @@ interface Props {
 
 import type { Locale } from '../../i18n/utils';
 import { useTranslations, withBase } from '../../i18n/utils';
+import Tag from './Tag.astro';
 
 const {
   title,
@@ -62,7 +63,7 @@ const resolvedCta = ctaText ?? t('home.learnMore');
       {acceptingApplications ? (
         <a href={resolvedHref} class="usa-button">{resolvedCta}</a>
       ) : (
-        <span class="usa-tag">{t('serviceCard.notAccepting')}</span>
+        <Tag>{t('serviceCard.notAccepting')}</Tag>
       )}
     </div>
   </div>

@@ -20,7 +20,6 @@ const services = defineCollection({
     acceptingApplications: z.boolean().default(true),
     order: z.number().default(0),
     draft: z.boolean().default(false),
-    esSlug: z.string().optional(),
     pubDate: z.coerce.date().optional(),
     updatedDate: z.coerce.date().optional(),
   }),
