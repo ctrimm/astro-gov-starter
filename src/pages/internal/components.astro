@@ -18,12 +18,16 @@ import SideNav from '../../components/uswds/SideNav.astro';
 import Search from '../../components/uswds/Search.astro';
 import Tag from '../../components/uswds/Tag.astro';
 import Pagination from '../../components/uswds/Pagination.astro';
+import Table from '../../components/uswds/Table.astro';
+import IconList from '../../components/uswds/IconList.astro';
+import LanguageSelector from '../../components/uswds/LanguageSelector.astro';
 import { withBase } from '../../i18n/utils';
 
 const components = [
   'Alert / SiteAlert', 'Breadcrumb', 'Accordion', 'ProcessList',
   'SummaryBox', 'StepIndicator', 'ServiceCard', 'Hero', 'CallToAction',
-  'SideNav', 'Search', 'Tag', 'Pagination',
+  'SideNav', 'Search', 'Tag', 'Pagination', 'Table', 'IconList',
+  'LanguageSelector',
 ];
 ---
 
@@ -314,6 +318,57 @@ const components = [
 
       <h3 class="font-heading-sm margin-top-4">Page 10 of 10 (last)</h3>
       <Pagination totalPages={10} currentPage={10} urlPattern="/news/page/%d/" label="Page 10 of 10 example" />
+    </section>
+
+    <!-- ─── Table ─── -->
+    <section aria-labelledby="table-heading" class="margin-bottom-8">
+      <h2 id="table-heading" class="border-bottom border-base-light padding-bottom-1">Table</h2>
+
+      <h3 class="font-heading-sm margin-top-4">Default</h3>
+      <Table
+        caption="Program status"
+        columns={['Program', 'Status']}
+        rows={[
+          ['SNAP', 'Accepting applications'],
+          ['WIC', 'Not accepting applications'],
+        ]}
+      />
+
+      <h3 class="font-heading-sm margin-top-4">Stacked (reflows on narrow screens), striped</h3>
+      <Table
+        columns={['Program', 'Description', 'Status']}
+        rows={[
+          ['SNAP', 'Monthly food assistance benefits.', 'Accepting applications'],
+          ['WIC', 'Nutrition support for women, infants, and children.', 'Not accepting applications'],
+        ]}
+        stacked
+        striped
+      />
+    </section>
+
+    <!-- ─── IconList ─── -->
+    <section aria-labelledby="iconlist-heading" class="margin-bottom-8">
+      <h2 id="iconlist-heading" class="border-bottom border-base-light padding-bottom-1">IconList</h2>
+      <IconList items={[
+        { icon: 'check_circle', color: 'green', content: 'Fruits, vegetables, meat, fish, and poultry' },
+        { icon: 'check_circle', color: 'green', content: 'Dairy products' },
+        { icon: 'cancel', color: 'red', content: 'Alcoholic beverages, tobacco, or vitamins' },
+      ]} />
+    </section>
+
+    <!-- ─── LanguageSelector ─── -->
+    <section aria-labelledby="languageselector-heading" class="margin-bottom-8">
+      <h2 id="languageselector-heading" class="border-bottom border-base-light padding-bottom-1">LanguageSelector</h2>
+      <p class="usa-intro">
+        Renders a simple toggle link for two locales, or the USWDS dropdown
+        once a third locale is added to <code>locales</code> in
+        <code>src/i18n/utils.ts</code>. Used in the site Header — shown here
+        standalone for both starting locales.
+      </p>
+      <div class="display-flex flex-align-center gap-4">
+        <LanguageSelector locale="en" currentPath="/services/" />
+        <LanguageSelector locale="es" currentPath="/es/services/" />
+      </div>
     </section>
   </div>
 </BaseLayout>

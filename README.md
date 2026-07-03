@@ -252,8 +252,8 @@ language (e.g. French):
    (create `src/i18n/fr.json` by copying `en.json` and translating)
 3. Add a `fr` entry to each page's `copy` object in
    `src/pages/[...lang]/*.astro` — TypeScript will point you at every one
-4. Add translated fields to content collections as needed (see `esSlug` /
-   `esQuestion` in `src/content.config.ts` for the pattern)
+4. Add translated fields to content collections as needed (see `esQuestion`
+   in `src/content.config.ts` for the pattern)
 
 That's it — the header's language selector, hreflang tags, and og:locale
 meta tags all read from `locales`/`localeMeta`, so they update automatically

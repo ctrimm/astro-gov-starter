@@ -3,9 +3,10 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import Hero from '../../../components/uswds/Hero.astro';
 import ServiceCard from '../../../components/uswds/ServiceCard.astro';
+import Table from '../../../components/uswds/Table.astro';
 import { idToSlug } from '../../../utils/content';
 import type { Locale } from '../../../i18n/utils';
-import { localeStaticPaths, useTranslations, withBase } from '../../../i18n/utils';
+import { localeStaticPaths, useTranslations, withBase, localizeUrl } from '../../../i18n/utils';
 
 export function getStaticPaths() {
   return localeStaticPaths();
@@ -34,6 +35,13 @@ const copy = {
     benefitsBefore: 'You can also visit',
     benefitsAfter: 'to find additional federal programs.',
     benefitsUrl: 'https://www.benefits.gov/',
+    compareHeading: 'Compare programs at a glance',
+    colProgram: 'Program',
+    colDescription: 'Description',
+    colStatus: 'Status',
+    statusAccepting: 'Accepting applications',
+    statusNotAccepting: 'Not accepting applications',
+    viewDetails: 'View details',
   },
   es: {
     title: 'Programas y servicios',
@@ -49,11 +57,24 @@ const copy = {
     benefitsBefore: 'También puede visitar',
     benefitsAfter: 'para encontrar programas federales adicionales.',
     benefitsUrl: 'https://www.benefits.gov/es',
+    compareHeading: 'Comparar programas de un vistazo',
+    colProgram: 'Programa',
+    colDescription: 'Descripción',
+    colStatus: 'Estado',
+    statusAccepting: 'Aceptando solicitudes',
+    statusNotAccepting: 'No se aceptan solicitudes',
+    viewDetails: 'Ver detalles',
   },
 }[locale];
 
 const services = (await getCollection('services', ({ data }) => !data.draft))
   .sort((a, b) => a.data.order - b.data.order);
+
+const compareRows = services.map((service) => [
+  service.data.shortTitle ?? service.data.title,
+  service.data.summary,
+  service.data.acceptingApplications ? copy.statusAccepting : copy.statusNotAccepting,
+]);
 ---
 
 <BaseLayout title={copy.title} description={copy.description} locale={locale}>
@@ -80,6 +101,14 @@ const services = (await getCollection('services', ({ data }) => !data.draft))
         />
       ))}
     </ul>
+
+    <h2 class="font-heading-lg margin-top-6">{copy.compareHeading}</h2>
+    <Table
+      columns={[copy.colProgram, copy.colDescription, copy.colStatus]}
+      rows={compareRows}
+      stacked
+      striped
+    />
 
     <div class="usa-prose margin-top-6">
       <p>
