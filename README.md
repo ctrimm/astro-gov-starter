@@ -5,6 +5,7 @@
 [![CI](https://github.com/ctrimm/astro-gov-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/ctrimm/astro-gov-starter/actions/workflows/ci.yml)
 [![USWDS 3.x](https://img.shields.io/badge/USWDS-3.x-0050d8)](https://designsystem.digital.gov/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![Release](https://img.shields.io/github/v/release/ctrimm/astro-gov-starter?sort=semver)](https://github.com/ctrimm/astro-gov-starter/releases/latest)
 
 **USWDS-native · Section 508 / WCAG 2.1 AA · i18n (en + es) · Zero client JS · Deploy anywhere**
 
@@ -25,6 +26,24 @@ pnpm dev
 ```
 
 Your site will be at `http://localhost:4321`.
+
+### Pick a release
+
+Each release of this starter targets one major Astro version. Pin the release
+that matches the Astro version you want to build on:
+
+| Starter release | Astro | Node | Notes |
+|---|---|---|---|
+| [`v2.x`](https://github.com/ctrimm/astro-gov-starter/releases/latest) | Astro 7 | ≥ 22.12 | Current line, on `main` |
+| [`v1.x`](https://github.com/ctrimm/astro-gov-starter/releases/tag/v1.0.0) | Astro 6 | ≥ 18.17.1 | **This branch** — maintenance only |
+
+```bash
+# start from this Astro 6 line
+git clone --branch v1.0.0 --depth 1 https://github.com/ctrimm/astro-gov-starter.git
+```
+
+See [CHANGELOG.md](./CHANGELOG.md) for what changed in each release, and
+[RELEASING.md](./RELEASING.md) for how releases are cut.
 
 ---
 
