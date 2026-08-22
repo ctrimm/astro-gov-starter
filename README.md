@@ -1,10 +1,11 @@
 # astro-gov-starter
 
-> A production-ready [Astro 6](https://astro.build) starter template for government service websites.
+> A production-ready [Astro 7](https://astro.build) starter template for government service websites.
 
 [![CI](https://github.com/ctrimm/astro-gov-starter/actions/workflows/ci.yml/badge.svg)](https://github.com/ctrimm/astro-gov-starter/actions/workflows/ci.yml)
 [![USWDS 3.x](https://img.shields.io/badge/USWDS-3.x-0050d8)](https://designsystem.digital.gov/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![Release](https://img.shields.io/github/v/release/ctrimm/astro-gov-starter?sort=semver)](https://github.com/ctrimm/astro-gov-starter/releases/latest)
 
 **USWDS-native · Section 508 / WCAG 2.1 AA · i18n (en + es) · Zero client JS · Deploy anywhere**
 
@@ -16,6 +17,8 @@
 
 ## Use this template
 
+Requires **Node.js 22.12 or newer** and **pnpm 10**.
+
 Click **"Use this template"** on GitHub to create your own repository, then run the setup wizard:
 
 ```bash
@@ -25,6 +28,24 @@ pnpm dev
 ```
 
 Your site will be at `http://localhost:4321`.
+
+### Pick a release
+
+Each release of this starter targets one major Astro version. Pin the release
+that matches the Astro version you want to build on:
+
+| Starter release | Astro | Node | Notes |
+|---|---|---|---|
+| [`v2.x`](https://github.com/ctrimm/astro-gov-starter/releases) | Astro 7 | ≥ 22.12 | Current — Rust compiler, Satteri Markdown, Vite 8 |
+| [`v1.x`](https://github.com/ctrimm/astro-gov-starter/releases/tag/v1.0.0) | Astro 6 | ≥ 18.17.1 | Maintenance only |
+
+```bash
+# start from a specific release instead of the default branch
+git clone --branch v2.0.0 --depth 1 https://github.com/ctrimm/astro-gov-starter.git
+```
+
+See [CHANGELOG.md](./CHANGELOG.md) for what changed in each release, and
+[RELEASING.md](./RELEASING.md) for how releases are cut.
 
 ---
 

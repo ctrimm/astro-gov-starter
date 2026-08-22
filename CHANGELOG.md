@@ -1,0 +1,159 @@
+# Changelog
+
+All notable changes to this starter are documented here.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## What the version numbers mean
+
+This is a **template you copy**, not a package you install, so semver is applied
+to the contract a template can actually keep: what you have to change in *your*
+copy to move to a newer release.
+
+| Bump | Means | Example |
+|---|---|---|
+| **Major** | The Astro major version changed, the minimum Node version rose, or an existing component's markup, props, or config changed in a way that needs edits in a project already built on this starter. | Astro 6 → Astro 7 |
+| **Minor** | New components, pages, content collections, CI gates, or config options. Existing code keeps working untouched. | Adding a new USWDS component wrapper |
+| **Patch** | Fixes and dependency bumps within the same Astro major — accessibility fixes, copy corrections, CI repairs, USWDS patch releases. | USWDS 3.13 → 3.14 |
+
+**Each major release line targets exactly one Astro major version.** Pin the
+release that matches the Astro version you want to build on — see the
+compatibility table in [README.md](./README.md#pick-a-release). Because this is
+a template, upgrading means merging changes into your own fork rather than
+bumping a dependency; the "Upgrading" notes in each major release tell you what
+to look for.
+
+---
+
+## [Unreleased]
+
+Nothing yet.
+
+---
+
+## [2.0.0] - 2026-08-22
+
+Targets **Astro 7**. Requires **Node.js 22.12 or newer**.
+
+This release is dependency maintenance only — no components, pages, routes,
+props, or content collection schemas changed. It is a major release because
+Astro 7 and the raised Node floor both require action in projects built on
+`v1.x`.
+
+### Changed
+
+- **Astro 6.1.7 → 7.2.4.** Brings the Rust compiler, Sätteri Markdown, Vite 8
+  with the Rolldown bundler, and streaming rendering.
+- **`@astrojs/mdx` 5.0.3 → 7.0.7**, matching the Astro 7 peer range.
+- **`@uswds/uswds` 3.13.0 → 3.14.0.**
+- **`typescript` 5.9.3 → 6.0.3.** Held at `^6` on purpose: `@astrojs/check`
+  0.9.x declares a `typescript: ^5.0.0 || ^6.0.0` peer range and does not yet
+  support the TypeScript 7 native compiler.
+- **`html-validate` 10.13.0 → 11.9.0**, **`linkinator` 7.6.1 → 8.0.4**,
+  **`@astrojs/check` 0.9.8 → 0.9.10**, **`tailwindcss` and
+  `@tailwindcss/vite` 4.2.2 → 4.3.3**, **`sass` 1.99.0 → 1.103.1**.
+- **Minimum Node.js is now 22.12** (was 18.17.1), required by Astro 7.
+  html-validate 11 and linkinator 8 additionally require Node 22.22, so CI
+  pins `22.22`.
+- **CI now uses pnpm 10** (was pnpm 9) to match the committed lockfile.
+
+### Fixed
+
+- **Lost spaces between inline elements.** Astro 7 changes the `compressHTML`
+  default to `'jsx'`, which strips whitespace-only text nodes that contain a
+  newline. Eight places relied on that whitespace and lost a required space —
+  most visibly the USA Banner, which rendered "A lock(" instead of
+  "A lock (". Each now uses an explicit `{' '}`.
+- **Double-escaped ampersand** in the component preview page. The Rust compiler
+  no longer decodes HTML entities inside component props, so
+  `heading="Programs &amp; services"` reached the browser as `&amp;amp;`.
+
+### Upgrading from 1.x
+
+Projects built on `v1.x` should expect to do the following in their own copy:
+
+1. **Move to Node 22.12+** locally and in every CI and deploy workflow.
+   Update `engines.node` in `package.json`.
+2. **Bump the dependencies** listed above; `pnpm install` regenerates the
+   lockfile.
+3. **Audit your own templates for lost inline whitespace.** This is the change
+   most likely to bite silently, because nothing errors — text just runs
+   together. Anywhere an inline element (`<a>`, `<strong>`, `<span>`, `<code>`…)
+   is followed by a newline and then more text, insert an explicit `{' '}`:
+
+   ```diff
+   - We strive to conform to the
+   + We strive to conform to the{' '}
+     <a href="https://www.w3.org/TR/WCAG21/">WCAG 2.1 Level AA</a>
+   ```
+
+   The fastest way to find these is to build before and after the upgrade and
+   diff the rendered text of every page.
+4. **Replace HTML entities in component props with literal characters.**
+   `heading="A &amp; B"` becomes `heading="A & B"`. Entities inside ordinary
+   HTML element content are unaffected.
+5. **Check any remark or rehype plugins.** Sätteri is now the default Markdown
+   processor and does not run them. This starter configures none, so nothing
+   was needed here — but if you added any, install `@astrojs/markdown-remark`
+   and set `markdown.processor` to `unified({ ... })`, or port the plugins to
+   MDAST/HAST.
+6. **Validate your HTML.** The Rust compiler no longer silently repairs
+   semantically invalid markup such as a `<div>` inside a `<p>`; it leaves it
+   for the browser. The `pnpm ci:check` HTML validation gate will catch these.
+
+### Known issues
+
+- Astro warns at build time that Shiki syntax highlighting uses inline styles
+  incompatible with the Content Security Policy this starter configures. This
+  predates the upgrade and only affects fenced code blocks in Markdown content,
+  of which the seed content has none. If you add code blocks, either set
+  `markdown.syntaxHighlight: 'prism'` or add the appropriate hashes to the CSP
+  `styleDirective` in `astro.config.mjs`.
+- `astro:content` re-exports `z` as deprecated. The content collection schemas
+  in `src/content.config.ts` still use it; it works, and migrating means taking
+  a direct `zod` dependency pinned to Astro's internal version.
+
+---
+
+## [1.0.0] - 2026-08-22
+
+Targets **Astro 6**. Requires **Node.js 18.17.1 or newer**.
+
+First tagged release. This marks the starter as stable and establishes the
+versioning contract described above; it is the last release on the Astro 6
+line and receives fixes only.
+
+### Added
+
+- **USWDS 3.x design system** wired through SCSS, with assets copied from
+  `node_modules` to `public/uswds/` by `scripts/setup-uswds.mjs` — no
+  reimplemented components.
+- **20 Astro component wrappers** for USWDS patterns: Accordion, Alert,
+  Breadcrumb, CallToAction, Footer, Header, Hero, IconList, LanguageSelector,
+  Pagination, ProcessList, Search, ServiceCard, SideNav, SiteAlert,
+  StepIndicator, SummaryBox, Table, Tag, USABanner, USAIdentifier.
+- **Required federal elements on every page**: the USA Banner
+  ("An official website of the United States government") and the USA
+  Identifier with its seven required links.
+- **Bilingual routing.** English at `/` and Spanish at `/es/`, served from one
+  `[...lang]` route file per page rather than duplicated page trees.
+- **Content collections** for services, announcements, and FAQs, Zod-typed and
+  MDX-ready.
+- **Static search** via Pagefind at `/search/`, self-hosted and language-aware.
+- **Type-safe environment variables** through `astro:env`, so the same build
+  config works for local dev, a GitHub Pages subpath, and a custom domain.
+- **Content Security Policy** generated at build time, with Astro hashing the
+  inline scripts and styles it emits so `unsafe-inline` is not required.
+- **Seven CI quality gates**: TypeScript, HTML validation, axe-core
+  accessibility, Lighthouse, link checking, plain language (Flesch-Kincaid
+  grade ≤ 8), and USWDS compliance. `pnpm ci:check` runs the non-browser gates
+  locally.
+- **Agency setup wizard** (`node scripts/init-agency.mjs`) to configure agency
+  name, domain, and identifier links in one pass.
+- **GitHub Pages deploy workflow**, plus a `public/_headers` example for hosts
+  that support response headers.
+
+[Unreleased]: https://github.com/ctrimm/astro-gov-starter/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/ctrimm/astro-gov-starter/compare/v1.0.0...v2.0.0
+[1.0.0]: https://github.com/ctrimm/astro-gov-starter/releases/tag/v1.0.0
