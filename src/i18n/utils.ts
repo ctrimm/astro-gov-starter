@@ -76,6 +76,10 @@ export function withBase(path: string): string {
 
 /** Prefix an unlocalized path (e.g. `/services/`) with a locale's URL segment. */
 export function localizePath(path: string, locale: Locale): string {
+  // Only site-relative paths get a locale segment. Content authors can put an
+  // external URL, tel:, mailto:, or #anchor in frontmatter link fields, and
+  // prefixing those would corrupt them. Mirrors the guard in withBase().
+  if (!path || !path.startsWith('/')) return path;
   const param = localeParam(locale);
   if (!param) return path;
   return path === '/' ? `/${param}/` : `/${param}${path}`;

@@ -37,6 +37,34 @@ echo "==> HTML validation"
 find dist -name '*.html' -not -path 'dist/internal/*' -print0 | xargs -0 npx html-validate
 
 echo ""
+echo "==> Base-path link check"
+# The deploy target serves from a subpath, so a link written as "/services/snap/"
+# instead of withBase(...) works locally and 404s in production. Rebuild under a
+# base path, serve it from under that prefix with directory listings disabled,
+# and crawl — this catches both unbased links and nav links pointing at routes
+# that were never built. Mirrors the `links` job in ci.yml.
+if [[ "$SKIP_BUILD" == false ]]; then
+  LINKROOT="$(mktemp -d)"
+  mkdir -p "$LINKROOT/base-path-test"
+  SITE=https://example.gov/base-path-test/ BASE_PATH=/base-path-test/ pnpm build >/dev/null
+  cp -r dist/. "$LINKROOT/base-path-test/"
+  npx -y http-server "$LINKROOT" -p 4011 -d false --silent >/dev/null 2>&1 &
+  SERVER_PID=$!
+  trap 'kill $SERVER_PID 2>/dev/null || true; rm -rf "$LINKROOT"' EXIT
+  for _ in $(seq 1 30); do
+    curl -sf -o /dev/null http://localhost:4011/base-path-test/ && break
+    sleep 1
+  done
+  npx -y linkinator http://localhost:4011/base-path-test/ \
+    --recurse --skip "^(?!http://localhost)" --skip "tel:" --verbosity error
+  kill $SERVER_PID 2>/dev/null || true
+  # Restore the default-base build so `dist/` matches what the other gates saw.
+  pnpm build >/dev/null
+else
+  echo "  (skipped with --skip-build)"
+fi
+
+echo ""
 echo "All local checks passed."
 echo ""
 echo "Note: Accessibility (axe-core) and Lighthouse CI require a running"

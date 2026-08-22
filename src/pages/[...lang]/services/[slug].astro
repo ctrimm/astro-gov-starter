@@ -20,7 +20,7 @@ const { service, locale } = Astro.props;
 const { Content } = await render(service);
 const slug = idToSlug(service.id);
 const prefix = locale === 'es' ? '/es' : '';
-const applyHref = service.data.applySlug ? `${prefix}/apply/${service.data.applySlug}/` : undefined;
+const applyHref = service.data.applySlug ? withBase(`${prefix}/apply/${service.data.applySlug}/`) : undefined;
 
 const copy = {
   en: {

@@ -28,7 +28,37 @@ to look for.
 
 ## [Unreleased]
 
-Nothing yet.
+### Fixed
+
+- **Links broke on subpath deployments.** Four places emitted root-relative URLs
+  without `withBase()`, so on a GitHub Pages project site (or any deployment
+  with a `base`) they pointed above the base path and 404'd: the homepage
+  announcement link, the "Apply" call to action on each service detail page,
+  the eligibility form's `action`, and the `Pagination` component's page links.
+  `Pagination` now applies `withBase()` internally, matching every other
+  component that takes an `href`-shaped prop.
+- **The homepage announcement link ignored the reader's language.** The Spanish
+  homepage linked to the English page. It now resolves through `localizeUrl()`.
+- **`localizePath()` corrupted non-site-relative URLs.** An external link, `tel:`,
+  `mailto:`, or `#anchor` in content frontmatter got a locale segment glued to
+  the front. It now passes those through untouched, like `withBase()` does.
+
+### Added
+
+- **An `/apply/` landing page** in both locales. The header's "Apply" nav item
+  pointed at a route that never existed, so it 404'd on every page of the site.
+  The page lists the programs that accept applications, what to have ready, and
+  how to apply by phone or in person.
+
+### Changed
+
+- **The CI link check now crawls a base-path build**, served from under that
+  prefix with directory listings disabled. It previously crawled a build made
+  at base `/` behind a server that returned a `200` directory listing for any
+  folder without an `index.html` — between them, those two gaps hid every bug
+  listed above from a passing build. The base used in CI is deliberately not
+  this repo's real Pages subpath, so a hardcoded one would fail the check.
+  `scripts/check.sh` runs the same crawl locally.
 
 ---
 
