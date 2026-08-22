@@ -158,3 +158,20 @@ We generally decline:
 - Features applicable only to one agency or program type
 
 If you're unsure, open an issue first to discuss before implementing.
+
+---
+
+## Releases
+
+Every change that lands on `main` goes into the `## [Unreleased]` section of
+[CHANGELOG.md](./CHANGELOG.md) as part of its own PR — that section becomes the
+release notes verbatim, so write the entry for someone deciding whether to
+adopt the release, not for someone reading the diff.
+
+Choose the section by impact on a project already built on this starter:
+`Added` for new capability, `Changed` for altered behaviour, `Fixed`,
+`Removed`, `Security`.
+
+Releases are cut from `main` by pushing a `vX.Y.Z` tag. Major versions track
+Astro major versions — see [RELEASING.md](./RELEASING.md) for the full process
+and the versioning contract.

@@ -1,7 +1,7 @@
 {
   "name": "astro-gov-starter",
   "type": "module",
-  "version": "0.1.0",
+  "version": "2.0.0",
   "description": "Production-ready Astro starter for government service websites. USWDS-native, accessible by default, privacy-respecting.",
   "keywords": [
     "astro",
