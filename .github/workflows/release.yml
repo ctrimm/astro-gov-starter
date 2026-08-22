@@ -1,17 +1,25 @@
-# Publishes a GitHub Release when a semver tag is pushed.
+# Publishes a GitHub Release for a version of this starter.
 #
-# Cutting a release is a two-step, human-initiated process — see RELEASING.md:
-#   1. Land a commit on `main` that bumps `version` in package.json and moves
-#      the CHANGELOG "Unreleased" section under the new version heading.
-#   2. Push the matching tag:  git tag v2.0.0 && git push origin v2.0.0
+# Two ways to cut one — see RELEASING.md:
+#   • Push a tag:        git tag v2.0.0 && git push origin v2.0.0
+#   • Run this workflow: Actions -> Release -> Run workflow, pick the branch
+#     and enter the version. The tag is created at that branch's head.
 #
-# This workflow refuses to publish if the tag and package.json disagree, so a
-# release can never claim a version the tree does not actually contain.
+# Either way the version must already be committed: this workflow refuses to
+# publish if the version and package.json disagree, or if CHANGELOG.md has no
+# section for it, so a release can never claim a version the tree does not
+# contain or ship notes nobody wrote.
 name: Release
 
 on:
   push:
     tags: ['v[0-9]+.[0-9]+.[0-9]+', 'v[0-9]+.[0-9]+.[0-9]+-*']
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release, without the leading v (e.g. 2.0.0). Must match package.json on the selected branch.'
+        required: true
+        type: string
 
 permissions:
   contents: write
@@ -38,29 +46,51 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'pnpm'
 
-      # A tag that disagrees with package.json would ship release notes for a
-      # version nobody can reproduce from the tree. Fail loudly instead.
-      - name: Verify tag matches package.json version
+      # One place decides what is being released, whether the run came from a
+      # tag push or a manual dispatch. Everything downstream reads these.
+      - name: Resolve version
+        id: v
         run: |
-          TAG="${GITHUB_REF_NAME#v}"
+          if [ "$GITHUB_EVENT_NAME" = "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+            VERSION="${VERSION#v}"
+          else
+            VERSION="${GITHUB_REF_NAME#v}"
+          fi
+          if ! echo "$VERSION" | grep -Eq '^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$'; then
+            echo "::error::'$VERSION' is not a semver version."
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION"    >> "$GITHUB_OUTPUT"
+          echo "Releasing v$VERSION from $GITHUB_SHA"
+
+      # A version that disagrees with package.json would ship release notes for
+      # a version nobody can reproduce from the tree. Fail loudly instead.
+      - name: Verify version matches package.json
+        run: |
           PKG=$(node -p "require('./package.json').version")
-          echo "tag=$TAG package.json=$PKG"
-          if [ "$TAG" != "$PKG" ]; then
-            echo "::error::Tag v$TAG does not match package.json version $PKG. Bump package.json on main, then re-tag."
+          echo "requested=${{ steps.v.outputs.version }} package.json=$PKG"
+          if [ "${{ steps.v.outputs.version }}" != "$PKG" ]; then
+            echo "::error::v${{ steps.v.outputs.version }} does not match package.json version $PKG. Bump package.json first."
+            exit 1
+          fi
+
+      - name: Refuse to overwrite an existing release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "${{ steps.v.outputs.tag }}" >/dev/null 2>&1; then
+            echo "::error::Release ${{ steps.v.outputs.tag }} already exists. Bump the version instead of re-releasing."
             exit 1
           fi
 
       # Release notes come from the CHANGELOG section for this version, so the
-      # notes people read on the Releases page are the same ones in the repo.
+      # notes people read on the Releases page are the notes committed to the
+      # repo — there is no second copy to drift.
       - name: Extract release notes from CHANGELOG
-        id: notes
         run: |
-          VERSION="${GITHUB_REF_NAME#v}"
-          node scripts/changelog-section.mjs "$VERSION" > release-notes.md
-          if [ ! -s release-notes.md ]; then
-            echo "::error::No CHANGELOG.md section found for $VERSION."
-            exit 1
-          fi
+          node scripts/changelog-section.mjs "${{ steps.v.outputs.version }}" > release-notes.md
           echo "--- release notes ---"
           cat release-notes.md
 
@@ -80,22 +110,25 @@ jobs:
 
       - name: Package starter source
         run: |
-          git archive --format=tar.gz --prefix="astro-gov-starter-${GITHUB_REF_NAME}/" \
-            -o "astro-gov-starter-${GITHUB_REF_NAME}.tar.gz" "$GITHUB_REF_NAME"
+          git archive --format=tar.gz \
+            --prefix="astro-gov-starter-${{ steps.v.outputs.tag }}/" \
+            -o "astro-gov-starter-${{ steps.v.outputs.tag }}.tar.gz" "$GITHUB_SHA"
 
       # Uses the gh CLI pre-installed on GitHub runners rather than a
-      # third-party action, so publishing a release pulls in no external
-      # supply-chain dependency.
+      # third-party action, so publishing pulls in no external supply-chain
+      # dependency. On a manual dispatch --target creates the tag at this commit;
+      # on a tag push the tag already exists and --target is a no-op.
       - name: Publish release
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           PRERELEASE=""
-          case "$GITHUB_REF_NAME" in
+          case "${{ steps.v.outputs.tag }}" in
             *-*) PRERELEASE="--prerelease" ;;
           esac
-          gh release create "$GITHUB_REF_NAME" \
-            --title "$GITHUB_REF_NAME" \
+          gh release create "${{ steps.v.outputs.tag }}" \
+            --title "${{ steps.v.outputs.tag }}" \
             --notes-file release-notes.md \
+            --target "$GITHUB_SHA" \
             $PRERELEASE \
-            "astro-gov-starter-${GITHUB_REF_NAME}.tar.gz"
+            "astro-gov-starter-${{ steps.v.outputs.tag }}.tar.gz"

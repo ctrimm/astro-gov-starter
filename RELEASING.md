@@ -39,7 +39,9 @@ On a branch, then merged to `main` through a PR:
   Astro version in the README's opening line.
 - Run `pnpm ci:check` and make sure CI is green.
 
-### 2. Push the tag
+### 2. Publish
+
+Either push the tag:
 
 ```bash
 git checkout main && git pull
@@ -47,19 +49,24 @@ git tag v2.0.0
 git push origin v2.0.0
 ```
 
-Pushing a `v*.*.*` tag triggers [`.github/workflows/release.yml`](./.github/workflows/release.yml),
-which:
+...or, if you'd rather not tag locally, go to **Actions → Release → Run
+workflow**, pick the branch, and enter `2.0.0`. The tag is created at that
+branch's head. Both paths run the same
+[`.github/workflows/release.yml`](./.github/workflows/release.yml), which:
 
-1. **Verifies the tag matches `package.json`** and fails loudly if not, so a
-   release can never claim a version the tree does not contain.
-2. **Extracts the release notes** from the matching `CHANGELOG.md` section via
+1. **Verifies the version matches `package.json`** and fails loudly if not, so
+   a release can never claim a version the tree does not contain.
+2. **Refuses to overwrite an existing release**, so a re-run cannot silently
+   replace published notes.
+3. **Extracts the release notes** from the matching `CHANGELOG.md` section via
    `scripts/changelog-section.mjs`, so the notes on the Releases page are the
-   notes committed to the repo — there is no second copy to keep in sync.
-3. **Runs `astro check` and a full build** on the tagged commit. A release is a
-   "use this exact commit" promise; it is proven before it is published.
-4. **Publishes the GitHub Release** with a `.tar.gz` of the tagged source.
+   notes committed to the repo — there is no second copy to keep in sync. A
+   version with no CHANGELOG section fails the run.
+4. **Runs `astro check` and a full build** on the released commit. A release is
+   a "use this exact commit" promise; it is proven before it is published.
+5. **Publishes the GitHub Release** with a `.tar.gz` of the source.
 
-A tag containing a hyphen (`v2.1.0-rc.1`) is published as a prerelease.
+A version containing a hyphen (`2.1.0-rc.1`) is published as a prerelease.
 
 To preview the notes a tag would publish:
 
