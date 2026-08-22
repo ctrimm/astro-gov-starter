@@ -164,33 +164,69 @@ jobs:
           uploadArtifacts: true
           temporaryPublicStorage: true
 
-  # ── 5. Link Check (linkinator) ─────────────────────────────────────────────
+  # ── 5. Link Check (linkinator, against a base-path build) ─────────────────
   links:
     name: Link Check
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
+      - uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
 
-      - name: Download build artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
 
+      - name: Copy USWDS assets
+        run: node scripts/setup-uswds.mjs
+
+      # This job deliberately builds its own site instead of reusing the `build`
+      # artifact, because that artifact is built at base '/' and the real
+      # deployment target (GitHub Pages) serves from a subpath. A link written
+      # as "/services/snap/" instead of withBase("/services/snap/") resolves
+      # fine at base '/' and 404s in production, so a base-'/' crawl cannot see
+      # that entire class of bug.
+      #
+      # The base used here is intentionally NOT this repo's real Pages subpath:
+      # a hardcoded "/astro-gov-starter/" somewhere would pass a crawl that used
+      # the same value, and fail this one.
+      - name: Build with a base path
+        env:
+          SITE: https://example.gov/base-path-test/
+          BASE_PATH: /base-path-test/
+        run: pnpm build
+
+      # Serve the site from under its base path so those URLs actually resolve,
+      # and leave the server root empty so anything missing the base prefix 404s.
+      - name: Stage the site under its base path
+        run: |
+          mkdir -p _linkroot/base-path-test
+          cp -r dist/. _linkroot/base-path-test/
+
+      # -d false disables directory listings. `npx serve` renders a listing with
+      # HTTP 200 for a directory that has no index.html, which silently hides a
+      # nav link pointing at a route that was never built — GitHub Pages returns
+      # 404 there. Without this flag the crawl passes on a genuinely broken site.
       - name: Start static server
-        run: npx -y serve dist --listen 4001 &
+        run: npx -y http-server _linkroot -p 4001 -d false --silent &
 
       - name: Wait for server
-        run: sleep 3
+        run: |
+          for i in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:4001/base-path-test/ && exit 0
+            sleep 1
+          done
+          echo "::error::Static server did not come up" && exit 1
 
       - name: Check internal links
         run: |
-          npx -y linkinator http://localhost:4001/ \
+          npx -y linkinator http://localhost:4001/base-path-test/ \
             --recurse \
             --skip "^(?!http://localhost)" \
             --skip "tel:" \

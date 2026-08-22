@@ -9,7 +9,7 @@ import CallToAction from '../../components/uswds/CallToAction.astro';
 import SiteAlert from '../../components/uswds/SiteAlert.astro';
 import { siteConfig } from '../../config/site';
 import type { Locale } from '../../i18n/utils';
-import { localeStaticPaths, useTranslations, withBase } from '../../i18n/utils';
+import { localeStaticPaths, useTranslations, withBase, localizeUrl } from '../../i18n/utils';
 import { idToSlug } from '../../utils/content';
 
 export function getStaticPaths() {
@@ -92,7 +92,7 @@ const activeAnnouncements = await getCollection('announcements', ({ data }) => {
       heading={ann.data.title}
     >
       {ann.data.linkText && ann.data.linkUrl && (
-        <a href={ann.data.linkUrl} class="usa-link">{ann.data.linkText}</a>
+        <a href={localizeUrl(ann.data.linkUrl, locale)} class="usa-link">{ann.data.linkText}</a>
       )}
     </SiteAlert>
   ))}

@@ -10,7 +10,7 @@
  */
 
 import type { Locale } from '../../i18n/utils';
-import { useTranslations } from '../../i18n/utils';
+import { useTranslations, withBase } from '../../i18n/utils';
 
 interface Props {
   /** Total number of pages */
@@ -41,7 +41,9 @@ const base = import.meta.env.BASE_URL;
 const sprite = `${base}uswds/img/sprite.svg`;
 
 function pageUrl(page: number): string {
-  return urlPattern.replace('%d', String(page));
+  // Callers pass an unbased pattern (e.g. "/news/page/%d/"), matching how
+  // Breadcrumb, Hero, Search, ServiceCard and SideNav take their href props.
+  return withBase(urlPattern.replace('%d', String(page)));
 }
 
 // Build the visible page range centered on currentPage

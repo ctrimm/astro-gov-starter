@@ -122,7 +122,7 @@ const copy = {
       </Alert>
     )}
 
-    <form class="usa-form usa-form--large" method="post" action={`${prefix}/apply/check-eligibility`}>
+    <form class="usa-form usa-form--large" method="post" action={withBase(`${prefix}/apply/check-eligibility`)}>
       <input type="hidden" name="program" value={service.data.applySlug} />
 
       <fieldset class="usa-fieldset">
