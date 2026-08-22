@@ -51,7 +51,19 @@ git push origin v2.0.0
 
 ...or, if you'd rather not tag locally, go to **Actions → Release → Run
 workflow**, pick the branch, and enter `2.0.0`. The tag is created at that
-branch's head. Both paths run the same
+branch's head.
+
+> **The Actions tab only lists "Release" once `release.yml` is on `main`.**
+> GitHub registers workflows from the default branch only, so a `workflow_dispatch`
+> workflow that exists solely on a feature or release branch does not appear at
+> all — and the branch dropdown cannot rescue it, because there is no workflow
+> there to select. Pushing a tag has no such restriction: it runs the workflow
+> from the tag's own tree. So on a branch whose `release.yml` has not reached
+> `main` yet, tag the release rather than looking for it in the UI. Once the
+> file is on `main`, the dropdown can target any branch, including `release/1.x`,
+> and GitHub runs that branch's copy of the file.
+
+Both paths run the same
 [`.github/workflows/release.yml`](./.github/workflows/release.yml), which:
 
 1. **Verifies the version matches `package.json`** and fails loudly if not, so
@@ -119,3 +131,7 @@ git tag v1.0.1 && git push origin v1.0.1
 ```
 
 The release workflow runs on any `v*` tag, so a backport publishes the same way.
+Tag rather than reaching for the Actions tab here: an older line's `release.yml`
+is not the copy on `main`, and per the note above, a run dispatched from the UI
+uses the file from the branch you select, so keep each line's copy current if you
+intend to dispatch from it.
