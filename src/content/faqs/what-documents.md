@@ -2,7 +2,6 @@
 question: What documents do I need to apply?
 tags: [snap, medicaid, wic, childcare, general]
 order: 3
-esQuestion: ¿Qué documentos necesito para solicitar?
 ---
 
 What you bring depends on the program. Most forms ask for:

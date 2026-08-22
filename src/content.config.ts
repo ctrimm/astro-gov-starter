@@ -48,7 +48,6 @@ const faqs = defineCollection({
     tags: z.array(z.string()).default([]),
     order: z.number().default(0),
     draft: z.boolean().default(false),
-    esQuestion: z.string().optional(),
   }),
 });
 

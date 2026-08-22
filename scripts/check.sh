@@ -51,10 +51,17 @@ if [[ "$SKIP_BUILD" == false ]]; then
   npx -y http-server "$LINKROOT" -p 4011 -d false --silent >/dev/null 2>&1 &
   SERVER_PID=$!
   trap 'kill $SERVER_PID 2>/dev/null || true; rm -rf "$LINKROOT"' EXIT
+  ready=false
   for _ in $(seq 1 30); do
-    curl -sf -o /dev/null http://localhost:4011/base-path-test/ && break
+    if curl -sf -o /dev/null http://localhost:4011/base-path-test/; then ready=true; break; fi
     sleep 1
   done
+  if [[ "$ready" == false ]]; then
+    echo "ERROR: static server never came up on port 4011." >&2
+    echo "If a previous run was interrupted, an orphaned server may still hold" >&2
+    echo "the port: pkill -f 'http-server' and try again." >&2
+    exit 1
+  fi
   npx -y linkinator http://localhost:4011/base-path-test/ \
     --recurse --skip "^(?!http://localhost)" --skip "tel:" --verbosity error
   kill $SERVER_PID 2>/dev/null || true

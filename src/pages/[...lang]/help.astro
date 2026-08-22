@@ -8,6 +8,7 @@ import SummaryBox from '../../components/uswds/SummaryBox.astro';
 import SideNav from '../../components/uswds/SideNav.astro';
 import type { Locale } from '../../i18n/utils';
 import { localeStaticPaths, useTranslations, telHref, withBase } from '../../i18n/utils';
+import { entriesForLocale } from '../../utils/content';
 
 export function getStaticPaths() {
   return localeStaticPaths();
@@ -65,15 +66,17 @@ const copy = {
   },
 }[locale];
 
-const faqs = (await getCollection('faqs', ({ data }) => !data.draft))
-  .sort((a, b) => a.data.order - b.data.order);
+const faqs = entriesForLocale(
+  await getCollection('faqs', ({ data }) => !data.draft),
+  locale,
+).sort((a, b) => a.data.order - b.data.order);
 
 const generalFaqs = faqs.filter((f) => f.data.tags.includes('general'));
 const snapFaqs = faqs.filter((f) => f.data.tags.includes('snap') && !f.data.tags.includes('general'));
 const otherFaqs = faqs.filter((f) => !f.data.tags.includes('general') && !f.data.tags.includes('snap'));
 
 function faqHeading(faq: (typeof faqs)[number]): string {
-  return locale === 'es' ? faq.data.esQuestion ?? faq.data.question : faq.data.question;
+  return faq.data.question;
 }
 ---
 

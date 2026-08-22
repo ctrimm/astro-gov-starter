@@ -2,14 +2,14 @@
 import { getCollection } from 'astro:content';
 import ApplyLayout from '../../../layouts/ApplyLayout.astro';
 import Alert from '../../../components/uswds/Alert.astro';
-import { idToSlug } from '../../../utils/content';
+import { entriesForLocale, idToSlug } from '../../../utils/content';
 import type { Locale } from '../../../i18n/utils';
 import { locales, localeParam, withBase } from '../../../i18n/utils';
 
 export async function getStaticPaths() {
   const services = await getCollection('services', ({ data }) => !data.draft && !!data.applySlug);
   return locales.flatMap((locale) =>
-    services.map((service) => ({
+    entriesForLocale(services, locale).map((service) => ({
       params: { lang: localeParam(locale), program: service.data.applySlug },
       props: { service, locale },
     }))

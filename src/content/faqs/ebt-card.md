@@ -2,7 +2,6 @@
 question: How does the EBT card work?
 tags: [snap, ebt]
 order: 4
-esQuestion: ¿Cómo funciona la tarjeta EBT?
 ---
 
 An Electronic Benefits Transfer (EBT) card works like a debit card. When your SNAP benefits are approved, they are loaded onto your EBT card each month on a set date.
