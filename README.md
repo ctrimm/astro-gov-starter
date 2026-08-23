@@ -273,13 +273,40 @@ language (e.g. French):
    (create `src/i18n/fr.json` by copying `en.json` and translating)
 3. Add a `fr` entry to each page's `copy` object in
    `src/pages/[...lang]/*.astro` — TypeScript will point you at every one
-4. Add translated fields to content collections as needed (see `esQuestion`
-   in `src/content.config.ts` for the pattern)
+4. Translate the content collections (see below)
 
 That's it — the header's language selector, hreflang tags, and og:locale
 meta tags all read from `locales`/`localeMeta`, so they update automatically
 (the header even switches from a simple toggle link to the USWDS dropdown
 once there are 3+ locales).
+
+### Translating content
+
+Collection entries are translated by adding a **locale subdirectory** beside
+the default-locale files, so translators edit real Markdown instead of strings
+crammed into frontmatter:
+
+```
+src/content/services/snap.mdx        # English (default locale)
+src/content/services/es/snap.mdx     # Spanish
+src/content/services/fr/snap.mdx     # French
+```
+
+Both files describe the same service, share the URL slug `snap`, and translate
+everything — `title`, `summary`, `eligibility`, `keyFacts`, and the body prose.
+Keep `applySlug`, `order`, and `related` identical across a set, since those are
+identifiers rather than copy.
+
+**Translations are optional.** A page renders the requested locale's file when
+one exists and falls back to the default locale otherwise, so a partial
+translation ships fine and a missing file never breaks the build. The lookup
+lives in `entriesForLocale()` in `src/utils/content.ts`.
+
+The plain-language gate scores each file with a formula built for the language
+it is written in — Flesch-Kincaid for English, Fórmula de Crawford for Spanish —
+because running an English readability formula over Spanish would fail plain
+translations for having longer words. Add a formula there when you add a
+language, or its files will be scored as English.
 
 ---
 

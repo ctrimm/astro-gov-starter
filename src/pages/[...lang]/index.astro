@@ -10,6 +10,7 @@ import SiteAlert from '../../components/uswds/SiteAlert.astro';
 import { siteConfig } from '../../config/site';
 import type { Locale } from '../../i18n/utils';
 import { localeStaticPaths, useTranslations, withBase, localizeUrl } from '../../i18n/utils';
+import { entriesForLocale } from '../../utils/content';
 import { idToSlug } from '../../utils/content';
 
 export function getStaticPaths() {
@@ -68,17 +69,23 @@ const copy = {
 
 const headingId = locale === 'es' ? 'services-heading-es' : 'services-heading';
 
-const services = (await getCollection('services', ({ data }) => !data.draft))
+const services = entriesForLocale(
+  await getCollection('services', ({ data }) => !data.draft),
+  locale,
+)
   .sort((a, b) => a.data.order - b.data.order)
   .slice(0, 3);
 
 const now = new Date();
-const activeAnnouncements = await getCollection('announcements', ({ data }) => {
-  if (data.draft) return false;
-  if (locale === 'es' && !data.showInEs) return false;
-  if (data.endDate && data.endDate < now) return false;
-  return data.startDate <= now;
-});
+const activeAnnouncements = entriesForLocale(
+  await getCollection('announcements', ({ data }) => {
+    if (data.draft) return false;
+    if (locale === 'es' && !data.showInEs) return false;
+    if (data.endDate && data.endDate < now) return false;
+    return data.startDate <= now;
+  }),
+  locale,
+);
 ---
 
 <BaseLayout

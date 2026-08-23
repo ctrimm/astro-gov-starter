@@ -5,6 +5,7 @@ import Hero from '../../../components/uswds/Hero.astro';
 import ServiceCard from '../../../components/uswds/ServiceCard.astro';
 import type { Locale } from '../../../i18n/utils';
 import { localeStaticPaths, useTranslations, withBase } from '../../../i18n/utils';
+import { entriesForLocale } from '../../../utils/content';
 
 export function getStaticPaths() {
   return localeStaticPaths();
@@ -75,8 +76,10 @@ const copy = {
 
 // Only programs with an apply flow belong here — the same filter
 // /apply/[program]/ uses to decide which pages exist.
-const services = (await getCollection('services', ({ data }) => !data.draft && !!data.applySlug))
-  .sort((a, b) => a.data.order - b.data.order);
+const services = entriesForLocale(
+  await getCollection('services', ({ data }) => !data.draft && !!data.applySlug),
+  locale,
+).sort((a, b) => a.data.order - b.data.order);
 ---
 
 <BaseLayout title={copy.title} description={copy.description} locale={locale}>

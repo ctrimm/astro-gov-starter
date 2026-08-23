@@ -2,7 +2,6 @@
 question: Who is eligible for SNAP?
 tags: [snap, eligibility]
 order: 1
-esQuestion: ¿Quién es elegible para SNAP?
 ---
 
 Most families must meet income limits to qualify. Your gross monthly income must be at or below 130% of the federal poverty level. Your net income must be at or below 100%.

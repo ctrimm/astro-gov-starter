@@ -2,7 +2,6 @@
 question: What if my application is denied?
 tags: [snap, medicaid, wic, childcare, appeal, general]
 order: 5
-esQuestion: ¿Qué pasa si mi solicitud es denegada?
 ---
 
 If your application is denied or your benefits are reduced, you have the right to appeal the decision. You must file your appeal within **90 days** of receiving your denial letter (10 days for SNAP if you want to keep your current benefits during the appeal).

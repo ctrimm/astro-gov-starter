@@ -2,7 +2,6 @@
 question: How long does an application take?
 tags: [snap, medicaid, wic, childcare, general]
 order: 2
-esQuestion: ¿Cuánto tiempo tarda una solicitud?
 ---
 
 Most online applications take 15–30 minutes to complete. After you submit, processing times vary by program:

@@ -28,7 +28,32 @@ to look for.
 
 ## [Unreleased]
 
-Nothing yet.
+### Added
+
+- **Spanish translations for all seed content** — the four services, five FAQs,
+  and two announcements, including frontmatter (`title`, `summary`,
+  `eligibility`, `keyFacts`) and body prose. Previously `/es/` pages rendered
+  the English Markdown, so a Spanish reader got a Spanish shell around English
+  content.
+- **A translation convention for content collections.** A translated entry is a
+  file in a locale subdirectory beside the original — `services/es/snap.mdx`
+  next to `services/snap.mdx` — so translators edit real Markdown rather than
+  strings in frontmatter, and the body is translatable at all. Both files share
+  a URL slug. `entriesForLocale()` in `src/utils/content.ts` resolves the pair,
+  falling back to the default locale when a translation is missing, so partial
+  translations ship fine and a missing file never breaks the build.
+
+### Changed
+
+- **The plain-language gate is language-aware.** It scored every file with
+  Flesch-Kincaid, which is tuned to English syllable counts — Spanish words
+  carry more syllables, so plain Spanish scored several grades too high and
+  would have failed the gate. Spanish files are now scored with the Fórmula de
+  Crawford, which yields a comparable grade level, and the summary reports each
+  language separately. English scores are unchanged.
+- **`esQuestion` is gone from the FAQ schema.** A Spanish FAQ now lives in
+  `faqs/es/` and carries its own `question`, so the parallel field is
+  redundant. If you added `esQuestion` entries, move them into `faqs/es/` files.
 
 ---
 
