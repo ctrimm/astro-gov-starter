@@ -31,17 +31,22 @@ Your site will be at `http://localhost:4321`.
 
 ### Pick a release
 
-Each release of this starter targets one major Astro version. Pin the release
-that matches the Astro version you want to build on:
+Every release line targets one major Astro version. Start from the newest line
+for the Astro version you want to build on:
 
 | Starter release | Astro | Node | Notes |
 |---|---|---|---|
-| [`v2.x`](https://github.com/ctrimm/astro-gov-starter/releases) | Astro 7 | ≥ 22.12 | Current — Rust compiler, Satteri Markdown, Vite 8 |
+| [`v3.x`](https://github.com/ctrimm/astro-gov-starter/releases/latest) | Astro 7 | ≥ 22.12 | **Current** — bilingual seed content, translatable collections |
+| [`v2.x`](https://github.com/ctrimm/astro-gov-starter/releases/tag/v2.1.0) | Astro 7 | ≥ 22.12 | Superseded by v3.x; English-only seed content |
 | [`v1.x`](https://github.com/ctrimm/astro-gov-starter/releases/tag/v1.0.0) | Astro 6 | ≥ 18.17.1 | Maintenance only |
+
+Two lines target Astro 7 because v3.0.0 made a breaking change of its own — see
+[Upgrading from 2.x](./CHANGELOG.md#upgrading-from-2x). New projects should start
+from `v3.x`.
 
 ```bash
 # start from a specific release instead of the default branch
-git clone --branch v2.0.0 --depth 1 https://github.com/ctrimm/astro-gov-starter.git
+git clone --branch v3.0.0 --depth 1 https://github.com/ctrimm/astro-gov-starter.git
 ```
 
 See [CHANGELOG.md](./CHANGELOG.md) for what changed in each release, and
