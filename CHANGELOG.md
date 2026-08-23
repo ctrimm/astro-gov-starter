@@ -17,16 +17,35 @@ copy to move to a newer release.
 | **Minor** | New components, pages, content collections, CI gates, or config options. Existing code keeps working untouched. | Adding a new USWDS component wrapper |
 | **Patch** | Fixes and dependency bumps within the same Astro major — accessibility fixes, copy corrections, CI repairs, USWDS patch releases. | USWDS 3.13 → 3.14 |
 
-**Each major release line targets exactly one Astro major version.** Pin the
-release that matches the Astro version you want to build on — see the
-compatibility table in [README.md](./README.md#pick-a-release). Because this is
-a template, upgrading means merging changes into your own fork rather than
-bumping a dependency; the "Upgrading" notes in each major release tell you what
-to look for.
+**Every major release line targets exactly one Astro major version**, and a new
+Astro major always forces a new line here. The reverse does not hold: a breaking
+change of our own starts a new line too, so more than one line can target the
+same Astro major. Start from the newest line for the Astro version you want —
+see the compatibility table in [README.md](./README.md#pick-a-release). Because
+this is a template, upgrading means merging changes into your own fork rather
+than bumping a dependency; the "Upgrading" notes in each major release tell you
+what to look for.
 
 ---
 
 ## [Unreleased]
+
+Nothing yet.
+
+---
+
+## [3.0.0] - 2026-08-23
+
+Targets **Astro 7**. Requires **Node.js 22.12 or newer** — both unchanged from
+2.x.
+
+Makes the Spanish site actually Spanish. Every service, FAQ, and announcement is
+translated, and content collections gain a convention for translating entries.
+A major release because the `esQuestion` frontmatter field is gone: a project
+that used it still builds without error, but its Spanish FAQ headings silently
+revert to English.
+
+No component props, markup, routes, or URLs changed.
 
 ### Added
 
@@ -54,6 +73,56 @@ to look for.
 - **`esQuestion` is gone from the FAQ schema.** A Spanish FAQ now lives in
   `faqs/es/` and carries its own `question`, so the parallel field is
   redundant. If you added `esQuestion` entries, move them into `faqs/es/` files.
+- **`idToSlug()` strips a leading locale directory** as well as the file
+  extension, so `faqs/es/ebt-card.md` and `faqs/ebt-card.md` both resolve to the
+  slug `ebt-card`. Paths that are not locale directories are unaffected:
+  `services/health/foo.md` still yields `health/foo`.
+
+### Upgrading from 2.x
+
+Only content is affected. If you never used `esQuestion` and have no translated
+content, there is nothing to do.
+
+1. **Move `esQuestion` into a translated file.** This is the one change that
+   fails silently — the build still succeeds, and the heading quietly reverts
+   to English — so check for it even if nothing looks broken:
+
+   ```diff
+    # src/content/faqs/ebt-card.md
+    ---
+    question: How does the EBT card work?
+   -esQuestion: ¿Cómo funciona la tarjeta EBT?
+    ---
+   ```
+
+   ```markdown
+   <!-- new file: src/content/faqs/es/ebt-card.md -->
+   ---
+   question: ¿Cómo funciona la tarjeta EBT?
+   tags: [snap, ebt]
+   order: 4
+   ---
+
+   La tarjeta EBT funciona como una tarjeta de débito…
+   ```
+
+   Grep for it first: `grep -rn "esQuestion" src/content/`.
+
+2. **Translate the rest of your content the same way**, if you want to. Put the
+   translation beside the original in a locale subdirectory, sharing the slug:
+   `services/es/snap.mdx` next to `services/snap.mdx`. Keep `applySlug`,
+   `order`, and `related` identical across the pair — they are identifiers, not
+   copy. Translations are optional per entry; anything untranslated falls back
+   to the default locale.
+
+3. **Expect different plain-language scores for non-English content.** Files
+   under a locale directory are now scored with a formula for that language
+   rather than Flesch-Kincaid. Spanish scores typically drop by a few grades,
+   because they were being overstated before, not because the text changed.
+
+4. **Replace the seed translations** as you replace the seed content. The
+   Spanish shipped here describes example programs, and the eligibility figures
+   in it are illustrative.
 
 ---
 
@@ -221,7 +290,8 @@ line and receives fixes only.
 - **GitHub Pages deploy workflow**, plus a `public/_headers` example for hosts
   that support response headers.
 
-[Unreleased]: https://github.com/ctrimm/astro-gov-starter/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/ctrimm/astro-gov-starter/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/ctrimm/astro-gov-starter/compare/v2.1.0...v3.0.0
 [2.1.0]: https://github.com/ctrimm/astro-gov-starter/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/ctrimm/astro-gov-starter/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/ctrimm/astro-gov-starter/releases/tag/v1.0.0

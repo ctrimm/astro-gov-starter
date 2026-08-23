@@ -50,7 +50,19 @@ if [[ "$SKIP_BUILD" == false ]]; then
   cp -r dist/. "$LINKROOT/base-path-test/"
   npx -y http-server "$LINKROOT" -p 4011 -d false --silent >/dev/null 2>&1 &
   SERVER_PID=$!
-  trap 'kill $SERVER_PID 2>/dev/null || true; rm -rf "$LINKROOT"' EXIT
+  # $! is npx, which spawns http-server as a child and then exits, so by teardown
+  # time there is no live parent left to enumerate children from — killing the
+  # recorded PID leaves an orphaned http-server holding port 4011, and the next
+  # run cannot bind. Kill by port instead, which does not depend on the process
+  # tree still being intact.
+  stop_server() {
+    [[ -n "${SERVER_PID:-}" ]] && kill "$SERVER_PID" 2>/dev/null
+    if command -v fuser >/dev/null 2>&1; then
+      fuser -k 4011/tcp >/dev/null 2>&1 || true
+    fi
+    SERVER_PID=""
+  }
+  trap 'stop_server; rm -rf "$LINKROOT"' EXIT
   ready=false
   for _ in $(seq 1 30); do
     if curl -sf -o /dev/null http://localhost:4011/base-path-test/; then ready=true; break; fi
@@ -64,7 +76,7 @@ if [[ "$SKIP_BUILD" == false ]]; then
   fi
   npx -y linkinator http://localhost:4011/base-path-test/ \
     --recurse --skip "^(?!http://localhost)" --skip "tel:" --verbosity error
-  kill $SERVER_PID 2>/dev/null || true
+  stop_server
   # Restore the default-base build so `dist/` matches what the other gates saw.
   pnpm build >/dev/null
 else

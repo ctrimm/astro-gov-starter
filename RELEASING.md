@@ -15,10 +15,14 @@ Full definitions live at the top of [CHANGELOG.md](./CHANGELOG.md). In short:
   with existing code untouched.
 - **Patch** — fixes and dependency bumps within the same Astro major.
 
-**One major release line per Astro major version.** When Astro ships a new
-major, this starter ships a new major — even if nothing else changed. That is
-the whole point: `v2.x` means Astro 7, and someone who needs Astro 6 can clone
-`v1.x` and get a tree that actually builds.
+**A new Astro major always forces a new major here**, even if nothing else
+changed. That is the point: someone who needs Astro 6 can clone `v1.x` and get a
+tree that actually builds.
+
+It does not follow that each Astro major gets only one line. A breaking change of
+our own starts a new line too, so several lines can target the same Astro major —
+`v2.x` and `v3.x` both target Astro 7. Every line still targets exactly one Astro
+major; the compatibility table says which line is current for each.
 
 The compatibility table in [README.md](./README.md#pick-a-release) must be
 updated in the same commit as any major release.
