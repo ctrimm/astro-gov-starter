@@ -28,6 +28,18 @@ to look for.
 
 ## [Unreleased]
 
+Nothing yet.
+
+---
+
+## [2.1.0] - 2026-08-23
+
+Targets **Astro 7**. Requires **Node.js 22.12 or newer**.
+
+A bug-fix release for subpath deployments, plus the `/apply/` landing page the
+header nav had always promised. No component props, content collection schemas,
+or configuration changed, so upgrading from 2.0.0 is a straight merge.
+
 ### Fixed
 
 - **Links broke on subpath deployments.** Four places emitted root-relative URLs
@@ -184,6 +196,7 @@ line and receives fixes only.
 - **GitHub Pages deploy workflow**, plus a `public/_headers` example for hosts
   that support response headers.
 
-[Unreleased]: https://github.com/ctrimm/astro-gov-starter/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/ctrimm/astro-gov-starter/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/ctrimm/astro-gov-starter/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/ctrimm/astro-gov-starter/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/ctrimm/astro-gov-starter/releases/tag/v1.0.0
