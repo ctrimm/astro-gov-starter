@@ -28,6 +28,43 @@ to look for.
 
 ## [Unreleased]
 
+### Added
+
+- **Spanish translations for all seed content** — the four services, five FAQs,
+  and two announcements, including frontmatter (`title`, `summary`,
+  `eligibility`, `keyFacts`) and body prose. Previously `/es/` pages rendered
+  the English Markdown, so a Spanish reader got a Spanish shell around English
+  content.
+- **A translation convention for content collections.** A translated entry is a
+  file in a locale subdirectory beside the original — `services/es/snap.mdx`
+  next to `services/snap.mdx` — so translators edit real Markdown rather than
+  strings in frontmatter, and the body is translatable at all. Both files share
+  a URL slug. `entriesForLocale()` in `src/utils/content.ts` resolves the pair,
+  falling back to the default locale when a translation is missing, so partial
+  translations ship fine and a missing file never breaks the build.
+
+### Changed
+
+- **The plain-language gate is language-aware.** It scored every file with
+  Flesch-Kincaid, which is tuned to English syllable counts — Spanish words
+  carry more syllables, so plain Spanish scored several grades too high and
+  would have failed the gate. Spanish files are now scored with the Fórmula de
+  Crawford, which yields a comparable grade level, and the summary reports each
+  language separately. English scores are unchanged.
+- **`esQuestion` is gone from the FAQ schema.** A Spanish FAQ now lives in
+  `faqs/es/` and carries its own `question`, so the parallel field is
+  redundant. If you added `esQuestion` entries, move them into `faqs/es/` files.
+
+---
+
+## [2.1.0] - 2026-08-23
+
+Targets **Astro 7**. Requires **Node.js 22.12 or newer**.
+
+A bug-fix release for subpath deployments, plus the `/apply/` landing page the
+header nav had always promised. No component props, content collection schemas,
+or configuration changed, so upgrading from 2.0.0 is a straight merge.
+
 ### Fixed
 
 - **Links broke on subpath deployments.** Four places emitted root-relative URLs
@@ -45,18 +82,6 @@ to look for.
 
 ### Added
 
-- **Spanish translations for all seed content** — the four services, five FAQs,
-  and two announcements, including frontmatter (`title`, `summary`,
-  `eligibility`, `keyFacts`) and body prose. Previously `/es/` pages rendered
-  the English Markdown, so a Spanish reader got a Spanish shell around English
-  content.
-- **A translation convention for content collections.** A translated entry is a
-  file in a locale subdirectory beside the original — `services/es/snap.mdx`
-  next to `services/snap.mdx` — so translators edit real Markdown rather than
-  strings in frontmatter, and the body is translatable at all. Both files share
-  a URL slug. `entriesForLocale()` in `src/utils/content.ts` resolves the pair,
-  falling back to the default locale when a translation is missing, so partial
-  translations ship fine and a missing file never breaks the build.
 - **An `/apply/` landing page** in both locales. The header's "Apply" nav item
   pointed at a route that never existed, so it 404'd on every page of the site.
   The page lists the programs that accept applications, what to have ready, and
@@ -64,15 +89,6 @@ to look for.
 
 ### Changed
 
-- **The plain-language gate is language-aware.** It scored every file with
-  Flesch-Kincaid, which is tuned to English syllable counts — Spanish words
-  carry more syllables, so plain Spanish scored several grades too high and
-  would have failed the gate. Spanish files are now scored with the Fórmula de
-  Crawford, which yields a comparable grade level, and the summary reports each
-  language separately. English scores are unchanged.
-- **`esQuestion` is gone from the FAQ schema.** A Spanish FAQ now lives in
-  `faqs/es/` and carries its own `question`, so the parallel field is
-  redundant. If you added `esQuestion` entries, move them into `faqs/es/` files.
 - **The CI link check now crawls a base-path build**, served from under that
   prefix with directory listings disabled. It previously crawled a build made
   at base `/` behind a server that returned a `200` directory listing for any
@@ -205,6 +221,7 @@ line and receives fixes only.
 - **GitHub Pages deploy workflow**, plus a `public/_headers` example for hosts
   that support response headers.
 
-[Unreleased]: https://github.com/ctrimm/astro-gov-starter/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/ctrimm/astro-gov-starter/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/ctrimm/astro-gov-starter/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/ctrimm/astro-gov-starter/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/ctrimm/astro-gov-starter/releases/tag/v1.0.0
